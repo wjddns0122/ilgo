@@ -1,102 +1,318 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/app_routes.dart';
+import '../../core/responsive.dart';
 import '../../core/theme.dart';
-import '../../data/models/enums.dart';
-import '../../data/services/profile_service.dart';
+import '../../data/models/analysis_summary.dart';
 import 'home_controller.dart';
 
+/// Main screen (Figma node 1:2095): capture actions + recent records.
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final profile = Get.find<ProfileService>();
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('읽고'),
-        actions: [
-          IconButton(
-            iconSize: 28,
-            icon: const Icon(Icons.folder_outlined),
-            tooltip: '보관함',
-            onPressed: () => Get.toNamed(Routes.library),
-          ),
-          IconButton(
-            iconSize: 28,
-            icon: const Icon(Icons.settings_outlined),
-            tooltip: '설정',
-            onPressed: () => Get.toNamed(Routes.settings),
-          ),
-        ],
-      ),
+      backgroundColor: AppColors.paper,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            children: [
-              const SizedBox(height: 12),
-              Obx(() => _modeChip(profile.mode.value)),
-              const Spacer(),
-              const Icon(Icons.center_focus_strong,
-                  size: 96, color: AppColors.primary),
-              const SizedBox(height: 20),
-              Text(
-                '고지서나 문자를\n사진으로 찍어보세요',
-                textAlign: TextAlign.center,
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineMedium
-                    ?.copyWith(height: 1.35),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                '어려운 내용을 쉽게 풀어드려요',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge
-                    ?.copyWith(color: AppColors.textSecondary),
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: controller.capture,
-                icon: const Icon(Icons.camera_alt, size: 26),
-                label: const Text('사진 찍기'),
-              ),
-              const SizedBox(height: 12),
-              OutlinedButton.icon(
-                onPressed: controller.fromGallery,
-                icon: const Icon(Icons.photo_library_outlined, size: 24),
-                label: const Text('앨범에서 고르기'),
-              ),
-              const SizedBox(height: 12),
-              TextButton.icon(
-                onPressed: controller.runSample,
-                icon: const Icon(Icons.auto_awesome, size: 20),
-                label: const Text('예시로 체험해보기'),
-              ),
-            ],
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: kOnbMaxWidth),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _header(context),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: context.rs(28)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: context.rs(28)),
+                          Text(
+                            '무엇을 읽어드릴까요?',
+                            style: GoogleFonts.notoSansKr(
+                              fontSize: context.rs(27.2),
+                              height: 1.5,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: -0.272,
+                              color: AppColors.ink,
+                            ),
+                          ),
+                          SizedBox(height: context.rs(12)),
+                          Text(
+                            '쉽게 알고 싶은 글을 사진으로 담아주세요.',
+                            style: GoogleFonts.notoSansKr(
+                              fontSize: context.rs(16),
+                              color: AppColors.stone,
+                            ),
+                          ),
+                          SizedBox(height: context.rs(32)),
+                          _ActionCard(
+                            icon: Icons.photo_camera_outlined,
+                            title: '종이 찍기',
+                            subtitle: '고지서 · 안내문 촬영',
+                            onTap: controller.capture,
+                          ),
+                          SizedBox(height: context.rs(16)),
+                          _ActionCard(
+                            icon: Icons.image_outlined,
+                            title: '화면 캡처 넣기',
+                            subtitle: '카톡 · 문자 · 공지 캡처',
+                            onTap: controller.fromGallery,
+                          ),
+                          SizedBox(height: context.rs(40)),
+                          _recentHeader(context),
+                          SizedBox(height: context.rs(16)),
+                          Container(height: 1, color: AppColors.hairline),
+                          _recentList(context),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _modeChip(OutputMode mode) {
-    final label =
-        mode == OutputMode.nativeLang ? '🌏 English' : '🟦 쉬운 한국어';
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-      decoration: BoxDecoration(
-        color: AppColors.riskGreenBg,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(label,
-          style: const TextStyle(
-              fontSize: 15,
+  Widget _header(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+          context.rs(28), context.rs(40), context.rs(28), context.rs(8)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            '읽고 · 오늘',
+            style: GoogleFonts.notoSansKr(
+              fontSize: context.rs(18.4),
+              height: 1.5,
               fontWeight: FontWeight.w700,
-              color: AppColors.primaryDark)),
+              letterSpacing: -0.184,
+              color: AppColors.forest,
+            ),
+          ),
+          IconButton(
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+            iconSize: context.rs(24),
+            icon: const Icon(Icons.inventory_2_outlined, color: AppColors.ink),
+            tooltip: '보관함',
+            onPressed: () => Get.toNamed(Routes.library),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _recentHeader(BuildContext context) {
+    return Row(
+      children: [
+        Icon(Icons.history, size: context.rs(18), color: AppColors.stone),
+        SizedBox(width: context.rs(8)),
+        Text(
+          '최근 기록',
+          style: GoogleFonts.notoSansKr(
+            fontSize: context.rs(13.12),
+            letterSpacing: 0.26,
+            color: AppColors.stone,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _recentList(BuildContext context) {
+    return Obx(() {
+      final items = controller.recent;
+      if (items.isEmpty) {
+        return Padding(
+          padding: EdgeInsets.symmetric(vertical: context.rs(20)),
+          child: Text(
+            '아직 기록이 없어요.',
+            style: GoogleFonts.notoSansKr(
+              fontSize: context.rs(14),
+              color: AppColors.stone,
+            ),
+          ),
+        );
+      }
+      return Column(
+        children: [
+          for (final item in items) ...[
+            _RecentRow(
+              summary: item,
+              onTap: () => controller.openRecord(item.id),
+            ),
+            Container(height: 1, color: AppColors.hairline),
+          ],
+        ],
+      );
+    });
+  }
+}
+
+/// A large primary action card (종이 찍기 / 화면 캡처 넣기).
+class _ActionCard extends StatelessWidget {
+  const _ActionCard({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.card,
+      borderRadius: BorderRadius.circular(8),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          padding: EdgeInsets.all(context.rs(25)),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: AppColors.hairline),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, size: context.rs(30), color: AppColors.forest),
+              SizedBox(width: context.rs(20)),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: GoogleFonts.notoSansKr(
+                        fontSize: context.rs(16.8),
+                        height: 1.5,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: -0.168,
+                        color: AppColors.ink,
+                      ),
+                    ),
+                    SizedBox(height: context.rs(4)),
+                    Text(
+                      subtitle,
+                      style: GoogleFonts.notoSansKr(
+                        fontSize: context.rs(14.08),
+                        height: 1.5,
+                        color: AppColors.stone,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: context.rs(12)),
+              Icon(Icons.arrow_forward,
+                  size: context.rs(20), color: AppColors.stone),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// One "최근 기록" row.
+class _RecentRow extends StatelessWidget {
+  const _RecentRow({required this.summary, required this.onTap});
+
+  final AnalysisSummary summary;
+  final VoidCallback onTap;
+
+  Color _dotColor(String? level) {
+    switch (level) {
+      case 'red':
+        return AppColors.riskRed;
+      case 'yellow':
+        return AppColors.riskYellow;
+      default:
+        return const Color(0xFF3B7A57);
+    }
+  }
+
+  String _metaLine() {
+    final type = summary.docType ?? '기록';
+    final d = DateTime.tryParse(summary.createdAt)?.toLocal();
+    if (d == null) return type;
+    return '$type · ${d.month}월 ${d.day}일';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: context.rs(20)),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: context.rs(2)),
+              child: Icon(Icons.description_outlined,
+                  size: context.rs(24), color: AppColors.stone),
+            ),
+            SizedBox(width: context.rs(16)),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: context.rs(12),
+                        height: context.rs(12),
+                        decoration: BoxDecoration(
+                          color: _dotColor(summary.topRiskLevel),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      SizedBox(width: context.rs(8)),
+                      Text(
+                        _metaLine(),
+                        style: GoogleFonts.notoSansKr(
+                          fontSize: context.rs(12.8),
+                          color: AppColors.stone,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: context.rs(6)),
+                  Text(
+                    summary.summaryOneLine ?? '',
+                    style: GoogleFonts.notoSansKr(
+                      fontSize: context.rs(16),
+                      height: 1.5,
+                      color: AppColors.ink,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(width: context.rs(12)),
+            Padding(
+              padding: EdgeInsets.only(top: context.rs(4)),
+              child: Icon(Icons.arrow_forward,
+                  size: context.rs(18), color: AppColors.stone),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

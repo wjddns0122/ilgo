@@ -11,4 +11,9 @@ class Config {
 
   /// Backend base URL (only used when [useMock] is false).
   static const String baseUrl = String.fromEnvironment('BASE_URL', defaultValue: '');
+
+  /// Dev switch: force the onboarding screen even if it was already completed.
+  /// Run: flutter run --dart-define=FORCE_ONBOARDING=true
+  static const bool forceOnboarding =
+      bool.fromEnvironment('FORCE_ONBOARDING', defaultValue: false);
 }

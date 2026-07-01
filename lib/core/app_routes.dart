@@ -1,6 +1,9 @@
 /// Named routes for GetX navigation. Keep in sync with [AppPages].
 abstract class Routes {
   static const onboarding = '/onboarding';
+  static const onboardingMode = '/onboarding/mode';
+  static const onboardingLanguage = '/onboarding/language';
+  static const onboardingPermission = '/onboarding/permission';
   static const home = '/home';
   static const analyze = '/analyze';
   static const result = '/result';

@@ -3,6 +3,9 @@ import 'package:get/get.dart';
 import '../modules/analyze/analyze_view.dart';
 import '../modules/home/home_view.dart';
 import '../modules/library/library_view.dart';
+import '../modules/onboarding/language_view.dart';
+import '../modules/onboarding/mode_view.dart';
+import '../modules/onboarding/permission_view.dart';
 import '../modules/onboarding/onboarding_view.dart';
 import '../modules/result/result_view.dart';
 import '../modules/settings/settings_view.dart';
@@ -13,6 +16,13 @@ import 'app_routes.dart';
 abstract class AppPages {
   static final routes = <GetPage<dynamic>>[
     GetPage(name: Routes.onboarding, page: () => const OnboardingView()),
+    GetPage(name: Routes.onboardingMode, page: () => const OnboardingModeView()),
+    GetPage(
+        name: Routes.onboardingLanguage,
+        page: () => const OnboardingLanguageView()),
+    GetPage(
+        name: Routes.onboardingPermission,
+        page: () => const OnboardingPermissionView()),
     GetPage(name: Routes.home, page: () => const HomeView()),
     GetPage(name: Routes.analyze, page: () => const AnalyzeView()),
     GetPage(name: Routes.result, page: () => const ResultView()),

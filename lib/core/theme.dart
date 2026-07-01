@@ -15,6 +15,15 @@ abstract class AppColors {
   static const textSecondary = Color(0xFF5A5F66);
   static const border = Color(0xFFDDE1E6);
 
+  // Figma design tokens (읽고 온보딩/브랜드 — vQjZTBlx…, node 1:55).
+  static const paper = Color(0xFFF6F1E7); // 크림 배경
+  static const ink = Color(0xFF23291F); // 본문 진한 텍스트
+  static const forest = Color(0xFF1F3D2F); // 브랜드/버튼 딥그린
+  static const stone = Color(0xFF6B6A5C); // 보조 텍스트
+  static const hairline = Color(0x2423291F); // rgba(35,41,31,0.14)
+  static const card = Color(0xFFFFFDF7); // 카드 배경(살짝 밝은 크림)
+  static const sand = Color(0xFFEFE8D8); // 아바타/뱃지 배경
+
   // Traffic-light risk colors (WCAG-contrast tuned).
   static const riskGreen = Color(0xFF1E8E3E);
   static const riskGreenBg = Color(0xFFE6F4EA);

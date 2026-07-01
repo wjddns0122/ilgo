@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 
 import 'core/app_pages.dart';
 import 'core/app_routes.dart';
+import 'core/config.dart';
 import 'core/theme.dart';
+import 'dev_flags.dart';
 import 'data/bindings/app_binding.dart';
 import 'data/services/profile_service.dart';
 import 'data/services/tts_service.dart';
@@ -15,7 +17,11 @@ Future<void> main() async {
   final profile = await Get.putAsync(() => ProfileService().init());
   await Get.putAsync(() => TtsService().init());
 
-  runApp(IlgoApp(initialRoute: profile.onboarded ? Routes.home : Routes.onboarding));
+  final showOnboarding =
+      DevFlags.forceOnboarding || Config.forceOnboarding || !profile.onboarded;
+  runApp(IlgoApp(
+    initialRoute: showOnboarding ? Routes.onboarding : Routes.home,
+  ));
 }
 
 class IlgoApp extends StatelessWidget {

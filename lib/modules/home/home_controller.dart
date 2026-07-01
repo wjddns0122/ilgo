@@ -4,16 +4,47 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../data/models/analysis_summary.dart';
+import '../../data/repositories/analysis_repository.dart';
 import '../../data/services/profile_service.dart';
 import '../analyze/analyze_controller.dart';
 
 /// Home: capture / choose an image (or run a bundled sample) and kick off
-/// an analysis using the current profile (mode + language).
+/// an analysis using the current profile (mode + language). Also surfaces the
+/// most recent saved analyses ("최근 기록").
 class HomeController extends GetxController {
   final ImagePicker _picker = ImagePicker();
 
   ProfileService get _profile => Get.find<ProfileService>();
   AnalyzeController get _analyze => Get.find<AnalyzeController>();
+  AnalysisRepository get _repo => Get.find<AnalysisRepository>();
+
+  /// Recent saved analyses shown at the bottom of home.
+  final recent = <AnalysisSummary>[].obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadRecent();
+  }
+
+  Future<void> loadRecent() async {
+    try {
+      final items = await _repo.list();
+      recent.assignAll(items.take(5).toList());
+    } catch (_) {
+      recent.clear();
+    }
+  }
+
+  /// Open a recent record on the result screen.
+  Future<void> openRecord(String id) async {
+    try {
+      _analyze.openSaved(await _repo.getById(id));
+    } catch (_) {
+      Get.snackbar('오류', '내용을 불러오지 못했어요.');
+    }
+  }
 
   Future<void> capture() => _pickAndAnalyze(ImageSource.camera);
 
