@@ -37,15 +37,23 @@
 `id, status, output_mode, lang, doc_type, summary_one_line, original_text, explained_text, consequence, cards{what,when,where,amount,deadline}, risks[{id,level(green|yellow|red),type,message}], actions[{id,text,priority,is_done}], reply_drafts[{id,korean,note_in_lang}](native만), created_at`. 프론트·백엔드 동일 스키마.
 
 ## 현재 상태
-- 기획/명세/스택 **문서화 완료**. 코드 아직 없음.
-- 백엔드는 아직 안 붙음 → **프론트는 목 우선**으로 진행 가능.
+- 기획/명세/스택 **문서화 완료**.
+- **프론트 스캐폴드 + 목 end-to-end 완료** (2026-07-01): 패키지·freezed 모델·목 JSON·Repository(목/실)·GetX 컨트롤러·전 화면(온보딩→홈→로딩→결과→보관함→설정)·접근성 테마·retrofit 클라이언트. `flutter analyze` 0 issues, 유닛테스트 4/4 통과.
+- 백엔드 아직 안 붙음 → **목(`USE_MOCK=true`, 기본값)** 으로 100% 동작.
 
-## 다음 할 일 (새 세션 시작점)
-1. Flutter 스캐폴드: `flutter create ilgo` + `읽고_Flutter_기술스택.md` §8 커맨드로 패키지.
-2. freezed 모델(Analysis 등) + `assets/mock/*.json`(= `읽고_프론트_API명세.md`의 예시 JSON).
-3. Repository 인터페이스 + Mock 구현 + GetX AnalyzeController.
-4. 화면: 온보딩→홈(촬영/캡처)→로딩→결과(요약/토글/카드/신호등/할일)→답장/음성.
-5. 이후 백엔드 나오면 retrofit ApiRepository + `USE_MOCK=false`.
+## 실행
+```bash
+# 목(기본): flutter run           # = --dart-define=USE_MOCK=true
+# 실서버:  flutter run --dart-define=USE_MOCK=false --dart-define=BASE_URL=https://ilgo-api.up.railway.app/v1
+# 코드생성: dart run build_runner build --delete-conflicting-outputs --force-jit
+```
+> ⚠️ **build_runner는 반드시 `--force-jit`**. 이 맥 Flutter SDK는 `dart-sdk/bin/utils/gen_snapshot`이 없어 기본(AOT) 모드가 `ProcessException`으로 실패함. `--force-jit`이면 gen_snapshot 불필요.
+> iOS 실기기: `cd ios && pod install` 후 Xcode에서 Runner 서명 팀 설정 → `flutter run`.
+
+## 다음 할 일
+1. **iOS 실기기 디버깅**: 아이폰 케이블 연결·잠금해제·개발자 모드 ON → `flutter run`.
+2. 백엔드 나오면 `USE_MOCK=false` + `BASE_URL` 주입 (Repository 코드 안 바뀜).
+3. (선택) 할 일 체크 PATCH·답장 재생성 등 P2 API 실연동.
 
 ## 주의/컨벤션
 - 개인정보: 데모 자료(고지서·문자)는 이름·번호·계좌 **마스킹**. 이미지 기본 미저장.

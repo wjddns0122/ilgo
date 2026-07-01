@@ -1,0 +1,404 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1782867815367,
+  "projectRoot": "/Users/nojeong-un/devs/ilgo",
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "lib",
+      "test"
+    ],
+    "gitBranches": null
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "android": {
+      "path": "android",
+      "purpose": null,
+      "fileCount": 8,
+      "lastAccessed": 1782867815361,
+      "keyFiles": [
+        "build.gradle.kts",
+        "gradle.properties",
+        "gradlew",
+        "gradlew.bat",
+        "ilgo_android.iml"
+      ]
+    },
+    "ios": {
+      "path": "ios",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1782867815361,
+      "keyFiles": []
+    },
+    "lib": {
+      "path": "lib",
+      "purpose": "Library code",
+      "fileCount": 1,
+      "lastAccessed": 1782867815362,
+      "keyFiles": [
+        "main.dart"
+      ]
+    },
+    "linux": {
+      "path": "linux",
+      "purpose": null,
+      "fileCount": 2,
+      "lastAccessed": 1782867815362,
+      "keyFiles": [
+        "CMakeLists.txt"
+      ]
+    },
+    "macos": {
+      "path": "macos",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1782867815362,
+      "keyFiles": []
+    },
+    "test": {
+      "path": "test",
+      "purpose": "Test files",
+      "fileCount": 1,
+      "lastAccessed": 1782867815362,
+      "keyFiles": [
+        "widget_test.dart"
+      ]
+    },
+    "web": {
+      "path": "web",
+      "purpose": null,
+      "fileCount": 3,
+      "lastAccessed": 1782867815362,
+      "keyFiles": [
+        "favicon.png",
+        "index.html",
+        "manifest.json"
+      ]
+    },
+    "windows": {
+      "path": "windows",
+      "purpose": null,
+      "fileCount": 2,
+      "lastAccessed": 1782867815362,
+      "keyFiles": [
+        "CMakeLists.txt"
+      ]
+    },
+    "android/app": {
+      "path": "android/app",
+      "purpose": "Application code",
+      "fileCount": 1,
+      "lastAccessed": 1782867815362,
+      "keyFiles": [
+        "build.gradle.kts"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "lib/data/bindings/app_binding.dart",
+      "accessCount": 2,
+      "lastAccessed": 1782868652572,
+      "type": "file"
+    },
+    {
+      "path": "lib/main.dart",
+      "accessCount": 2,
+      "lastAccessed": 1782868656888,
+      "type": "file"
+    },
+    {
+      "path": "pubspec.yaml",
+      "accessCount": 2,
+      "lastAccessed": 1782868665457,
+      "type": "file"
+    },
+    {
+      "path": "ios/Runner/Info.plist",
+      "accessCount": 2,
+      "lastAccessed": 1782868692357,
+      "type": "file"
+    },
+    {
+      "path": "lib/widgets/speak_button.dart",
+      "accessCount": 2,
+      "lastAccessed": 1782868709755,
+      "type": "file"
+    },
+    {
+      "path": "lib/modules/library/library_view.dart",
+      "accessCount": 2,
+      "lastAccessed": 1782868711192,
+      "type": "file"
+    },
+    {
+      "path": "test/widget_test.dart",
+      "accessCount": 2,
+      "lastAccessed": 1782868737140,
+      "type": "file"
+    },
+    {
+      "path": "assets/mock/analyze_easy_health.json",
+      "accessCount": 1,
+      "lastAccessed": 1782867980527,
+      "type": "file"
+    },
+    {
+      "path": "assets/mock/analyze_native_wage.json",
+      "accessCount": 1,
+      "lastAccessed": 1782867987565,
+      "type": "file"
+    },
+    {
+      "path": "assets/mock/analyze_easy_fine.json",
+      "accessCount": 1,
+      "lastAccessed": 1782867993268,
+      "type": "file"
+    },
+    {
+      "path": "assets/mock/list.json",
+      "accessCount": 1,
+      "lastAccessed": 1782867996152,
+      "type": "file"
+    },
+    {
+      "path": "lib/core/config.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868005952,
+      "type": "file"
+    },
+    {
+      "path": "lib/core/app_routes.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868007898,
+      "type": "file"
+    },
+    {
+      "path": "lib/core/device_id.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868012606,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/models/enums.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868051443,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/models/cards.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868053771,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/models/risk.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868057514,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/models/action_item.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868059870,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/models/reply_draft.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868062776,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/models/analysis.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868067920,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/models/analysis_summary.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868072560,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/api/analyze_request.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868075197,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/api/ilgo_api.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868103225,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/repositories/analysis_repository.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868107017,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/repositories/mock_analysis_repository.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868114087,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/repositories/api_analysis_repository.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868118694,
+      "type": "file"
+    },
+    {
+      "path": "lib/core/dio_client.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868121502,
+      "type": "file"
+    },
+    {
+      "path": "lib/core/theme.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868159249,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/services/profile_service.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868288276,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/services/tts_service.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868292588,
+      "type": "file"
+    },
+    {
+      "path": "lib/modules/analyze/analyze_controller.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868301899,
+      "type": "file"
+    },
+    {
+      "path": "lib/modules/home/home_controller.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868309398,
+      "type": "file"
+    },
+    {
+      "path": "lib/modules/library/library_controller.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868314109,
+      "type": "file"
+    },
+    {
+      "path": "lib/modules/settings/settings_controller.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868317256,
+      "type": "file"
+    },
+    {
+      "path": "lib/widgets/section_header.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868363203,
+      "type": "file"
+    },
+    {
+      "path": "lib/widgets/risk_banner.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868368867,
+      "type": "file"
+    },
+    {
+      "path": "lib/widgets/info_cards.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868376965,
+      "type": "file"
+    },
+    {
+      "path": "lib/widgets/original_explained_toggle.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868386386,
+      "type": "file"
+    },
+    {
+      "path": "lib/widgets/action_tile.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868469622,
+      "type": "file"
+    },
+    {
+      "path": "lib/widgets/reply_draft_tile.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868479533,
+      "type": "file"
+    },
+    {
+      "path": "lib/modules/onboarding/onboarding_view.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868564480,
+      "type": "file"
+    },
+    {
+      "path": "lib/modules/home/home_view.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868576332,
+      "type": "file"
+    },
+    {
+      "path": "lib/modules/analyze/analyze_view.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868584263,
+      "type": "file"
+    },
+    {
+      "path": "lib/modules/settings/settings_view.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868607071,
+      "type": "file"
+    },
+    {
+      "path": "lib/modules/result/result_view.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868639196,
+      "type": "file"
+    },
+    {
+      "path": "lib/core/app_pages.dart",
+      "accessCount": 1,
+      "lastAccessed": 1782868643159,
+      "type": "file"
+    },
+    {
+      "path": "CLAUDE.md",
+      "accessCount": 1,
+      "lastAccessed": 1782869246967,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}

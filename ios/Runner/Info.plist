@@ -2,6 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCameraUsageDescription</key>
+	<string>고지서나 문자를 사진으로 찍어 쉽게 풀이하기 위해 카메라를 사용합니다.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>사진첩에서 이미지를 골라 쉽게 풀이하기 위해 사진에 접근합니다.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>납부·제출 기한을 달력에 등록하기 위해 캘린더를 사용합니다.</string>
+	<key>NSCalendarsWriteOnlyAccessUsageDescription</key>
+	<string>납부·제출 기한을 달력에 등록하기 위해 캘린더를 사용합니다.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>

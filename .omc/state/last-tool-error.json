@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"tail -20 /private/tmp/claude-501/-Users-nojeong-un-devs-ilgo/5c898efd-2252-4409-b671-4dc2eab226fe/tasks/b5j7qpx5m.output; echo \\\"===GEN===\\\"; ls -1 lib/data/models/*.g.dart lib/data/models...",
+  "error": "Exit code 1\nlrwxr-xr-x@ 1 nojeong-un  admin  78 Jul  1 10:10 /opt/homebrew/share/flutter/bin/cache/dart-sdk/bin/utils/gen_snapshot -> /opt/homebrew/share/flutter/bin/cache/artifacts/engine/darwin-x64/gen_snapshot\n=== rerun build_runner ===\n  1s compiling builders/aot\n  2s compiling builders/aot\n  3s compiling builders/aot\n  4s compiling builders/aot\n  5s compiling builders/aot\n  6s compiling builders/aot\n  7s compiling builders/aot\n  8s compiling builders/aot\n  9s compiling builders/aot\n  10s co...",
+  "timestamp": "2026-07-01T01:12:02.389Z",
+  "retry_count": 1
+}

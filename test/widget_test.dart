@@ -1,30 +1,75 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
+// Unit tests for the "읽고" data layer. Pure-Dart parsing/logic — no Flutter
+// binding needed, so they run fast and stay green in CI.
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:ilgo/main.dart';
+import 'package:ilgo/data/models/analysis.dart';
+import 'package:ilgo/data/models/enums.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  group('OutputMode', () {
+    test('maps to/from wire strings', () {
+      expect(OutputMode.easyKorean.wire, 'easy_korean');
+      expect(OutputMode.nativeLang.wire, 'native');
+      expect(OutputMode.fromWire('native'), OutputMode.nativeLang);
+      expect(OutputMode.fromWire('unknown'), OutputMode.easyKorean);
+    });
+  });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  group('RiskLevel', () {
+    test('parses known levels and degrades unknown to unknown', () {
+      expect(RiskLevel.fromString('red'), RiskLevel.red);
+      expect(RiskLevel.fromString('green'), RiskLevel.green);
+      expect(RiskLevel.fromString('yellow'), RiskLevel.yellow);
+      expect(RiskLevel.fromString('???'), RiskLevel.unknown);
+      expect(RiskLevel.fromString(null), RiskLevel.unknown);
+    });
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  group('Analysis.fromJson', () {
+    test('parses a full easy-korean result', () {
+      final json = {
+        'id': 'anl_0001',
+        'status': 'done',
+        'output_mode': 'easy_korean',
+        'lang': 'ko',
+        'doc_type': '고지서',
+        'summary_one_line': '8월 15일까지 6만 8천 원',
+        'original_text': '원문',
+        'explained_text': '쉬운 풀이',
+        'consequence': '연체료',
+        'cards': {'what': '건강보험료', 'amount': '68,000원', 'deadline': '2026-08-15'},
+        'risks': [
+          {'id': 'rsk_1', 'level': 'yellow', 'type': '기한', 'message': '연체 주의'}
+        ],
+        'actions': [
+          {'id': 'act_1', 'text': '납부', 'priority': 1, 'is_done': false}
+        ],
+        'reply_drafts': [],
+        'created_at': '2026-06-30T07:10:00Z',
+      };
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      final a = Analysis.fromJson(json);
+
+      expect(a.id, 'anl_0001');
+      expect(a.outputMode, 'easy_korean');
+      expect(a.cards?.amount, '68,000원');
+      expect(a.risks.single.levelEnum, RiskLevel.yellow);
+      expect(a.actions.single.isDone, isFalse);
+      expect(a.replyDrafts, isEmpty);
+    });
+
+    test('defaults missing lists to empty', () {
+      final a = Analysis.fromJson({
+        'id': 'x',
+        'status': 'done',
+        'output_mode': 'native',
+        'lang': 'en',
+        'created_at': '2026-06-30T07:10:00Z',
+      });
+      expect(a.risks, isEmpty);
+      expect(a.actions, isEmpty);
+      expect(a.replyDrafts, isEmpty);
+      expect(a.cards, isNull);
+    });
   });
 }
