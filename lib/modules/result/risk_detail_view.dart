@@ -38,6 +38,9 @@ class RiskDetailView extends StatelessWidget {
     final detail = (args is Map && args['detail'] is String)
         ? args['detail'] as String
         : '';
+    final docType = (args is Map && args['doc_type'] is String)
+        ? args['doc_type'] as String
+        : null;
     final body = detail.isNotEmpty ? detail : message;
     final look = _look(level);
 
@@ -84,7 +87,7 @@ class RiskDetailView extends StatelessWidget {
           Padding(
             padding: EdgeInsets.fromLTRB(
                 context.rs(28), context.rs(8), context.rs(28), context.rs(24)),
-            child: _helpButton(context),
+            child: _helpButton(context, type, docType),
           ),
         ],
       ),
@@ -212,7 +215,7 @@ class RiskDetailView extends StatelessWidget {
     );
   }
 
-  Widget _helpButton(BuildContext context) {
+  Widget _helpButton(BuildContext context, String type, String? docType) {
     return SizedBox(
       width: double.infinity,
       child: Material(
@@ -220,7 +223,10 @@ class RiskDetailView extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         child: InkWell(
           borderRadius: BorderRadius.circular(10),
-          onTap: () => Get.toNamed(Routes.help),
+          onTap: () => Get.toNamed(
+            Routes.help,
+            arguments: {'risk_type': type, 'doc_type': docType},
+          ),
           child: Container(
             height: context.rs(72),
             alignment: Alignment.center,

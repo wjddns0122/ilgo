@@ -24,11 +24,15 @@ class AnalyzeController extends GetxController {
   /// True while reply drafts are being regenerated.
   final isRegenerating = false.obs;
 
+  /// True once the user has rated the current result (hides the feedback card).
+  final feedbackSent = false.obs;
+
   // Remembered for the retry button.
   Uint8List? _lastBytes;
   String _lastMediaType = 'image/jpeg';
   OutputMode _lastMode = OutputMode.easyKorean;
   String _lastLang = 'ko';
+  String? _lastHint;
 
   /// Runs an analysis and drives navigation: show the loading screen, then
   /// replace it with the result on success (or surface an error to retry).
@@ -37,15 +41,18 @@ class AnalyzeController extends GetxController {
     required String mediaType,
     required OutputMode mode,
     required String lang,
+    String? hint,
   }) async {
     _lastBytes = bytes;
     _lastMediaType = mediaType;
     _lastMode = mode;
     _lastLang = lang;
+    _lastHint = hint;
 
     isLoading.value = true;
     error.value = null;
     result.value = null;
+    feedbackSent.value = false;
     // Show loading over home — drop camera/confirm so "back" from the result
     // returns to the main page, not the capture-confirm screen.
     Get.offNamedUntil(
@@ -59,6 +66,7 @@ class AnalyzeController extends GetxController {
         mediaType: mediaType,
         mode: mode,
         lang: lang,
+        hint: hint,
       );
       result.value = analysis;
       isLoading.value = false;
@@ -117,6 +125,7 @@ class AnalyzeController extends GetxController {
       mediaType: _lastMediaType,
       mode: _lastMode,
       lang: _lastLang,
+      hint: _lastHint,
     );
   }
 
@@ -124,7 +133,21 @@ class AnalyzeController extends GetxController {
   void openSaved(Analysis analysis) {
     result.value = analysis;
     error.value = null;
+    feedbackSent.value = false;
     Get.toNamed(Routes.result);
+  }
+
+  /// Send 👍/👎 for the current analysis with an optional reason. Optimistically
+  /// flips [feedbackSent] so the card shows a thank-you immediately.
+  Future<void> submitFeedback(bool isHelpful, {String? reason}) async {
+    final current = result.value;
+    if (current == null || feedbackSent.value) return;
+    feedbackSent.value = true;
+    try {
+      await _repo.feedback(current.id, isHelpful: isHelpful, reason: reason);
+    } catch (_) {
+      // best-effort; keep the thank-you state even if the request failed
+    }
   }
 
   /// Optimistic local toggle for the to-do checklist, best-effort synced to

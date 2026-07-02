@@ -404,11 +404,15 @@ class _IlgoApi implements IlgoApi {
   Future<HelpContactsResponse> helpContacts(
     String? lang,
     String? docType,
+    String? riskType,
+    String? region,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'lang': lang,
       r'doc_type': docType,
+      r'risk_type': riskType,
+      r'region': region,
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};

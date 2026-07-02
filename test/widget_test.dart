@@ -104,5 +104,24 @@ void main() {
       expect(response.items[1].docType, '고지서');
       expect(response.nextCursor, isNull);
     });
+
+    test('items view is unmodifiable — library must sort a copy', () {
+      final response = AnalysisListResponse.fromJson({
+        'items': [
+          {'id': 'b', 'created_at': '2026-07-02T00:15:00Z', 'card_deadline': '2009-03-06'},
+          {'id': 'a', 'created_at': '2026-07-02T00:33:00Z', 'card_deadline': '2009-03-05'},
+        ],
+        'next_cursor': null,
+      });
+
+      // freezed exposes the list as an unmodifiable view, so an in-place sort
+      // throws. This is exactly what broke the library screen.
+      expect(() => response.items.sort(), throwsUnsupportedError);
+
+      // LibraryController.load sorts a copy — this must succeed.
+      final sorted = List<AnalysisSummary>.of(response.items)
+        ..sort((x, y) => (x.cardDeadline ?? '').compareTo(y.cardDeadline ?? ''));
+      expect(sorted.first.id, 'a');
+    });
   });
 }

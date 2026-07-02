@@ -21,12 +21,15 @@ class ApiAnalysisRepository implements AnalysisRepository {
     required String mediaType,
     required OutputMode mode,
     required String lang,
+    String? hint,
   }) {
+    final trimmed = hint?.trim();
     return _api.analyze(AnalyzeRequest(
       imageBase64: base64Encode(imageBytes),
       mediaType: mediaType,
       outputMode: mode.wire,
       lang: lang,
+      hint: (trimmed != null && trimmed.isNotEmpty) ? trimmed : null,
     ));
   }
 
@@ -53,5 +56,14 @@ class ApiAnalysisRepository implements AnalysisRepository {
     if (tone != null) body['tone'] = tone;
     final res = await _api.regenerateReplies(analysisId, body);
     return res.replyDrafts;
+  }
+
+  @override
+  Future<void> feedback(String analysisId,
+      {required bool isHelpful, String? reason}) async {
+    final body = <String, dynamic>{'is_helpful': isHelpful};
+    final trimmed = reason?.trim();
+    if (trimmed != null && trimmed.isNotEmpty) body['reason'] = trimmed;
+    await _api.feedback(analysisId, body);
   }
 }

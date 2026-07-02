@@ -13,6 +13,7 @@ _AnalyzeRequest _$AnalyzeRequestFromJson(Map<String, dynamic> json) =>
       outputMode: json['output_mode'] as String,
       lang: json['lang'] as String,
       save: json['save'] as bool? ?? true,
+      hint: json['hint'] as String?,
     );
 
 Map<String, dynamic> _$AnalyzeRequestToJson(_AnalyzeRequest instance) =>
@@ -22,4 +23,5 @@ Map<String, dynamic> _$AnalyzeRequestToJson(_AnalyzeRequest instance) =>
       'output_mode': instance.outputMode,
       'lang': instance.lang,
       'save': instance.save,
+      'hint': ?instance.hint,
     };

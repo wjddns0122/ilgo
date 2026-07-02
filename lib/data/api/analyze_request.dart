@@ -12,6 +12,7 @@ abstract class AnalyzeRequest with _$AnalyzeRequest {
     @JsonKey(name: 'output_mode') required String outputMode,
     required String lang,
     @Default(true) bool save,
+    @JsonKey(includeIfNull: false) String? hint,
   }) = _AnalyzeRequest;
 
   factory AnalyzeRequest.fromJson(Map<String, dynamic> json) =>

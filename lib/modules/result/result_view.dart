@@ -81,6 +81,8 @@ class _ResultViewState extends State<ResultView> {
                       _tabs(context, a),
                       SizedBox(height: context.rs(24)),
                       _tabContent(context, a),
+                      SizedBox(height: context.rs(28)),
+                      _feedbackCard(context),
                     ],
                   ),
                 ),
@@ -178,6 +180,155 @@ class _ResultViewState extends State<ResultView> {
     return b.toString().trimRight();
   }
 
+  // ── Feedback (👍/👎) ────────────────────────────────────────────────────
+  Widget _feedbackCard(BuildContext context) {
+    final sent = controller.feedbackSent.value;
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(
+        horizontal: context.rs(20),
+        vertical: context.rs(18),
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.hairline),
+      ),
+      child: sent
+          ? Row(
+              children: [
+                Icon(Icons.favorite, size: context.rs(20), color: AppColors.forest),
+                SizedBox(width: context.rs(10)),
+                Expanded(
+                  child: Text(
+                    '고마워요! 더 잘 읽어드릴게요.',
+                    style: GoogleFonts.notoSansKr(
+                      fontSize: context.rs(16),
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.forest,
+                    ),
+                  ),
+                ),
+              ],
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '이 풀이가 도움이 됐어요?',
+                  style: GoogleFonts.notoSansKr(
+                    fontSize: context.rs(17),
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.ink,
+                  ),
+                ),
+                SizedBox(height: context.rs(14)),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _fbButton(context, Icons.thumb_up_alt_outlined,
+                          '도움됐어요', () => controller.submitFeedback(true)),
+                    ),
+                    SizedBox(width: context.rs(12)),
+                    Expanded(
+                      child: _fbButton(context, Icons.thumb_down_alt_outlined,
+                          '아쉬워요', () => _askReason(context)),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+    );
+  }
+
+  Widget _fbButton(
+    BuildContext context,
+    IconData icon,
+    String label,
+    VoidCallback onTap,
+  ) {
+    return OutlinedButton.icon(
+      style: OutlinedButton.styleFrom(
+        foregroundColor: AppColors.forest,
+        side: const BorderSide(color: AppColors.forest),
+        padding: EdgeInsets.symmetric(vertical: context.rs(13)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+      onPressed: onTap,
+      icon: Icon(icon, size: context.rs(18)),
+      label: Text(
+        label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: GoogleFonts.notoSansKr(
+          fontSize: context.rs(15),
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
+  /// 👎 → optional free-text reason, then submit.
+  void _askReason(BuildContext context) {
+    final reason = TextEditingController();
+    Get.dialog(
+      AlertDialog(
+        backgroundColor: AppColors.paper,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          '무엇이 아쉬웠나요?',
+          style: GoogleFonts.notoSansKr(
+            fontSize: context.rs(19),
+            fontWeight: FontWeight.w700,
+            color: AppColors.ink,
+          ),
+        ),
+        content: TextField(
+          controller: reason,
+          minLines: 1,
+          maxLines: 3,
+          style: GoogleFonts.notoSansKr(
+              fontSize: context.rs(16), color: AppColors.ink),
+          decoration: InputDecoration(
+            hintText: '예: 금액이 실제와 달라요 (안 써도 돼요)',
+            hintStyle: GoogleFonts.notoSansKr(
+                fontSize: context.rs(14), color: AppColors.stone),
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back();
+              controller.submitFeedback(false);
+            },
+            child: Text(
+              '그냥 보내기',
+              style: GoogleFonts.notoSansKr(
+                  fontSize: context.rs(15), color: AppColors.stone),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              final text = reason.text;
+              Get.back();
+              controller.submitFeedback(false, reason: text);
+            },
+            child: Text(
+              '보내기',
+              style: GoogleFonts.notoSansKr(
+                fontSize: context.rs(15),
+                fontWeight: FontWeight.w700,
+                color: AppColors.forest,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ).then((_) => reason.dispose());
+  }
+
   // ── Summary + listen ──────────────────────────────────────────────────
   Widget _summary(BuildContext context, Analysis a) {
     final english = a.outputMode == 'native';
@@ -211,13 +362,16 @@ class _ResultViewState extends State<ResultView> {
   }
 
   Widget _listenPill(
-      BuildContext context, String text, String lang, String? docType) {
+    BuildContext context,
+    String text,
+    String lang,
+    String? docType,
+  ) {
     return GestureDetector(
-      onTap: () => Get.toNamed(Routes.listenTts, arguments: {
-        'text': text,
-        'lang': lang,
-        'title': docType ?? '',
-      }),
+      onTap: () => Get.toNamed(
+        Routes.listenTts,
+        arguments: {'text': text, 'lang': lang, 'title': docType ?? ''},
+      ),
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: context.rs(17),
@@ -274,17 +428,19 @@ class _ResultViewState extends State<ResultView> {
           // Prefer backend-provided steps; fall back to the analysis to-dos.
           final steps = risk.steps.isNotEmpty
               ? risk.steps
-              : (controller.result.value?.actions
-                      .map((e) => e.text)
-                      .toList() ??
-                  const <String>[]);
-          Get.toNamed(Routes.riskDetail, arguments: {
-            'level': risk.level,
-            'type': risk.type,
-            'message': risk.message,
-            'detail': risk.detail,
-            'steps': steps,
-          });
+              : (controller.result.value?.actions.map((e) => e.text).toList() ??
+                    const <String>[]);
+          Get.toNamed(
+            Routes.riskDetail,
+            arguments: {
+              'level': risk.level,
+              'type': risk.type,
+              'message': risk.message,
+              'detail': risk.detail,
+              'steps': steps,
+              'doc_type': controller.result.value?.docType,
+            },
+          );
         },
         child: Container(
           width: double.infinity,
@@ -295,7 +451,7 @@ class _ResultViewState extends State<ResultView> {
           decoration: BoxDecoration(
             color: AppColors.card,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: look.color),
+            border: Border.all(color: look.color.withValues(alpha: 0.4)),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -348,8 +504,11 @@ class _ResultViewState extends State<ResultView> {
                 ),
               ),
               SizedBox(width: context.rs(8)),
-              Icon(Icons.chevron_right,
-                  size: context.rs(20), color: AppColors.stone),
+              Icon(
+                Icons.chevron_right,
+                size: context.rs(20),
+                color: AppColors.stone,
+              ),
             ],
           ),
         ),
@@ -552,8 +711,9 @@ class _ResultViewState extends State<ResultView> {
       for (final act in a.actions) act.text,
       a.originalText,
     ].whereType<String>().join(' ');
-    final m = RegExp(r'(0\d{1,2}[-.\s]?\d{3,4}[-.\s]?\d{4}|1\d{3}[-.\s]?\d{4})')
-        .firstMatch(source);
+    final m = RegExp(
+      r'(0\d{1,2}[-.\s]?\d{3,4}[-.\s]?\d{4}|1\d{3}[-.\s]?\d{4})',
+    ).firstMatch(source);
     return m?.group(0);
   }
 
@@ -629,8 +789,7 @@ class _ResultViewState extends State<ResultView> {
         SizedBox(height: context.rs(10)),
         Row(
           children: [
-            Expanded(
-                child: _toneButton(context, '정중하게 다시', 'polite', busy)),
+            Expanded(child: _toneButton(context, '정중하게 다시', 'polite', busy)),
             SizedBox(width: context.rs(12)),
             Expanded(child: _toneButton(context, '짧게 다시', 'short', busy)),
           ],
@@ -640,7 +799,11 @@ class _ResultViewState extends State<ResultView> {
   }
 
   Widget _toneButton(
-      BuildContext context, String label, String tone, bool busy) {
+    BuildContext context,
+    String label,
+    String tone,
+    bool busy,
+  ) {
     return OutlinedButton.icon(
       style: OutlinedButton.styleFrom(
         foregroundColor: AppColors.forest,
@@ -910,10 +1073,10 @@ class _ResultViewState extends State<ResultView> {
         borderRadius: BorderRadius.circular(8),
         child: InkWell(
           borderRadius: BorderRadius.circular(8),
-          onTap: () => Get.toNamed(Routes.replyDetail, arguments: {
-            'korean': draft.korean,
-            'note': draft.noteInLang ?? '',
-          }),
+          onTap: () => Get.toNamed(
+            Routes.replyDetail,
+            arguments: {'korean': draft.korean, 'note': draft.noteInLang ?? ''},
+          ),
           child: Container(
             padding: EdgeInsets.all(context.rs(17)),
             decoration: BoxDecoration(
@@ -954,8 +1117,11 @@ class _ResultViewState extends State<ResultView> {
                   ),
                 ),
                 SizedBox(width: context.rs(8)),
-                Icon(Icons.chevron_right,
-                    size: context.rs(22), color: AppColors.stone),
+                Icon(
+                  Icons.chevron_right,
+                  size: context.rs(22),
+                  color: AppColors.stone,
+                ),
               ],
             ),
           ),
@@ -979,13 +1145,17 @@ class _ResultViewState extends State<ResultView> {
     final ok = await Add2Calendar.addEvent2Cal(event);
     if (!ok) return;
     final amount = a.cards?.amount;
-    Get.toNamed(Routes.calendarAdded, arguments: {
-      'month': '${date.month}월',
-      'day': '${date.day}',
-      'title': a.cards?.what ?? a.summaryOneLine ?? '기한',
-      'subtitle':
-          [if (amount != null && amount.trim().isNotEmpty) amount, '오전 알림']
-              .join(' · '),
-    });
+    Get.toNamed(
+      Routes.calendarAdded,
+      arguments: {
+        'month': '${date.month}월',
+        'day': '${date.day}',
+        'title': a.cards?.what ?? a.summaryOneLine ?? '기한',
+        'subtitle': [
+          if (amount != null && amount.trim().isNotEmpty) amount,
+          '오전 알림',
+        ].join(' · '),
+      },
+    );
   }
 }

@@ -37,19 +37,30 @@ class HelpView extends StatefulWidget {
 class _HelpViewState extends State<HelpView> {
   List<_Contact> _contacts = _fallback;
 
+  // Context from the risk-detail screen: lets the backend recommend the right
+  // hotline first (e.g. 사기·스미싱 → 118, 임금·부당공제 → 1350).
+  String? _riskType;
+  String? _docType;
+
   @override
   void initState() {
     super.initState();
+    final args = Get.arguments;
+    if (args is Map) {
+      _riskType = args['risk_type'] as String?;
+      _docType = args['doc_type'] as String?;
+    }
     _load();
   }
 
   Future<void> _load() async {
-    if (!Get.isRegistered<IlgoApi>()) return; // mock/offline → keep fallback
+    if (!Get.isRegistered<IlgoApi>()) return; // offline → keep fallback
     final lang = Get.isRegistered<ProfileService>()
         ? Get.find<ProfileService>().lang.value
         : null;
     try {
-      final res = await Get.find<IlgoApi>().helpContacts(lang, null);
+      final res =
+          await Get.find<IlgoApi>().helpContacts(lang, _docType, _riskType, null);
       if (!mounted || res.items.isEmpty) return;
       setState(() {
         _contacts = [
@@ -96,8 +107,10 @@ class _HelpViewState extends State<HelpView> {
                       child: Column(
                         children: [
                           SizedBox(height: context.rs(20)),
-                          for (final c in _contacts) ...[
-                            _card(context, c),
+                          for (var i = 0; i < _contacts.length; i++) ...[
+                            i == 0
+                                ? _primaryCard(context, _contacts[i])
+                                : _card(context, _contacts[i]),
                             SizedBox(height: context.rs(16)),
                           ],
                           SizedBox(height: context.rs(8)),
@@ -166,6 +179,82 @@ class _HelpViewState extends State<HelpView> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  /// The first contact is the recommended CTA — a filled, prominent card.
+  Widget _primaryCard(BuildContext context, _Contact c) {
+    final bg = c.emergency ? const Color(0xFFB04A3A) : AppColors.forest;
+    final subtitle = [c.org, c.number].where((s) => s.isNotEmpty).join(' · ');
+    return Material(
+      color: bg,
+      borderRadius: BorderRadius.circular(20),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20),
+        onTap: () => _dial(c.number),
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(
+              horizontal: context.rs(24), vertical: context.rs(22)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.recommend,
+                      color: Colors.white, size: context.rs(20)),
+                  SizedBox(width: context.rs(6)),
+                  Text(
+                    '여기로 먼저 전화하세요',
+                    style: GoogleFonts.notoSansKr(
+                      fontSize: context.rs(15),
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white.withValues(alpha: 0.9),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: context.rs(12)),
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          c.title,
+                          style: GoogleFonts.notoSansKr(
+                            fontSize: context.rs(24),
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: context.rs(3)),
+                        Text(
+                          subtitle,
+                          style: GoogleFonts.notoSansKr(
+                            fontSize: context.rs(18),
+                            color: Colors.white.withValues(alpha: 0.85),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: context.rs(12)),
+                  Container(
+                    width: context.rs(64),
+                    height: context.rs(64),
+                    alignment: Alignment.center,
+                    decoration: const BoxDecoration(
+                        color: Colors.white, shape: BoxShape.circle),
+                    child: Icon(Icons.call, color: bg, size: context.rs(30)),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

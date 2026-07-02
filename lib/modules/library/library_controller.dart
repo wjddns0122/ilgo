@@ -1,3 +1,6 @@
+import 'dart:developer' as developer;
+
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 
 import '../../data/models/analysis_summary.dart';
@@ -24,7 +27,9 @@ class LibraryController extends GetxController {
     isLoading.value = true;
     error.value = null;
     try {
-      final list = await _repo.list();
+      // Copy first: _repo.list() returns freezed's unmodifiable list view,
+      // so sorting it in place throws. Sort the copy instead.
+      final list = List<AnalysisSummary>.of(await _repo.list());
       // 다가오는 기한 순서(빠른 순), 기한 없는 항목은 뒤로.
       list.sort((a, b) {
         final da = DateTime.tryParse(a.cardDeadline ?? '');
@@ -35,7 +40,21 @@ class LibraryController extends GetxController {
         return da.compareTo(db);
       });
       items.value = list;
-    } catch (_) {
+    } on DioException catch (e, st) {
+      final code = e.response?.statusCode;
+      developer.log(
+        'library list failed: status=$code type=${e.type} '
+        'msg=${e.message} body=${e.response?.data}',
+        name: 'ilgo.library',
+        error: e,
+        stackTrace: st,
+      );
+      error.value = code == 401
+          ? '로그인이 만료됐어요. 다시 로그인해 주세요.'
+          : '목록을 불러오지 못했어요. (${code ?? e.type.name})';
+    } catch (e, st) {
+      developer.log('library list failed (non-dio): $e',
+          name: 'ilgo.library', error: e, stackTrace: st);
       error.value = '목록을 불러오지 못했어요.';
     } finally {
       isLoading.value = false;
@@ -52,7 +71,12 @@ class LibraryController extends GetxController {
   }
 
   Future<void> remove(String id) async {
-    await _repo.delete(id);
-    items.removeWhere((e) => e.id == id);
+    try {
+      await _repo.delete(id);
+      items.removeWhere((e) => e.id == id);
+    } catch (_) {
+      Get.snackbar('오류', '지우지 못했어요. 잠시 후 다시 시도해 주세요.');
+      // Item stays in the list; the Obx rebuild restores the swiped row.
+    }
   }
 }

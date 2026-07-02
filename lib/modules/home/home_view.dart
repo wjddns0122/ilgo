@@ -119,8 +119,10 @@ class HomeView extends GetView<HomeController> {
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
                 iconSize: context.rs(24),
-                icon: const Icon(Icons.inventory_2_outlined,
-                    color: AppColors.ink),
+                icon: const Icon(
+                  Icons.inventory_2_outlined,
+                  color: AppColors.ink,
+                ),
                 tooltip: '보관함',
                 onPressed: () => Get.toNamed(Routes.library),
               ),

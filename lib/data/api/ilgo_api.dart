@@ -78,5 +78,7 @@ abstract class IlgoApi {
   Future<HelpContactsResponse> helpContacts(
     @Query('lang') String? lang,
     @Query('doc_type') String? docType,
+    @Query('risk_type') String? riskType,
+    @Query('region') String? region,
   );
 }

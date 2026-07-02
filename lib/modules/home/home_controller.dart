@@ -92,10 +92,11 @@ class HomeController extends GetxController {
   void toConfirm(XFile file) =>
       Get.toNamed(Routes.confirmCapture, arguments: file);
 
-  /// Analyze a confirmed photo (from camera or gallery).
-  Future<void> analyzeXFile(XFile file) async {
+  /// Analyze a confirmed photo (from camera or gallery). [hint] is optional
+  /// user context typed on the confirm screen.
+  Future<void> analyzeXFile(XFile file, {String? hint}) async {
     final bytes = await _compress(file);
-    await _run(bytes);
+    await _run(bytes, hint: hint);
   }
 
   Future<void> _pickAndAnalyze(ImageSource source) async {
@@ -108,12 +109,13 @@ class HomeController extends GetxController {
     await _run(bytes);
   }
 
-  Future<void> _run(Uint8List bytes) {
+  Future<void> _run(Uint8List bytes, {String? hint}) {
     return _analyze.analyze(
       bytes: bytes,
       mediaType: 'image/jpeg',
       mode: _profile.mode.value,
       lang: _profile.lang.value,
+      hint: hint,
     );
   }
 

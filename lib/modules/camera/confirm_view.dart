@@ -11,8 +11,21 @@ import '../home/home_controller.dart';
 
 /// Capture-confirm screen (Figma node 17:1039): preview the photo and decide
 /// whether to analyze it or retake. Shown after camera capture / gallery pick.
-class ConfirmView extends StatelessWidget {
+class ConfirmView extends StatefulWidget {
   const ConfirmView({super.key});
+
+  @override
+  State<ConfirmView> createState() => _ConfirmViewState();
+}
+
+class _ConfirmViewState extends State<ConfirmView> {
+  final _hint = TextEditingController();
+
+  @override
+  void dispose() {
+    _hint.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +63,9 @@ class ConfirmView extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(height: context.rs(20)),
+                        SizedBox(height: context.rs(16)),
+                        _hintField(context),
+                        SizedBox(height: context.rs(16)),
                         _buttons(context, file),
                       ],
                     ),
@@ -159,6 +174,33 @@ class ConfirmView extends StatelessWidget {
     );
   }
 
+  Widget _hintField(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: AppColors.hairline),
+      ),
+      padding: EdgeInsets.symmetric(horizontal: context.rs(16)),
+      child: TextField(
+        controller: _hint,
+        textInputAction: TextInputAction.done,
+        style: GoogleFonts.notoSansKr(
+            fontSize: context.rs(16), color: AppColors.ink),
+        decoration: InputDecoration(
+          isDense: true,
+          border: InputBorder.none,
+          icon: Icon(Icons.lightbulb_outline,
+              size: context.rs(20), color: AppColors.stone),
+          hintText: '무슨 글인지 알려주면 더 정확해요 (선택)',
+          hintStyle: GoogleFonts.notoSansKr(
+              fontSize: context.rs(15), color: AppColors.stone),
+          contentPadding: EdgeInsets.symmetric(vertical: context.rs(16)),
+        ),
+      ),
+    );
+  }
+
   Widget _buttons(BuildContext context, XFile file) {
     return Row(
       children: [
@@ -178,7 +220,8 @@ class ConfirmView extends StatelessWidget {
             context,
             label: '이 사진 쓰기',
             filled: true,
-            onTap: () => Get.find<HomeController>().analyzeXFile(file),
+            onTap: () =>
+                Get.find<HomeController>().analyzeXFile(file, hint: _hint.text),
           ),
         ),
       ],

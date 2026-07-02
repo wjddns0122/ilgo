@@ -105,7 +105,7 @@ class _SplashViewState extends State<SplashView> {
   Widget _logo(BuildContext context) {
     final s = context.rs(180);
     return Image.asset(
-      'assets/images/logo.png',
+      'assets/images/applogo.png',
       width: s,
       height: s,
       errorBuilder: (_, _, _) => Container(

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AnalyzeRequest {
 
-@JsonKey(name: 'image_base64') String get imageBase64;@JsonKey(name: 'media_type') String get mediaType;@JsonKey(name: 'output_mode') String get outputMode; String get lang; bool get save;
+@JsonKey(name: 'image_base64') String get imageBase64;@JsonKey(name: 'media_type') String get mediaType;@JsonKey(name: 'output_mode') String get outputMode; String get lang; bool get save;@JsonKey(includeIfNull: false) String? get hint;
 /// Create a copy of AnalyzeRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $AnalyzeRequestCopyWith<AnalyzeRequest> get copyWith => _$AnalyzeRequestCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AnalyzeRequest&&(identical(other.imageBase64, imageBase64) || other.imageBase64 == imageBase64)&&(identical(other.mediaType, mediaType) || other.mediaType == mediaType)&&(identical(other.outputMode, outputMode) || other.outputMode == outputMode)&&(identical(other.lang, lang) || other.lang == lang)&&(identical(other.save, save) || other.save == save));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AnalyzeRequest&&(identical(other.imageBase64, imageBase64) || other.imageBase64 == imageBase64)&&(identical(other.mediaType, mediaType) || other.mediaType == mediaType)&&(identical(other.outputMode, outputMode) || other.outputMode == outputMode)&&(identical(other.lang, lang) || other.lang == lang)&&(identical(other.save, save) || other.save == save)&&(identical(other.hint, hint) || other.hint == hint));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,imageBase64,mediaType,outputMode,lang,save);
+int get hashCode => Object.hash(runtimeType,imageBase64,mediaType,outputMode,lang,save,hint);
 
 @override
 String toString() {
-  return 'AnalyzeRequest(imageBase64: $imageBase64, mediaType: $mediaType, outputMode: $outputMode, lang: $lang, save: $save)';
+  return 'AnalyzeRequest(imageBase64: $imageBase64, mediaType: $mediaType, outputMode: $outputMode, lang: $lang, save: $save, hint: $hint)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $AnalyzeRequestCopyWith<$Res>  {
   factory $AnalyzeRequestCopyWith(AnalyzeRequest value, $Res Function(AnalyzeRequest) _then) = _$AnalyzeRequestCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'image_base64') String imageBase64,@JsonKey(name: 'media_type') String mediaType,@JsonKey(name: 'output_mode') String outputMode, String lang, bool save
+@JsonKey(name: 'image_base64') String imageBase64,@JsonKey(name: 'media_type') String mediaType,@JsonKey(name: 'output_mode') String outputMode, String lang, bool save,@JsonKey(includeIfNull: false) String? hint
 });
 
 
@@ -65,14 +65,15 @@ class _$AnalyzeRequestCopyWithImpl<$Res>
 
 /// Create a copy of AnalyzeRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? imageBase64 = null,Object? mediaType = null,Object? outputMode = null,Object? lang = null,Object? save = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? imageBase64 = null,Object? mediaType = null,Object? outputMode = null,Object? lang = null,Object? save = null,Object? hint = freezed,}) {
   return _then(_self.copyWith(
 imageBase64: null == imageBase64 ? _self.imageBase64 : imageBase64 // ignore: cast_nullable_to_non_nullable
 as String,mediaType: null == mediaType ? _self.mediaType : mediaType // ignore: cast_nullable_to_non_nullable
 as String,outputMode: null == outputMode ? _self.outputMode : outputMode // ignore: cast_nullable_to_non_nullable
 as String,lang: null == lang ? _self.lang : lang // ignore: cast_nullable_to_non_nullable
 as String,save: null == save ? _self.save : save // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,hint: freezed == hint ? _self.hint : hint // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -157,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'image_base64')  String imageBase64, @JsonKey(name: 'media_type')  String mediaType, @JsonKey(name: 'output_mode')  String outputMode,  String lang,  bool save)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'image_base64')  String imageBase64, @JsonKey(name: 'media_type')  String mediaType, @JsonKey(name: 'output_mode')  String outputMode,  String lang,  bool save, @JsonKey(includeIfNull: false)  String? hint)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AnalyzeRequest() when $default != null:
-return $default(_that.imageBase64,_that.mediaType,_that.outputMode,_that.lang,_that.save);case _:
+return $default(_that.imageBase64,_that.mediaType,_that.outputMode,_that.lang,_that.save,_that.hint);case _:
   return orElse();
 
 }
@@ -178,10 +179,10 @@ return $default(_that.imageBase64,_that.mediaType,_that.outputMode,_that.lang,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'image_base64')  String imageBase64, @JsonKey(name: 'media_type')  String mediaType, @JsonKey(name: 'output_mode')  String outputMode,  String lang,  bool save)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'image_base64')  String imageBase64, @JsonKey(name: 'media_type')  String mediaType, @JsonKey(name: 'output_mode')  String outputMode,  String lang,  bool save, @JsonKey(includeIfNull: false)  String? hint)  $default,) {final _that = this;
 switch (_that) {
 case _AnalyzeRequest():
-return $default(_that.imageBase64,_that.mediaType,_that.outputMode,_that.lang,_that.save);case _:
+return $default(_that.imageBase64,_that.mediaType,_that.outputMode,_that.lang,_that.save,_that.hint);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +199,10 @@ return $default(_that.imageBase64,_that.mediaType,_that.outputMode,_that.lang,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'image_base64')  String imageBase64, @JsonKey(name: 'media_type')  String mediaType, @JsonKey(name: 'output_mode')  String outputMode,  String lang,  bool save)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'image_base64')  String imageBase64, @JsonKey(name: 'media_type')  String mediaType, @JsonKey(name: 'output_mode')  String outputMode,  String lang,  bool save, @JsonKey(includeIfNull: false)  String? hint)?  $default,) {final _that = this;
 switch (_that) {
 case _AnalyzeRequest() when $default != null:
-return $default(_that.imageBase64,_that.mediaType,_that.outputMode,_that.lang,_that.save);case _:
+return $default(_that.imageBase64,_that.mediaType,_that.outputMode,_that.lang,_that.save,_that.hint);case _:
   return null;
 
 }
@@ -213,7 +214,7 @@ return $default(_that.imageBase64,_that.mediaType,_that.outputMode,_that.lang,_t
 @JsonSerializable()
 
 class _AnalyzeRequest implements AnalyzeRequest {
-  const _AnalyzeRequest({@JsonKey(name: 'image_base64') required this.imageBase64, @JsonKey(name: 'media_type') required this.mediaType, @JsonKey(name: 'output_mode') required this.outputMode, required this.lang, this.save = true});
+  const _AnalyzeRequest({@JsonKey(name: 'image_base64') required this.imageBase64, @JsonKey(name: 'media_type') required this.mediaType, @JsonKey(name: 'output_mode') required this.outputMode, required this.lang, this.save = true, @JsonKey(includeIfNull: false) this.hint});
   factory _AnalyzeRequest.fromJson(Map<String, dynamic> json) => _$AnalyzeRequestFromJson(json);
 
 @override@JsonKey(name: 'image_base64') final  String imageBase64;
@@ -221,6 +222,7 @@ class _AnalyzeRequest implements AnalyzeRequest {
 @override@JsonKey(name: 'output_mode') final  String outputMode;
 @override final  String lang;
 @override@JsonKey() final  bool save;
+@override@JsonKey(includeIfNull: false) final  String? hint;
 
 /// Create a copy of AnalyzeRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AnalyzeRequest&&(identical(other.imageBase64, imageBase64) || other.imageBase64 == imageBase64)&&(identical(other.mediaType, mediaType) || other.mediaType == mediaType)&&(identical(other.outputMode, outputMode) || other.outputMode == outputMode)&&(identical(other.lang, lang) || other.lang == lang)&&(identical(other.save, save) || other.save == save));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AnalyzeRequest&&(identical(other.imageBase64, imageBase64) || other.imageBase64 == imageBase64)&&(identical(other.mediaType, mediaType) || other.mediaType == mediaType)&&(identical(other.outputMode, outputMode) || other.outputMode == outputMode)&&(identical(other.lang, lang) || other.lang == lang)&&(identical(other.save, save) || other.save == save)&&(identical(other.hint, hint) || other.hint == hint));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,imageBase64,mediaType,outputMode,lang,save);
+int get hashCode => Object.hash(runtimeType,imageBase64,mediaType,outputMode,lang,save,hint);
 
 @override
 String toString() {
-  return 'AnalyzeRequest(imageBase64: $imageBase64, mediaType: $mediaType, outputMode: $outputMode, lang: $lang, save: $save)';
+  return 'AnalyzeRequest(imageBase64: $imageBase64, mediaType: $mediaType, outputMode: $outputMode, lang: $lang, save: $save, hint: $hint)';
 }
 
 
@@ -255,7 +257,7 @@ abstract mixin class _$AnalyzeRequestCopyWith<$Res> implements $AnalyzeRequestCo
   factory _$AnalyzeRequestCopyWith(_AnalyzeRequest value, $Res Function(_AnalyzeRequest) _then) = __$AnalyzeRequestCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'image_base64') String imageBase64,@JsonKey(name: 'media_type') String mediaType,@JsonKey(name: 'output_mode') String outputMode, String lang, bool save
+@JsonKey(name: 'image_base64') String imageBase64,@JsonKey(name: 'media_type') String mediaType,@JsonKey(name: 'output_mode') String outputMode, String lang, bool save,@JsonKey(includeIfNull: false) String? hint
 });
 
 
@@ -272,14 +274,15 @@ class __$AnalyzeRequestCopyWithImpl<$Res>
 
 /// Create a copy of AnalyzeRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? imageBase64 = null,Object? mediaType = null,Object? outputMode = null,Object? lang = null,Object? save = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? imageBase64 = null,Object? mediaType = null,Object? outputMode = null,Object? lang = null,Object? save = null,Object? hint = freezed,}) {
   return _then(_AnalyzeRequest(
 imageBase64: null == imageBase64 ? _self.imageBase64 : imageBase64 // ignore: cast_nullable_to_non_nullable
 as String,mediaType: null == mediaType ? _self.mediaType : mediaType // ignore: cast_nullable_to_non_nullable
 as String,outputMode: null == outputMode ? _self.outputMode : outputMode // ignore: cast_nullable_to_non_nullable
 as String,lang: null == lang ? _self.lang : lang // ignore: cast_nullable_to_non_nullable
 as String,save: null == save ? _self.save : save // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,hint: freezed == hint ? _self.hint : hint // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

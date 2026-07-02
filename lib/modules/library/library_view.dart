@@ -134,12 +134,80 @@ class LibraryView extends GetView<LibraryController> {
         children: [
           Container(height: 1, color: AppColors.hairline),
           for (final item in items) ...[
-            _ArchiveRow(summary: item, onTap: () => controller.open(item.id)),
+            _dismissibleRow(context, item),
             Container(height: 1, color: AppColors.hairline),
           ],
         ],
       );
     });
+  }
+
+  /// Swipe-left to delete a saved analysis (with a confirm dialog).
+  Widget _dismissibleRow(BuildContext context, AnalysisSummary item) {
+    return Dismissible(
+      key: ValueKey(item.id),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        alignment: Alignment.centerRight,
+        color: AppColors.riskRedBg,
+        padding: EdgeInsets.only(right: context.rs(24)),
+        child: Icon(Icons.delete_outline,
+            color: AppColors.riskRed, size: context.rs(26)),
+      ),
+      confirmDismiss: (_) => _confirmDelete(context),
+      onDismissed: (_) => controller.remove(item.id),
+      child: _ArchiveRow(summary: item, onTap: () => controller.open(item.id)),
+    );
+  }
+
+  Future<bool> _confirmDelete(BuildContext context) async {
+    final ok = await Get.dialog<bool>(
+      AlertDialog(
+        backgroundColor: AppColors.paper,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          '이 기록을 지울까요?',
+          style: GoogleFonts.notoSansKr(
+            fontSize: context.rs(19),
+            fontWeight: FontWeight.w700,
+            color: AppColors.ink,
+          ),
+        ),
+        content: Text(
+          '지우면 되돌릴 수 없어요.',
+          style: GoogleFonts.notoSansKr(
+            fontSize: context.rs(16),
+            height: 1.5,
+            color: AppColors.stone,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(result: false),
+            child: Text(
+              '취소',
+              style: GoogleFonts.notoSansKr(
+                fontSize: context.rs(16),
+                fontWeight: FontWeight.w600,
+                color: AppColors.stone,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Get.back(result: true),
+            child: Text(
+              '지우기',
+              style: GoogleFonts.notoSansKr(
+                fontSize: context.rs(16),
+                fontWeight: FontWeight.w700,
+                color: AppColors.riskRed,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    return ok ?? false;
   }
 }
 
