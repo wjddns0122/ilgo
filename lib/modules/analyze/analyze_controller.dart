@@ -74,8 +74,10 @@ class AnalyzeController extends GetxController {
       // - failed: engine couldn't read the image (blurry) → retake tips.
       // - unknown doc type: probably not a document → "무슨 글인지 모르겠어요".
       if (analysis.status == 'failed') {
+        _discardIfSaved(analysis);
         Get.offNamed(Routes.unreadable);
       } else if (_isUnknownDoc(analysis)) {
+        _discardIfSaved(analysis);
         Get.offNamed(Routes.notADocument);
       } else {
         Get.offNamed(Routes.result); // replace loading screen
@@ -107,11 +109,28 @@ class AnalyzeController extends GetxController {
   }
 
   /// True when the engine couldn't identify a supported document type.
+  ///
+  /// Prefers the backend's explicit signals ([Analysis.isDocument] /
+  /// [Analysis.docClass]) once they ship; falls back to a doc_type heuristic.
   bool _isUnknownDoc(Analysis a) {
+    if (a.isDocument == false) return true;
+    final cls = a.docClass?.trim().toLowerCase();
+    if (cls != null && cls.isNotEmpty) {
+      const badClasses = {'unknown', 'not_a_document', 'not_related', 'other'};
+      return badClasses.contains(cls);
+    }
     final raw = a.docType?.trim();
     if (raw == null || raw.isEmpty) return true;
     const unknown = {'기타', '알 수 없음', '알수없음', 'unknown', 'other'};
     return unknown.contains(raw) || unknown.contains(raw.toLowerCase());
+  }
+
+  /// Junk results (unreadable / not-a-document) are still persisted by the
+  /// backend (analyze saves by default), so remove them from the library —
+  /// they aren't real analyses the user wants to keep. Best-effort.
+  void _discardIfSaved(Analysis a) {
+    if (a.id.trim().isEmpty) return;
+    unawaited(_repo.delete(a.id).catchError((_) {}));
   }
 
   Future<void> retry() async {

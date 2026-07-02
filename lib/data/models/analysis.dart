@@ -12,11 +12,17 @@ part 'analysis.g.dart';
 @freezed
 abstract class Analysis with _$Analysis {
   const factory Analysis({
-    required String id,
+    // Empty when the backend returns a result it chose not to persist
+    // (판독 실패 / 문서 아님) — the app then won't try to delete or save it.
+    @Default('') String id,
     required String status, // done | processing | failed
     @JsonKey(name: 'output_mode') required String outputMode,
     required String lang,
     @JsonKey(name: 'doc_type') String? docType,
+    // Explicit classification signals (backend enum). Preferred over the
+    // doc_type heuristic when present; null until the backend ships them.
+    @JsonKey(name: 'doc_class') String? docClass,
+    @JsonKey(name: 'is_document') bool? isDocument,
     @JsonKey(name: 'summary_one_line') String? summaryOneLine,
     @JsonKey(name: 'original_text') String? originalText,
     @JsonKey(name: 'explained_text') String? explainedText,
@@ -26,7 +32,7 @@ abstract class Analysis with _$Analysis {
     @Default(<ActionItem>[]) List<ActionItem> actions,
     @JsonKey(name: 'reply_drafts')
     @Default(<ReplyDraft>[]) List<ReplyDraft> replyDrafts,
-    @JsonKey(name: 'created_at') required String createdAt,
+    @JsonKey(name: 'created_at') @Default('') String createdAt,
   }) = _Analysis;
 
   factory Analysis.fromJson(Map<String, dynamic> json) =>

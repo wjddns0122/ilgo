@@ -7,11 +7,13 @@ part of 'analysis.dart';
 // **************************************************************************
 
 _Analysis _$AnalysisFromJson(Map<String, dynamic> json) => _Analysis(
-  id: json['id'] as String,
+  id: json['id'] as String? ?? '',
   status: json['status'] as String,
   outputMode: json['output_mode'] as String,
   lang: json['lang'] as String,
   docType: json['doc_type'] as String?,
+  docClass: json['doc_class'] as String?,
+  isDocument: json['is_document'] as bool?,
   summaryOneLine: json['summary_one_line'] as String?,
   originalText: json['original_text'] as String?,
   explainedText: json['explained_text'] as String?,
@@ -34,7 +36,7 @@ _Analysis _$AnalysisFromJson(Map<String, dynamic> json) => _Analysis(
           ?.map((e) => ReplyDraft.fromJson(e as Map<String, dynamic>))
           .toList() ??
       const <ReplyDraft>[],
-  createdAt: json['created_at'] as String,
+  createdAt: json['created_at'] as String? ?? '',
 );
 
 Map<String, dynamic> _$AnalysisToJson(_Analysis instance) => <String, dynamic>{
@@ -43,6 +45,8 @@ Map<String, dynamic> _$AnalysisToJson(_Analysis instance) => <String, dynamic>{
   'output_mode': instance.outputMode,
   'lang': instance.lang,
   'doc_type': instance.docType,
+  'doc_class': instance.docClass,
+  'is_document': instance.isDocument,
   'summary_one_line': instance.summaryOneLine,
   'original_text': instance.originalText,
   'explained_text': instance.explainedText,

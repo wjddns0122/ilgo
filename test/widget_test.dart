@@ -72,6 +72,23 @@ void main() {
       expect(a.replyDrafts, isEmpty);
       expect(a.cards, isNull);
     });
+
+    test('parses explicit classification signals; missing id defaults to empty',
+        () {
+      // A "not a document" result the backend chose not to persist: no id.
+      final a = Analysis.fromJson({
+        'status': 'done',
+        'output_mode': 'easy_korean',
+        'lang': 'ko',
+        'doc_type': '기타',
+        'doc_class': 'NOT_A_DOCUMENT',
+        'is_document': false,
+      });
+      expect(a.id, '');
+      expect(a.createdAt, '');
+      expect(a.docClass, 'NOT_A_DOCUMENT');
+      expect(a.isDocument, isFalse);
+    });
   });
 
   group('AnalysisListResponse.fromJson', () {
