@@ -6,6 +6,7 @@ import '../api/ilgo_api.dart';
 import '../models/analysis.dart';
 import '../models/analysis_summary.dart';
 import '../models/enums.dart';
+import '../models/reply_draft.dart';
 import 'analysis_repository.dart';
 
 /// Live implementation backed by the Spring/Railway API via retrofit.
@@ -40,4 +41,17 @@ class ApiAnalysisRepository implements AnalysisRepository {
 
   @override
   Future<void> delete(String id) => _api.delete(id);
+
+  @override
+  Future<void> toggleAction(String analysisId, String actionId, bool isDone) =>
+      _api.toggleAction(analysisId, actionId, {'is_done': isDone});
+
+  @override
+  Future<List<ReplyDraft>> regenerateReplies(String analysisId,
+      {String? tone}) async {
+    final body = <String, dynamic>{};
+    if (tone != null) body['tone'] = tone;
+    final res = await _api.regenerateReplies(analysisId, body);
+    return res.replyDrafts;
+  }
 }

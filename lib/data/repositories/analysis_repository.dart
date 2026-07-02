@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import '../models/analysis.dart';
 import '../models/analysis_summary.dart';
 import '../models/enums.dart';
+import '../models/reply_draft.dart';
 
 /// The single seam the UI depends on. Swap Mock ↔ Api in [AppBinding] via
 /// `Config.useMock` — no screen code changes.
@@ -23,4 +24,10 @@ abstract class AnalysisRepository {
 
   /// Remove a saved analysis.
   Future<void> delete(String id);
+
+  /// Toggle a to-do's done state (server-synced).
+  Future<void> toggleAction(String analysisId, String actionId, bool isDone);
+
+  /// Regenerate reply drafts (native only).
+  Future<List<ReplyDraft>> regenerateReplies(String analysisId, {String? tone});
 }

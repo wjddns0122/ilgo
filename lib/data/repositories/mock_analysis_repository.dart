@@ -6,6 +6,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import '../models/analysis.dart';
 import '../models/analysis_summary.dart';
 import '../models/enums.dart';
+import '../models/reply_draft.dart';
 import 'analysis_repository.dart';
 
 /// Serves the bundled `assets/mock/*.json` so the whole app runs with no
@@ -15,6 +16,18 @@ class MockAnalysisRepository implements AnalysisRepository {
   static const _wage = 'assets/mock/analyze_native_wage.json';
   static const _fine = 'assets/mock/analyze_easy_fine.json';
   static const _list = 'assets/mock/list.json';
+
+  /// Demo-only: the native "wage" explanation localized per mother tongue.
+  /// A real backend returns the translation directly. Unknown languages fall
+  /// back to the JSON's English text (edge case).
+  static const _wageExplainedByLang = <String, String>{
+    'km':
+        'ថ្ងៃស្អែក ត្រូវមកម៉ោង ៥ ព្រឹក។ បើយឺត គេនឹងកាត់ប្រាក់ឈ្នួល។ អ្នកគ្រប់គ្រងនិយាយថានឹងកាត់ថ្លៃស្នាក់នៅ ១៥ម៉ឺនវ៉ុន ក្នុងខែនេះ។',
+    'vi':
+        'Ngày mai hãy đến trước kho lúc 5 giờ sáng. Nếu đến muộn, họ sẽ trừ tiền công trong ngày. Quản lý còn nói sẽ trừ 150.000 won tiền ở trọ trong tháng này.',
+    'ne':
+        'भोलि बिहान ५ बजे गोदाम अगाडि आउनू। ढिलो भए ज्यालाबाट कटौती गरिन्छ। यस महिना बासको १५०,००० वोन तलबबाट काटिने पनि भनिएको छ।',
+  };
 
   Future<Map<String, dynamic>> _load(String path) async {
     final raw = await rootBundle.loadString(path);
@@ -30,7 +43,15 @@ class MockAnalysisRepository implements AnalysisRepository {
   }) async {
     await Future<void>.delayed(const Duration(seconds: 2)); // show loading UI
     final path = mode == OutputMode.nativeLang ? _wage : _health;
-    return Analysis.fromJson(await _load(path));
+    final analysis = Analysis.fromJson(await _load(path));
+    if (mode == OutputMode.nativeLang) {
+      // Localize the explanation to the chosen mother tongue for the demo.
+      return analysis.copyWith(
+        lang: lang,
+        explainedText: _wageExplainedByLang[lang] ?? analysis.explainedText,
+      );
+    }
+    return analysis;
   }
 
   @override
@@ -53,4 +74,15 @@ class MockAnalysisRepository implements AnalysisRepository {
   Future<void> delete(String id) async {
     // No persistence in mock mode.
   }
+
+  @override
+  Future<void> toggleAction(
+      String analysisId, String actionId, bool isDone) async {
+    // No-op in mock mode (state kept client-side).
+  }
+
+  @override
+  Future<List<ReplyDraft>> regenerateReplies(String analysisId,
+          {String? tone}) async =>
+      const <ReplyDraft>[];
 }

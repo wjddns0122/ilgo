@@ -1,0 +1,34 @@
+읽고 앱 ↔ 백엔드 실서버 연동 — 완료
+
+백엔드: https://ilgo-backend-production.up.railway.app/v1 (springdoc /v3/api-docs)
+  * alt 호스트 ilgo-api.up.railway.app 는 404 → production 호스트 사용.
+
+구현/변경 파일:
+- core/config.dart: baseUrl 기본값=production, useMock 기본값=false
+- core/token_store.dart (신규): access/refresh 토큰 prefs 저장
+- core/dio_client.dart: Bearer 부착 + 401→/auth/refresh 1회 갱신 후 재시도
+- data/models/{auth,profile,help_contact,api_responses}.dart (신규), risk.dart(+detail,steps)
+- data/api/ilgo_api.dart: auth/profile/analyses(+toggle,replies,feedback)/help-contacts 전체
+- data/services/auth_service.dart (신규): register/login/startWithEmail/me/refresh/logout + 토큰
+- data/services/profile_service.dart: 로그인 시 GET/PUT /profile 동기화(오프라인 로컬 폴백)
+- data/repositories: 인터페이스+Api/Mock에 toggleAction, regenerateReplies 추가
+- data/bindings/app_binding.dart: 실모드에서 IlgoApi+AuthService 등록
+- modules/splash: 세션 복원(/auth/me) → 홈/온보딩, 실패 시 로그인
+- modules/login: startWithEmail(register→없으면 login) + 로딩 + 실패 스낵바
+- modules/result: 위험배너 → risk.detail/steps 전달
+- modules/result/risk_detail: 실제 detail 렌더
+- modules/help: GET /help-contacts fetch(언어별) + 폴백
+
+검증:
+- flutter analyze: 0 issues
+- flutter test: 4/4
+- build_runner --force-jit: 성공(35 outputs)
+- 라이브: register→me→profile→help 200, POST /analyses 201(응답 키 전부 앱 모델 일치),
+  GET /analyses 200. doc_type null(빈 이미지)→앱 '문서 아님' 경로 검증.
+
+백엔드에 없는 것(보고):
+- 소리 듣기(TTS) 오디오/워드타이밍 엔드포인트 없음 → 앱은 온디바이스 flutter_tts 폴백, 화면 컨트롤은 로컬 토글(TODO 유지).
+
+학습:
+- build_runner는 이 맥에서 반드시 --force-jit (gen_snapshot 없음).
+- retrofit 요청 바디는 Map<String,dynamic>로 두면 코드생성 최소화.

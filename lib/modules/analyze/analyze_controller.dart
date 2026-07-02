@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 
 import '../../core/app_routes.dart';
@@ -40,7 +42,12 @@ class AnalyzeController extends GetxController {
     isLoading.value = true;
     error.value = null;
     result.value = null;
-    Get.toNamed(Routes.analyze);
+    // Show loading over home — drop camera/confirm so "back" from the result
+    // returns to the main page, not the capture-confirm screen.
+    Get.offNamedUntil(
+      Routes.analyze,
+      (route) => route.settings.name == Routes.home,
+    );
 
     try {
       final analysis = await _repo.analyze(
@@ -51,11 +58,48 @@ class AnalyzeController extends GetxController {
       );
       result.value = analysis;
       isLoading.value = false;
-      Get.offNamed(Routes.result); // replace loading screen
-    } catch (_) {
+      // Edge cases:
+      // - failed: engine couldn't read the image (blurry) → retake tips.
+      // - unknown doc type: probably not a document → "무슨 글인지 모르겠어요".
+      if (analysis.status == 'failed') {
+        Get.offNamed(Routes.unreadable);
+      } else if (_isUnknownDoc(analysis)) {
+        Get.offNamed(Routes.notADocument);
+      } else {
+        Get.offNamed(Routes.result); // replace loading screen
+      }
+    } catch (e) {
       isLoading.value = false;
-      error.value = '분석에 실패했어요. 다시 시도해 주세요.';
+      if (_isNetworkError(e)) {
+        Get.offNamed(Routes.connectionFailed); // photo kept for retry
+      } else {
+        error.value = '분석에 실패했어요. 다시 시도해 주세요.';
+        Get.offNamed(Routes.unreadable);
+      }
     }
+  }
+
+  /// True when the failure looks like a network / connectivity problem.
+  bool _isNetworkError(Object e) {
+    if (e is SocketException) return true;
+    if (e is DioException) {
+      const netTypes = {
+        DioExceptionType.connectionError,
+        DioExceptionType.connectionTimeout,
+        DioExceptionType.receiveTimeout,
+        DioExceptionType.sendTimeout,
+      };
+      return netTypes.contains(e.type);
+    }
+    return false;
+  }
+
+  /// True when the engine couldn't identify a supported document type.
+  bool _isUnknownDoc(Analysis a) {
+    final raw = a.docType?.trim();
+    if (raw == null || raw.isEmpty) return true;
+    const unknown = {'기타', '알 수 없음', '알수없음', 'unknown', 'other'};
+    return unknown.contains(raw) || unknown.contains(raw.toLowerCase());
   }
 
   Future<void> retry() async {

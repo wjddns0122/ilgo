@@ -1,201 +1,602 @@
 import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/app_routes.dart';
+import '../../core/responsive.dart';
 import '../../core/theme.dart';
+import '../../data/models/action_item.dart';
 import '../../data/models/analysis.dart';
-import '../../widgets/action_tile.dart';
-import '../../widgets/info_cards.dart';
-import '../../widgets/original_explained_toggle.dart';
-import '../../widgets/reply_draft_tile.dart';
-import '../../widgets/risk_banner.dart';
-import '../../widgets/section_header.dart';
-import '../../widgets/speak_button.dart';
+import '../../data/models/cards.dart';
+import '../../data/models/reply_draft.dart';
+import '../../data/models/risk.dart';
 import '../analyze/analyze_controller.dart';
 
-/// The main result screen: summary → risks → explanation → cards →
-/// to-dos → reply drafts. Everything a user needs after one photo.
-class ResultView extends GetView<AnalyzeController> {
+/// Result screen — easy-Korean 고지서 layout (Figma node 1:828).
+/// Two tabs: 풀이 (explanation) and 핵심·할 일 (key facts + to-dos).
+class ResultView extends StatefulWidget {
   const ResultView({super.key});
+
+  @override
+  State<ResultView> createState() => _ResultViewState();
+}
+
+/// Design-specific risk styling (safe/caution/danger).
+class _RiskLook {
+  const _RiskLook(this.color, this.label);
+  final Color color;
+  final String label;
+
+  static _RiskLook of(String level) {
+    switch (level) {
+      case 'green':
+        return const _RiskLook(Color(0xFF3B7A57), '안심');
+      case 'red':
+        return const _RiskLook(Color(0xFFB04A3A), '위험');
+      default:
+        return const _RiskLook(Color(0xFFC0902A), '주의');
+    }
+  }
+}
+
+class _ResultViewState extends State<ResultView> {
+  final AnalyzeController controller = Get.find<AnalyzeController>();
+
+  int _tab = 0; // 0 = 풀이, 1 = 핵심·할 일
+  bool _showOriginal = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('읽은 결과'),
-        actions: [
-          IconButton(
-            iconSize: 26,
-            icon: const Icon(Icons.home_outlined),
-            tooltip: '처음으로',
-            onPressed: () => Get.offAllNamed(Routes.home),
-          ),
-        ],
-      ),
+      backgroundColor: AppColors.paper,
       body: SafeArea(
-        child: Obx(() {
-          final a = controller.result.value;
-          if (a == null) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          return _body(context, a);
-        }),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: kOnbMaxWidth),
+            child: Obx(() {
+              final a = controller.result.value;
+              if (a == null) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    context.rs(28),
+                    0,
+                    context.rs(28),
+                    context.rs(24),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _header(context, a),
+                      SizedBox(height: context.rs(26)),
+                      _summary(context, a),
+                      SizedBox(height: context.rs(28)),
+                      _risks(context, a.risks),
+                      SizedBox(height: context.rs(32)),
+                      _tabs(context, a),
+                      SizedBox(height: context.rs(24)),
+                      _tabContent(context, a),
+                    ],
+                  ),
+                ),
+              );
+            }),
+          ),
+        ),
       ),
     );
   }
 
-  Widget _body(BuildContext context, Analysis a) {
+  // ── Header ────────────────────────────────────────────────────────────
+  Widget _header(BuildContext context, Analysis a) {
+    final d = DateTime.tryParse(a.createdAt)?.toLocal();
+    final date = d != null ? '${d.month}월 ${d.day}일' : '';
+    final meta = [
+      a.docType,
+      if (date.isNotEmpty) date,
+    ].whereType<String>().join(' · ');
+    return Padding(
+      padding: EdgeInsets.only(top: context.rs(15), bottom: context.rs(8)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SizedBox(
+            width: context.rs(22),
+            height: context.rs(22),
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              iconSize: context.rs(22),
+              icon: const Icon(Icons.arrow_back, color: AppColors.ink),
+              onPressed: () => Get.back(),
+            ),
+          ),
+          Text(
+            meta,
+            style: GoogleFonts.notoSansKr(
+              fontSize: context.rs(13.12),
+              color: AppColors.stone,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Summary + listen ──────────────────────────────────────────────────
+  Widget _summary(BuildContext context, Analysis a) {
     final english = a.outputMode == 'native';
     final speakText = a.explainedText ?? a.summaryOneLine ?? '';
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (a.docType != null) _docTypeChip(a.docType!),
-        const SizedBox(height: 12),
+        Text(
+          '한 문장으로',
+          style: GoogleFonts.notoSansKr(
+            fontSize: context.rs(12.48),
+            letterSpacing: 1.0,
+            color: AppColors.stone,
+          ),
+        ),
+        SizedBox(height: context.rs(12)),
+        Text(
+          a.summaryOneLine ?? '',
+          style: GoogleFonts.notoSansKr(
+            fontSize: context.rs(25.6),
+            height: 1.5,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.256,
+            color: AppColors.ink,
+          ),
+        ),
+        SizedBox(height: context.rs(16)),
+        _listenPill(context, speakText, english ? a.lang : 'ko', a.docType),
+      ],
+    );
+  }
 
-        // Headline summary.
+  Widget _listenPill(
+      BuildContext context, String text, String lang, String? docType) {
+    return GestureDetector(
+      onTap: () => Get.toNamed(Routes.listenTts, arguments: {
+        'text': text,
+        'lang': lang,
+        'title': docType ?? '',
+      }),
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: context.rs(17),
+          vertical: context.rs(9),
+        ),
+        decoration: BoxDecoration(
+          color: AppColors.card,
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(color: AppColors.hairline),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.volume_up,
+              size: context.rs(18),
+              color: AppColors.forest,
+            ),
+            SizedBox(width: context.rs(8)),
+            Text(
+              '소리로 듣기',
+              style: GoogleFonts.notoSansKr(
+                fontSize: context.rs(13.6),
+                color: AppColors.forest,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── Risk banners ──────────────────────────────────────────────────────
+  Widget _risks(BuildContext context, List<Risk> risks) {
+    if (risks.isEmpty) return const SizedBox.shrink();
+    return Column(
+      children: [
+        for (var i = 0; i < risks.length; i++) ...[
+          if (i > 0) SizedBox(height: context.rs(12)),
+          _riskBanner(context, risks[i]),
+        ],
+      ],
+    );
+  }
+
+  Widget _riskBanner(BuildContext context, Risk risk) {
+    final look = _RiskLook.of(risk.level);
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(8),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: () {
+          // Prefer backend-provided steps; fall back to the analysis to-dos.
+          final steps = risk.steps.isNotEmpty
+              ? risk.steps
+              : (controller.result.value?.actions
+                      .map((e) => e.text)
+                      .toList() ??
+                  const <String>[]);
+          Get.toNamed(Routes.riskDetail, arguments: {
+            'level': risk.level,
+            'type': risk.type,
+            'message': risk.message,
+            'detail': risk.detail,
+            'steps': steps,
+          });
+        },
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(
+            horizontal: context.rs(17),
+            vertical: context.rs(15),
+          ),
+          decoration: BoxDecoration(
+            color: AppColors.card,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: look.color),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: context.rs(5)),
+                child: Container(
+                  width: context.rs(14),
+                  height: context.rs(14),
+                  decoration: BoxDecoration(
+                    color: look.color,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+              SizedBox(width: context.rs(12)),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          look.label,
+                          style: GoogleFonts.notoSansKr(
+                            fontSize: context.rs(13.12),
+                            color: look.color,
+                          ),
+                        ),
+                        SizedBox(width: context.rs(8)),
+                        Text(
+                          risk.type,
+                          style: GoogleFonts.notoSansKr(
+                            fontSize: context.rs(12.48),
+                            color: AppColors.stone,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: context.rs(4)),
+                    Text(
+                      risk.message,
+                      style: GoogleFonts.notoSansKr(
+                        fontSize: context.rs(14.72),
+                        height: 1.6,
+                        color: AppColors.ink,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: context.rs(8)),
+              Icon(Icons.chevron_right,
+                  size: context.rs(20), color: AppColors.stone),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ── Segmented tabs ────────────────────────────────────────────────────
+  Widget _tabs(BuildContext context, Analysis a) {
+    final native = a.outputMode == 'native';
+    final labels = native
+        ? const ['풀이', '핵심 · 할 일', '답장']
+        : const ['풀이', '핵심 · 할 일'];
+    return Container(
+      padding: EdgeInsets.all(context.rs(4)),
+      decoration: BoxDecoration(
+        color: AppColors.sand,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          for (var i = 0; i < labels.length; i++) ...[
+            if (i > 0) SizedBox(width: context.rs(4)),
+            _tabButton(context, labels[i], i),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// Picks tab content, clamping the index when the tab set shrinks
+  /// (e.g. easy mode has no 답장 tab).
+  Widget _tabContent(BuildContext context, Analysis a) {
+    final maxTab = a.outputMode == 'native' ? 2 : 1;
+    final idx = _tab > maxTab ? 0 : _tab;
+    switch (idx) {
+      case 0:
+        return _explanationTab(context, a);
+      case 1:
+        return _detailsTab(context, a);
+      default:
+        return _replyTab(context, a);
+    }
+  }
+
+  Widget _tabButton(BuildContext context, String label, int index) {
+    final active = _tab == index;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => setState(() => _tab = index),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: EdgeInsets.symmetric(vertical: context.rs(8)),
+          decoration: BoxDecoration(
+            color: active ? AppColors.card : Colors.transparent,
+            borderRadius: BorderRadius.circular(6),
+            boxShadow: active
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.1),
+                      blurRadius: 1.5,
+                      offset: const Offset(0, 1),
+                    ),
+                  ]
+                : null,
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            label,
+            style: GoogleFonts.notoSansKr(
+              fontSize: context.rs(13.6),
+              color: active ? AppColors.forest : AppColors.stone,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ── Tab: 풀이 ──────────────────────────────────────────────────────────
+  Widget _explanationTab(BuildContext context, Analysis a) {
+    final native = a.outputMode == 'native';
+    var body = _showOriginal ? a.originalText : a.explainedText;
+    // Edge case: no translation available → fall back to the original text.
+    if (!_showOriginal && (body == null || body.trim().isEmpty)) {
+      body = a.originalText;
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              _showOriginal ? '원문' : (native ? '모국어 풀이' : '쉬운 풀이'),
+              style: GoogleFonts.notoSansKr(
+                fontSize: context.rs(16),
+                fontWeight: FontWeight.w700,
+                letterSpacing: -0.16,
+                color: AppColors.ink,
+              ),
+            ),
+            GestureDetector(
+              onTap: () => setState(() => _showOriginal = !_showOriginal),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.swap_horiz,
+                    size: context.rs(18),
+                    color: AppColors.stone,
+                  ),
+                  SizedBox(width: context.rs(8)),
+                  Text(
+                    _showOriginal ? '풀이 보기' : '원문 보기',
+                    style: GoogleFonts.notoSansKr(
+                      fontSize: context.rs(13.12),
+                      color: AppColors.stone,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: context.rs(16)),
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(context.rs(21)),
           decoration: BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: BorderRadius.circular(18),
+            color: AppColors.card,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: AppColors.hairline),
           ),
           child: Text(
-            a.summaryOneLine ?? '',
-            style: const TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                height: 1.4,
-                fontWeight: FontWeight.w800),
+            (body == null || body.trim().isEmpty) ? '—' : body,
+            // Plain style (no forced family) so non-Latin scripts (Khmer,
+            // Devanagari, etc.) fall back to a system font instead of tofu.
+            style: TextStyle(
+              fontSize: context.rs(16),
+              height: 1.9,
+              color: AppColors.ink,
+            ),
           ),
         ),
-        const SizedBox(height: 12),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: SpeakButton(text: speakText, lang: english ? 'en' : 'ko'),
-        ),
-        const SizedBox(height: 24),
-
-        // Risks (traffic light) — most important, near the top.
-        if (a.risks.isNotEmpty) ...[
-          SectionHeader(
-              icon: Icons.warning_amber_rounded,
-              title: english ? 'Watch out' : '조심하세요'),
-          for (final r in a.risks) ...[
-            RiskBanner(risk: r),
-            const SizedBox(height: 10),
-          ],
-          const SizedBox(height: 14),
-        ],
-
-        // Explanation ↔ original.
-        SectionHeader(
-            icon: Icons.menu_book_outlined,
-            title: english ? 'What it says' : '무슨 내용인가요'),
-        OriginalExplainedToggle(
-          explained: a.explainedText,
-          original: a.originalText,
-          english: english,
-        ),
-        const SizedBox(height: 24),
-
-        // Consequence callout.
-        if (a.consequence != null && a.consequence!.trim().isNotEmpty) ...[
-          _consequence(context, a.consequence!, english),
-          const SizedBox(height: 24),
-        ],
-
-        // At-a-glance cards.
-        if (a.cards != null) ...[
-          SectionHeader(
-              icon: Icons.dashboard_outlined,
-              title: english ? 'At a glance' : '한눈에 보기'),
-          InfoCards(cards: a.cards!, english: english),
-          if (a.cards!.deadline != null && a.cards!.deadline!.isNotEmpty)
-            _calendarButton(context, a, english),
-          const SizedBox(height: 24),
-        ],
-
-        // To-do checklist.
-        if (a.actions.isNotEmpty) ...[
-          SectionHeader(
-              icon: Icons.checklist_rtl,
-              title: english ? 'What to do' : '할 일'),
-          for (final action in a.actions)
-            ActionTile(
-              action: action,
-              onToggle: () => controller.toggleAction(action.id),
-            ),
-          const SizedBox(height: 24),
-        ],
-
-        // Reply drafts (native mode only).
-        if (a.replyDrafts.isNotEmpty) ...[
-          SectionHeader(
-              icon: Icons.reply_outlined,
-              title: english ? 'Reply in Korean' : '답장하기'),
-          for (final draft in a.replyDrafts) ReplyDraftTile(draft: draft),
-          const SizedBox(height: 16),
-        ],
-
-        OutlinedButton.icon(
-          onPressed: () => _shareAll(a),
-          icon: const Icon(Icons.ios_share),
-          label: Text(english ? 'Share' : '공유하기'),
+        SizedBox(height: context.rs(12)),
+        Text(
+          '풀이가 어색하면 원문을 함께 확인하세요. 금액·날짜는 원문 기준이에요.',
+          style: GoogleFonts.notoSansKr(
+            fontSize: context.rs(12.8),
+            height: 1.6,
+            color: AppColors.stone,
+          ),
         ),
       ],
     );
   }
 
-  Widget _docTypeChip(String docType) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: AppColors.background,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: AppColors.border),
+  // ── Tab: 핵심 · 할 일 ──────────────────────────────────────────────────
+  Widget _detailsTab(BuildContext context, Analysis a) {
+    final hasCards = a.cards != null && _keyPairs(a.cards!).isNotEmpty;
+    final hasDeadline =
+        a.cards?.deadline != null && a.cards!.deadline!.trim().isNotEmpty;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (hasCards) ...[
+          _sectionTitle(context, '핵심 카드'),
+          SizedBox(height: context.rs(16)),
+          _keyCards(context, a.cards!),
+        ],
+        if (a.actions.isNotEmpty) ...[
+          SizedBox(height: context.rs(32)),
+          _sectionTitle(context, '할 일'),
+          SizedBox(height: context.rs(16)),
+          _todoList(context, a.actions),
+        ],
+        if (a.consequence != null && a.consequence!.trim().isNotEmpty) ...[
+          SizedBox(height: context.rs(32)),
+          _consequenceBox(context, a.consequence!),
+        ],
+        if (hasDeadline) ...[
+          SizedBox(height: context.rs(32)),
+          _calendarButton(context, a),
+        ],
+      ],
+    );
+  }
+
+  // ── Tab: 답장 (native only) ────────────────────────────────────────────
+  Widget _replyTab(BuildContext context, Analysis a) {
+    if (a.replyDrafts.isEmpty) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: context.rs(20)),
+        child: Text(
+          '이 글에는 준비된 답장이 없어요.',
+          style: GoogleFonts.notoSansKr(
+            fontSize: context.rs(14),
+            color: AppColors.stone,
+          ),
         ),
-        child: Text(docType,
-            style: const TextStyle(
-                fontWeight: FontWeight.w700, color: AppColors.textSecondary)),
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _sectionTitle(context, '이렇게 답장해요'),
+        SizedBox(height: context.rs(16)),
+        for (final draft in a.replyDrafts) _replyRow(context, draft),
+      ],
+    );
+  }
+
+  Widget _sectionTitle(BuildContext context, String title) {
+    return Text(
+      title,
+      style: GoogleFonts.notoSansKr(
+        fontSize: context.rs(16),
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.16,
+        color: AppColors.ink,
       ),
     );
   }
 
-  Widget _consequence(BuildContext context, String text, bool english) {
+  // ── 핵심 카드 (2-column grid) ──────────────────────────────────────────
+  /// (label, value) pairs, non-empty only; deadline formatted as YYYY년 M월 D일.
+  List<(String, String)> _keyPairs(Cards c) {
+    return <(String, String?)>[
+          ('무엇', c.what),
+          ('언제', c.when),
+          ('어디서', c.where),
+          ('얼마', c.amount),
+          ('기한', _fmtDeadline(c.deadline)),
+        ]
+        .where((e) => e.$2 != null && e.$2!.trim().isNotEmpty)
+        .map((e) => (e.$1, e.$2!))
+        .toList();
+  }
+
+  String? _fmtDeadline(String? raw) {
+    if (raw == null || raw.isEmpty) return null;
+    final d = DateTime.tryParse(raw);
+    return d == null ? raw : '${d.year}년 ${d.month}월 ${d.day}일';
+  }
+
+  Widget _keyCards(BuildContext context, Cards c) {
+    final pairs = _keyPairs(c);
+    return Column(
+      children: [
+        for (var i = 0; i < pairs.length; i += 2) ...[
+          if (i > 0) SizedBox(height: context.rs(12)),
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(child: _keyCard(context, pairs[i])),
+                SizedBox(width: context.rs(12)),
+                Expanded(
+                  child: i + 1 < pairs.length
+                      ? _keyCard(context, pairs[i + 1])
+                      : const SizedBox(),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _keyCard(BuildContext context, (String, String) pair) {
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.riskYellowBg,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.riskYellow),
+      padding: EdgeInsets.symmetric(
+        horizontal: context.rs(17),
+        vertical: context.rs(15),
       ),
-      child: Row(
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: AppColors.hairline),
+      ),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.info_outline, color: AppColors.riskYellow),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(english ? "If you don't" : '안 하면요',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.riskYellow)),
-                const SizedBox(height: 4),
-                Text(text,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge
-                        ?.copyWith(height: 1.45)),
-              ],
+          Text(
+            pair.$1,
+            style: GoogleFonts.notoSansKr(
+              fontSize: context.rs(12),
+              color: AppColors.stone,
+            ),
+          ),
+          SizedBox(height: context.rs(4)),
+          Text(
+            pair.$2,
+            style: GoogleFonts.notoSansKr(
+              fontSize: context.rs(16),
+              height: 1.4,
+              color: AppColors.ink,
             ),
           ),
         ],
@@ -203,18 +604,181 @@ class ResultView extends GetView<AnalyzeController> {
     );
   }
 
-  Widget _calendarButton(BuildContext context, Analysis a, bool english) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 4),
-      child: OutlinedButton.icon(
-        onPressed: () => _addToCalendar(a),
-        icon: const Icon(Icons.event_available_outlined),
-        label: Text(english ? 'Add deadline to calendar' : '기한을 달력에 넣기'),
+  // ── 할 일 (numbered list) ──────────────────────────────────────────────
+  Widget _todoList(BuildContext context, List<ActionItem> actions) {
+    return Column(
+      children: [
+        for (var i = 0; i < actions.length; i++) ...[
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: context.rs(12)),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: context.rs(24),
+                  height: context.rs(24),
+                  alignment: Alignment.center,
+                  decoration: const BoxDecoration(
+                    color: AppColors.forest,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text(
+                    '${i + 1}',
+                    style: GoogleFonts.notoSansKr(
+                      fontSize: context.rs(12),
+                      color: AppColors.paper,
+                    ),
+                  ),
+                ),
+                SizedBox(width: context.rs(12)),
+                Expanded(
+                  child: Text(
+                    actions[i].text,
+                    style: GoogleFonts.notoSansKr(
+                      fontSize: context.rs(16),
+                      height: 1.6,
+                      color: AppColors.ink,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(height: 1, color: AppColors.hairline),
+        ],
+      ],
+    );
+  }
+
+  Widget _consequenceBox(BuildContext context, String text) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(
+        horizontal: context.rs(20),
+        vertical: context.rs(16),
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.sand,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.schedule,
+                size: context.rs(18),
+                color: AppColors.forest,
+              ),
+              SizedBox(width: context.rs(8)),
+              Text(
+                '안 하면 어떻게 되나요?',
+                style: GoogleFonts.notoSansKr(
+                  fontSize: context.rs(13.6),
+                  color: AppColors.forest,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: context.rs(8)),
+          Text(
+            text,
+            style: GoogleFonts.notoSansKr(
+              fontSize: context.rs(14.4),
+              height: 1.7,
+              color: AppColors.stone,
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  void _addToCalendar(Analysis a) {
+  Widget _calendarButton(BuildContext context, Analysis a) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: AppColors.forest,
+          side: const BorderSide(color: AppColors.forest),
+          padding: EdgeInsets.symmetric(vertical: context.rs(17)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+        onPressed: () => _addToCalendar(a),
+        icon: Icon(Icons.calendar_today_outlined, size: context.rs(20)),
+        label: Text(
+          '캘린더에 추가',
+          style: GoogleFonts.notoSansKr(fontSize: context.rs(16)),
+        ),
+      ),
+    );
+  }
+
+  Widget _replyRow(BuildContext context, ReplyDraft draft) {
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.only(bottom: context.rs(12)),
+      child: Material(
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(8),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(8),
+          onTap: () => Get.toNamed(Routes.replyDetail, arguments: {
+            'korean': draft.korean,
+            'note': draft.noteInLang ?? '',
+          }),
+          child: Container(
+            padding: EdgeInsets.all(context.rs(17)),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: AppColors.hairline),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        draft.korean,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.notoSansKr(
+                          fontSize: context.rs(16),
+                          height: 1.5,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.ink,
+                        ),
+                      ),
+                      if (draft.noteInLang != null &&
+                          draft.noteInLang!.trim().isNotEmpty) ...[
+                        SizedBox(height: context.rs(6)),
+                        Text(
+                          draft.noteInLang!,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.notoSansKr(
+                            fontSize: context.rs(13.6),
+                            color: AppColors.stone,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                SizedBox(width: context.rs(8)),
+                Icon(Icons.chevron_right,
+                    size: context.rs(22), color: AppColors.stone),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _addToCalendar(Analysis a) async {
     final deadline = a.cards?.deadline;
     if (deadline == null) return;
     final date = DateTime.tryParse(deadline);
@@ -226,14 +790,16 @@ class ResultView extends GetView<AnalyzeController> {
       endDate: date.add(const Duration(hours: 1)),
       allDay: true,
     );
-    Add2Calendar.addEvent2Cal(event);
-  }
-
-  void _shareAll(Analysis a) {
-    final buffer = StringBuffer()
-      ..writeln(a.summaryOneLine ?? '')
-      ..writeln()
-      ..writeln(a.explainedText ?? '');
-    SharePlus.instance.share(ShareParams(text: buffer.toString().trim()));
+    final ok = await Add2Calendar.addEvent2Cal(event);
+    if (!ok) return;
+    final amount = a.cards?.amount;
+    Get.toNamed(Routes.calendarAdded, arguments: {
+      'month': '${date.month}월',
+      'day': '${date.day}',
+      'title': a.cards?.what ?? a.summaryOneLine ?? '기한',
+      'subtitle':
+          [if (amount != null && amount.trim().isNotEmpty) amount, '오전 알림']
+              .join(' · '),
+    });
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../core/app_routes.dart';
 import '../../data/models/analysis_summary.dart';
 import '../../data/repositories/analysis_repository.dart';
 import '../../data/services/profile_service.dart';
@@ -48,10 +49,28 @@ class HomeController extends GetxController {
 
   Future<void> capture() => _pickAndAnalyze(ImageSource.camera);
 
-  Future<void> fromGallery() => _pickAndAnalyze(ImageSource.gallery);
+  /// Pick from gallery, then show the capture-confirm screen before analyzing.
+  Future<void> fromGallery() async {
+    final picked = await _picker.pickImage(source: ImageSource.gallery);
+    if (picked == null) return;
+    toConfirm(picked);
+  }
+
+  /// Open the "이 사진으로 읽어드릴까요?" confirm screen with [file].
+  void toConfirm(XFile file) =>
+      Get.toNamed(Routes.confirmCapture, arguments: file);
+
+  /// Analyze a confirmed photo (from camera or gallery).
+  Future<void> analyzeXFile(XFile file) async {
+    final bytes = await _compress(file);
+    await _run(bytes);
+  }
 
   Future<void> _pickAndAnalyze(ImageSource source) async {
-    final picked = await _picker.pickImage(source: source, imageQuality: 90);
+    // No `imageQuality` → skip image_picker_ios's background re-encode, which
+    // can raise an uncatchable "Data cannot be nil" NSException. We compress
+    // ourselves from validated bytes instead.
+    final picked = await _picker.pickImage(source: source);
     if (picked == null) return; // user cancelled
     final bytes = await _compress(picked);
     await _run(bytes);
@@ -71,17 +90,21 @@ class HomeController extends GetxController {
   }
 
   Future<Uint8List> _compress(XFile file) async {
+    // Read bytes in Dart first (safe), then compress from the validated list.
+    // Avoids compressWithFile's native file read, which can crash on nil data.
+    final raw = await file.readAsBytes();
+    if (raw.isEmpty) return raw;
     try {
-      final out = await FlutterImageCompress.compressWithFile(
-        file.path,
+      final out = await FlutterImageCompress.compressWithList(
+        raw,
         minWidth: 1280,
         minHeight: 1280,
         quality: 80,
       );
-      if (out != null) return out;
+      if (out.isNotEmpty) return out;
     } catch (_) {
       // fall through to raw bytes
     }
-    return file.readAsBytes();
+    return raw;
   }
 }

@@ -15,6 +15,9 @@ abstract class Risk with _$Risk {
     required String level,
     required String type,
     required String message,
+    // Backend-provided rich detail for the risk-detail screen (optional).
+    String? detail,
+    @Default(<String>[]) List<String> steps,
   }) = _Risk;
 
   factory Risk.fromJson(Map<String, dynamic> json) => _$RiskFromJson(json);

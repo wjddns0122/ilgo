@@ -31,7 +31,6 @@ class HomeView extends GetView<HomeController> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: context.rs(28)),
                           Text(
                             '무엇을 읽어드릴까요?',
                             style: GoogleFonts.notoSansKr(
@@ -55,7 +54,7 @@ class HomeView extends GetView<HomeController> {
                             icon: Icons.photo_camera_outlined,
                             title: '종이 찍기',
                             subtitle: '고지서 · 안내문 촬영',
-                            onTap: controller.capture,
+                            onTap: () => Get.toNamed(Routes.camera),
                           ),
                           SizedBox(height: context.rs(16)),
                           _ActionCard(
@@ -85,7 +84,11 @@ class HomeView extends GetView<HomeController> {
   Widget _header(BuildContext context) {
     return Padding(
       padding: EdgeInsets.fromLTRB(
-          context.rs(28), context.rs(40), context.rs(28), context.rs(8)),
+        context.rs(28),
+        context.rs(15),
+        context.rs(28),
+        context.rs(8),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -99,13 +102,28 @@ class HomeView extends GetView<HomeController> {
               color: AppColors.forest,
             ),
           ),
-          IconButton(
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
-            iconSize: context.rs(24),
-            icon: const Icon(Icons.inventory_2_outlined, color: AppColors.ink),
-            tooltip: '보관함',
-            onPressed: () => Get.toNamed(Routes.library),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                iconSize: context.rs(24),
+                icon: const Icon(Icons.settings_outlined, color: AppColors.ink),
+                tooltip: '설정',
+                onPressed: () => Get.toNamed(Routes.settings),
+              ),
+              SizedBox(width: context.rs(16)),
+              IconButton(
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                iconSize: context.rs(24),
+                icon: const Icon(Icons.inventory_2_outlined,
+                    color: AppColors.ink),
+                tooltip: '보관함',
+                onPressed: () => Get.toNamed(Routes.library),
+              ),
+            ],
           ),
         ],
       ),
@@ -218,8 +236,11 @@ class _ActionCard extends StatelessWidget {
                 ),
               ),
               SizedBox(width: context.rs(12)),
-              Icon(Icons.arrow_forward,
-                  size: context.rs(20), color: AppColors.stone),
+              Icon(
+                Icons.arrow_forward,
+                size: context.rs(20),
+                color: AppColors.stone,
+              ),
             ],
           ),
         ),
@@ -264,8 +285,11 @@ class _RecentRow extends StatelessWidget {
           children: [
             Padding(
               padding: EdgeInsets.only(top: context.rs(2)),
-              child: Icon(Icons.description_outlined,
-                  size: context.rs(24), color: AppColors.stone),
+              child: Icon(
+                Icons.description_outlined,
+                size: context.rs(24),
+                color: AppColors.stone,
+              ),
             ),
             SizedBox(width: context.rs(16)),
             Expanded(
@@ -307,8 +331,11 @@ class _RecentRow extends StatelessWidget {
             SizedBox(width: context.rs(12)),
             Padding(
               padding: EdgeInsets.only(top: context.rs(4)),
-              child: Icon(Icons.arrow_forward,
-                  size: context.rs(18), color: AppColors.stone),
+              child: Icon(
+                Icons.arrow_forward,
+                size: context.rs(18),
+                color: AppColors.stone,
+              ),
             ),
           ],
         ),

@@ -4,20 +4,22 @@
   "output_mode": "native",
   "lang": "en",
   "doc_type": "메시지",
-  "summary_one_line": "Tomorrow 5 AM meetup. If you're late, your daily pay gets cut.",
-  "original_text": "내일 새벽 5시까지 창고 앞으로 집합. 늦으면 일당 깐다.",
-  "explained_text": "Your boss says: gather in front of the warehouse tomorrow at 5:00 AM. If you are late, he will deduct part of your daily wage.",
-  "consequence": "If you arrive late, you may lose part of tomorrow's pay.",
-  "cards": { "what": "Report for work (meetup)", "when": "Tomorrow 05:00", "where": "In front of the warehouse", "amount": null, "deadline": null },
+  "summary_one_line": "내일 새벽 5시까지 오라고 해요. 늦으면 일당을 깎겠다고 해요.",
+  "original_text": "내일 새벽 5시까지 창고 앞으로 집합. 늦으면 일당 깐다. 이번 달 숙소비 15만 원은 월급에서 뗀다.",
+  "explained_text": "Your boss says: come to the warehouse by 5:00 AM tomorrow. If you are late, he will cut part of your daily wage. He also says 150,000 won for lodging will be deducted from this month's pay.",
+  "consequence": "늦으면 하루 일당의 일부를 못 받을 수 있어요.",
+  "cards": { "what": "새벽 집합 (출근)", "when": "내일 05:00", "where": "창고 앞", "amount": "숙소비 15만 원 공제", "deadline": null },
   "risks": [
-    { "id": "rsk_2", "level": "red", "type": "임금", "message": "This message says your daily wage will be cut if you are late. Check your work contract." }
+    { "id": "rsk_2", "level": "red", "type": "임금", "message": "지각을 이유로 일당을 깎는 것은 부당할 수 있어요. 근로계약을 확인하세요." },
+    { "id": "rsk_3", "level": "yellow", "type": "계약", "message": "숙소비 15만 원 공제가 계약에 있는지 꼭 확인하세요." }
   ],
   "actions": [
-    { "id": "act_3", "text": "Set an alarm for 4:00 AM to arrive on time", "priority": 1, "is_done": false }
+    { "id": "act_6", "text": "새벽 4시에 알람을 맞춰 늦지 않게 준비해요.", "priority": 1, "is_done": false },
+    { "id": "act_7", "text": "근로계약서에서 임금·숙소비 공제 내용을 확인해요.", "priority": 2, "is_done": false }
   ],
   "reply_drafts": [
     { "id": "rd_1", "korean": "네, 알겠습니다. 내일 새벽 5시까지 창고 앞으로 가겠습니다.", "note_in_lang": "\"Yes, understood. I'll be in front of the warehouse by 5 AM tomorrow.\"" },
-    { "id": "rd_2", "korean": "확인했습니다. 혹시 늦을 수 있어 미리 말씀드립니다.", "note_in_lang": "\"Noted. I'm letting you know in advance in case I might be late.\"" }
+    { "id": "rd_2", "korean": "확인했습니다. 숙소비 공제는 계약서를 다시 확인하고 싶습니다.", "note_in_lang": "\"Understood. I'd like to recheck the lodging fee deduction in my contract.\"" }
   ],
   "created_at": "2026-06-30T07:20:00Z"
 }

@@ -1,94 +1,284 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
+import '../../core/responsive.dart';
 import '../../core/theme.dart';
 import '../../data/models/analysis_summary.dart';
-import '../../data/models/enums.dart';
 import 'library_controller.dart';
 
+/// Archive / library screen (Figma node 1:1333). Saved analyses sorted by
+/// upcoming deadline, with a traffic-light dot and deadline chip.
 class LibraryView extends GetView<LibraryController> {
   const LibraryView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('보관함')),
+      backgroundColor: AppColors.paper,
       body: SafeArea(
-        child: Obx(() {
-          if (controller.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (controller.error.value != null) {
-            return Center(child: Text(controller.error.value!));
-          }
-          if (controller.items.isEmpty) {
-            return Center(
-              child: Text('아직 저장된 분석이 없어요',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge
-                      ?.copyWith(color: AppColors.textSecondary)),
-            );
-          }
-          return ListView.separated(
-            padding: const EdgeInsets.all(16),
-            itemCount: controller.items.length,
-            separatorBuilder: (_, _) => const SizedBox(height: 12),
-            itemBuilder: (_, i) => _row(context, controller.items[i]),
-          );
-        }),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: kOnbMaxWidth),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _header(context),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: context.rs(28)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: context.rs(24)),
+                          Text(
+                            '지금까지 읽어드린 글이에요. 다가오는 기한 순서로 보여드려요.',
+                            style: GoogleFonts.notoSansKr(
+                              fontSize: context.rs(16),
+                              height: 1.5,
+                              color: AppColors.stone,
+                            ),
+                          ),
+                          SizedBox(height: context.rs(24)),
+                          _body(context),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
 
-  Widget _row(BuildContext context, AnalysisSummary item) {
-    final style = RiskStyle.of(RiskLevel.fromString(item.topRiskLevel));
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () => controller.open(item.id),
-        borderRadius: BorderRadius.circular(14),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: AppColors.border),
+  Widget _header(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        context.rs(15),
+        context.rs(15),
+        context.rs(28),
+        context.rs(8),
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            width: context.rs(22),
+            height: context.rs(22),
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              iconSize: context.rs(22),
+              icon: const Icon(Icons.arrow_back, color: AppColors.ink),
+              onPressed: () => Get.back(),
+            ),
           ),
-          child: Row(
-            children: [
-              Text(style.emoji, style: const TextStyle(fontSize: 22)),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (item.docType != null)
-                      Text(item.docType!,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: AppColors.textSecondary,
-                              fontWeight: FontWeight.w700)),
-                    const SizedBox(height: 2),
-                    Text(item.summaryOneLine ?? '',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge
-                            ?.copyWith(fontWeight: FontWeight.w600)),
-                    if (item.cardDeadline != null) ...[
-                      const SizedBox(height: 4),
-                      Text('기한 ${item.cardDeadline}',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: AppColors.riskRed,
-                              fontWeight: FontWeight.w700)),
-                    ],
-                  ],
-                ),
+          SizedBox(width: context.rs(16)),
+          Text(
+            '내 보관함',
+            style: GoogleFonts.notoSansKr(
+              fontSize: context.rs(18.4),
+              height: 1.5,
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.184,
+              color: AppColors.forest,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _body(BuildContext context) {
+    return Obx(() {
+      if (controller.isLoading.value) {
+        return Padding(
+          padding: EdgeInsets.only(top: context.rs(40)),
+          child: const Center(child: CircularProgressIndicator()),
+        );
+      }
+      if (controller.error.value != null) {
+        return Padding(
+          padding: EdgeInsets.only(top: context.rs(40)),
+          child: Center(
+            child: Text(
+              controller.error.value!,
+              style: GoogleFonts.notoSansKr(
+                fontSize: context.rs(15),
+                color: AppColors.stone,
               ),
-              const Icon(Icons.chevron_right, color: AppColors.textSecondary),
-            ],
+            ),
           ),
+        );
+      }
+      final items = controller.items;
+      if (items.isEmpty) {
+        return Padding(
+          padding: EdgeInsets.only(top: context.rs(40)),
+          child: Center(
+            child: Text(
+              '아직 보관된 글이 없어요.',
+              style: GoogleFonts.notoSansKr(
+                fontSize: context.rs(16),
+                color: AppColors.stone,
+              ),
+            ),
+          ),
+        );
+      }
+      return Column(
+        children: [
+          Container(height: 1, color: AppColors.hairline),
+          for (final item in items) ...[
+            _ArchiveRow(summary: item, onTap: () => controller.open(item.id)),
+            Container(height: 1, color: AppColors.hairline),
+          ],
+        ],
+      );
+    });
+  }
+}
+
+/// One archive row: signal dot + type·date + deadline chip + summary + arrow.
+class _ArchiveRow extends StatelessWidget {
+  const _ArchiveRow({required this.summary, required this.onTap});
+
+  final AnalysisSummary summary;
+  final VoidCallback onTap;
+
+  Color _dotColor(String? level) {
+    switch (level) {
+      case 'red':
+        return const Color(0xFFB04A3A);
+      case 'yellow':
+        return AppColors.riskYellow;
+      default:
+        return const Color(0xFF3B7A57);
+    }
+  }
+
+  IconData _docIcon() => summary.docType == '메시지'
+      ? Icons.image_outlined
+      : Icons.description_outlined;
+
+  String _metaLine() {
+    final type = summary.docType ?? '기록';
+    final d = DateTime.tryParse(summary.createdAt)?.toLocal();
+    if (d == null) return type;
+    return '$type · ${d.month}월 ${d.day}일';
+  }
+
+  String? _deadlineLabel() {
+    final raw = summary.cardDeadline;
+    if (raw == null || raw.isEmpty) return null;
+    final d = DateTime.tryParse(raw);
+    if (d == null) return null;
+    return '${d.year}년 ${d.month}월 ${d.day}일까지';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final deadline = _deadlineLabel();
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: context.rs(20)),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: context.rs(2)),
+              child: Icon(
+                _docIcon(),
+                size: context.rs(24),
+                color: AppColors.stone,
+              ),
+            ),
+            SizedBox(width: context.rs(16)),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: context.rs(12),
+                        height: context.rs(12),
+                        decoration: BoxDecoration(
+                          color: _dotColor(summary.topRiskLevel),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      SizedBox(width: context.rs(8)),
+                      Flexible(
+                        child: Text(
+                          _metaLine(),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.notoSansKr(
+                            fontSize: context.rs(12.8),
+                            color: AppColors.stone,
+                          ),
+                        ),
+                      ),
+                      if (deadline != null) ...[
+                        SizedBox(width: context.rs(8)),
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: _deadlineChip(context, deadline),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                  SizedBox(height: context.rs(6)),
+                  Text(
+                    summary.summaryOneLine ?? '',
+                    style: GoogleFonts.notoSansKr(
+                      fontSize: context.rs(16),
+                      height: 1.5,
+                      color: AppColors.ink,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(width: context.rs(12)),
+            Padding(
+              padding: EdgeInsets.only(top: context.rs(4)),
+              child: Icon(
+                Icons.arrow_forward,
+                size: context.rs(18),
+                color: AppColors.stone,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _deadlineChip(BuildContext context, String label) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: context.rs(10),
+        vertical: context.rs(2),
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.sand,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: GoogleFonts.notoSansKr(
+          fontSize: context.rs(11.52),
+          color: AppColors.forest,
         ),
       ),
     );

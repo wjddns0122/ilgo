@@ -119,14 +119,62 @@
   "hotPaths": [
     {
       "path": "lib/core/app_pages.dart",
-      "accessCount": 7,
-      "lastAccessed": 1782873940867,
+      "accessCount": 37,
+      "lastAccessed": 1782925735238,
+      "type": "file"
+    },
+    {
+      "path": "lib/modules/result/result_view.dart",
+      "accessCount": 29,
+      "lastAccessed": 1782930696737,
+      "type": "file"
+    },
+    {
+      "path": "lib/core/app_routes.dart",
+      "accessCount": 20,
+      "lastAccessed": 1782930681060,
+      "type": "file"
+    },
+    {
+      "path": "lib/modules/settings/settings_view.dart",
+      "accessCount": 11,
+      "lastAccessed": 1782925797995,
       "type": "file"
     },
     {
       "path": "lib/main.dart",
-      "accessCount": 6,
-      "lastAccessed": 1782873279901,
+      "accessCount": 10,
+      "lastAccessed": 1782930648809,
+      "type": "file"
+    },
+    {
+      "path": "lib/modules/analyze/analyze_controller.dart",
+      "accessCount": 10,
+      "lastAccessed": 1782951878266,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/services/profile_service.dart",
+      "accessCount": 9,
+      "lastAccessed": 1782930820079,
+      "type": "file"
+    },
+    {
+      "path": "lib/modules/home/home_controller.dart",
+      "accessCount": 8,
+      "lastAccessed": 1782910159534,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/bindings/app_binding.dart",
+      "accessCount": 7,
+      "lastAccessed": 1782930647037,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/repositories/mock_analysis_repository.dart",
+      "accessCount": 7,
+      "lastAccessed": 1782930659819,
       "type": "file"
     },
     {
@@ -136,15 +184,51 @@
       "type": "file"
     },
     {
-      "path": "lib/core/app_routes.dart",
-      "accessCount": 4,
-      "lastAccessed": 1782873937022,
+      "path": "lib/modules/analyze/analyze_view.dart",
+      "accessCount": 5,
+      "lastAccessed": 1782906016565,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/repositories/api_analysis_repository.dart",
+      "accessCount": 5,
+      "lastAccessed": 1782930654615,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/services/tts_service.dart",
+      "accessCount": 5,
+      "lastAccessed": 1782952183662,
       "type": "file"
     },
     {
       "path": "lib/modules/onboarding/mode_view.dart",
       "accessCount": 4,
       "lastAccessed": 1782874414545,
+      "type": "file"
+    },
+    {
+      "path": "lib/modules/home/home_view.dart",
+      "accessCount": 4,
+      "lastAccessed": 1782912090472,
+      "type": "file"
+    },
+    {
+      "path": "lib/core/config.dart",
+      "accessCount": 4,
+      "lastAccessed": 1782930647389,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/repositories/analysis_repository.dart",
+      "accessCount": 4,
+      "lastAccessed": 1782930660231,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/models/risk.dart",
+      "accessCount": 4,
+      "lastAccessed": 1782930670719,
       "type": "file"
     },
     {
@@ -160,21 +244,39 @@
       "type": "file"
     },
     {
-      "path": "lib/modules/home/home_controller.dart",
+      "path": "lib/modules/library/library_controller.dart",
       "accessCount": 3,
-      "lastAccessed": 1782904311155,
+      "lastAccessed": 1782904514405,
       "type": "file"
     },
     {
-      "path": "lib/data/bindings/app_binding.dart",
-      "accessCount": 2,
-      "lastAccessed": 1782868652572,
+      "path": "lib/modules/library/library_view.dart",
+      "accessCount": 3,
+      "lastAccessed": 1782904543664,
+      "type": "file"
+    },
+    {
+      "path": "assets/mock/analyze_easy_health.json",
+      "accessCount": 3,
+      "lastAccessed": 1782907444630,
       "type": "file"
     },
     {
       "path": "pubspec.yaml",
-      "accessCount": 2,
-      "lastAccessed": 1782868665457,
+      "accessCount": 3,
+      "lastAccessed": 1782913160771,
+      "type": "file"
+    },
+    {
+      "path": "lib/core/dio_client.dart",
+      "accessCount": 3,
+      "lastAccessed": 1782930640905,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/api/ilgo_api.dart",
+      "accessCount": 3,
+      "lastAccessed": 1782930648332,
       "type": "file"
     },
     {
@@ -190,39 +292,45 @@
       "type": "file"
     },
     {
-      "path": "lib/modules/library/library_view.dart",
-      "accessCount": 2,
-      "lastAccessed": 1782868711192,
-      "type": "file"
-    },
-    {
       "path": "test/widget_test.dart",
       "accessCount": 2,
       "lastAccessed": 1782868737140,
       "type": "file"
     },
     {
-      "path": "lib/core/config.dart",
-      "accessCount": 2,
-      "lastAccessed": 1782873201308,
-      "type": "file"
-    },
-    {
-      "path": "lib/modules/home/home_view.dart",
-      "accessCount": 2,
-      "lastAccessed": 1782904363019,
-      "type": "file"
-    },
-    {
-      "path": "assets/mock/analyze_easy_health.json",
-      "accessCount": 1,
-      "lastAccessed": 1782867980527,
-      "type": "file"
-    },
-    {
       "path": "assets/mock/analyze_native_wage.json",
-      "accessCount": 1,
-      "lastAccessed": 1782867987565,
+      "accessCount": 2,
+      "lastAccessed": 1782907881101,
+      "type": "file"
+    },
+    {
+      "path": "lib/modules/settings/settings_controller.dart",
+      "accessCount": 2,
+      "lastAccessed": 1782912015722,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/models/analysis.dart",
+      "accessCount": 2,
+      "lastAccessed": 1782930664908,
+      "type": "file"
+    },
+    {
+      "path": "lib/core/device_id.dart",
+      "accessCount": 2,
+      "lastAccessed": 1782930667173,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/models/analysis_summary.dart",
+      "accessCount": 2,
+      "lastAccessed": 1782930680447,
+      "type": "file"
+    },
+    {
+      "path": "lib/data/api/analyze_request.dart",
+      "accessCount": 2,
+      "lastAccessed": 1782930681257,
       "type": "file"
     },
     {
@@ -238,12 +346,6 @@
       "type": "file"
     },
     {
-      "path": "lib/core/device_id.dart",
-      "accessCount": 1,
-      "lastAccessed": 1782868012606,
-      "type": "file"
-    },
-    {
       "path": "lib/data/models/enums.dart",
       "accessCount": 1,
       "lastAccessed": 1782868051443,
@@ -256,12 +358,6 @@
       "type": "file"
     },
     {
-      "path": "lib/data/models/risk.dart",
-      "accessCount": 1,
-      "lastAccessed": 1782868057514,
-      "type": "file"
-    },
-    {
       "path": "lib/data/models/action_item.dart",
       "accessCount": 1,
       "lastAccessed": 1782868059870,
@@ -271,84 +367,6 @@
       "path": "lib/data/models/reply_draft.dart",
       "accessCount": 1,
       "lastAccessed": 1782868062776,
-      "type": "file"
-    },
-    {
-      "path": "lib/data/models/analysis.dart",
-      "accessCount": 1,
-      "lastAccessed": 1782868067920,
-      "type": "file"
-    },
-    {
-      "path": "lib/data/models/analysis_summary.dart",
-      "accessCount": 1,
-      "lastAccessed": 1782868072560,
-      "type": "file"
-    },
-    {
-      "path": "lib/data/api/analyze_request.dart",
-      "accessCount": 1,
-      "lastAccessed": 1782868075197,
-      "type": "file"
-    },
-    {
-      "path": "lib/data/api/ilgo_api.dart",
-      "accessCount": 1,
-      "lastAccessed": 1782868103225,
-      "type": "file"
-    },
-    {
-      "path": "lib/data/repositories/analysis_repository.dart",
-      "accessCount": 1,
-      "lastAccessed": 1782868107017,
-      "type": "file"
-    },
-    {
-      "path": "lib/data/repositories/mock_analysis_repository.dart",
-      "accessCount": 1,
-      "lastAccessed": 1782868114087,
-      "type": "file"
-    },
-    {
-      "path": "lib/data/repositories/api_analysis_repository.dart",
-      "accessCount": 1,
-      "lastAccessed": 1782868118694,
-      "type": "file"
-    },
-    {
-      "path": "lib/core/dio_client.dart",
-      "accessCount": 1,
-      "lastAccessed": 1782868121502,
-      "type": "file"
-    },
-    {
-      "path": "lib/data/services/profile_service.dart",
-      "accessCount": 1,
-      "lastAccessed": 1782868288276,
-      "type": "file"
-    },
-    {
-      "path": "lib/data/services/tts_service.dart",
-      "accessCount": 1,
-      "lastAccessed": 1782868292588,
-      "type": "file"
-    },
-    {
-      "path": "lib/modules/analyze/analyze_controller.dart",
-      "accessCount": 1,
-      "lastAccessed": 1782868301899,
-      "type": "file"
-    },
-    {
-      "path": "lib/modules/library/library_controller.dart",
-      "accessCount": 1,
-      "lastAccessed": 1782868314109,
-      "type": "file"
-    },
-    {
-      "path": "lib/modules/settings/settings_controller.dart",
-      "accessCount": 1,
-      "lastAccessed": 1782868317256,
       "type": "file"
     },
     {
@@ -385,24 +403,6 @@
       "path": "lib/widgets/reply_draft_tile.dart",
       "accessCount": 1,
       "lastAccessed": 1782868479533,
-      "type": "file"
-    },
-    {
-      "path": "lib/modules/analyze/analyze_view.dart",
-      "accessCount": 1,
-      "lastAccessed": 1782868584263,
-      "type": "file"
-    },
-    {
-      "path": "lib/modules/settings/settings_view.dart",
-      "accessCount": 1,
-      "lastAccessed": 1782868607071,
-      "type": "file"
-    },
-    {
-      "path": "lib/modules/result/result_view.dart",
-      "accessCount": 1,
-      "lastAccessed": 1782868639196,
       "type": "file"
     },
     {

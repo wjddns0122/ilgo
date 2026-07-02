@@ -24,7 +24,17 @@ class LibraryController extends GetxController {
     isLoading.value = true;
     error.value = null;
     try {
-      items.value = await _repo.list();
+      final list = await _repo.list();
+      // 다가오는 기한 순서(빠른 순), 기한 없는 항목은 뒤로.
+      list.sort((a, b) {
+        final da = DateTime.tryParse(a.cardDeadline ?? '');
+        final db = DateTime.tryParse(b.cardDeadline ?? '');
+        if (da == null && db == null) return 0;
+        if (da == null) return 1;
+        if (db == null) return -1;
+        return da.compareTo(db);
+      });
+      items.value = list;
     } catch (_) {
       error.value = '목록을 불러오지 못했어요.';
     } finally {

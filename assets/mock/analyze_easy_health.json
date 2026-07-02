@@ -6,15 +6,17 @@
   "doc_type": "고지서",
   "summary_one_line": "8월 15일까지 건강보험료 6만 8천 원을 내야 해요",
   "original_text": "2026년 7월분 건강보험료 고지서. 본인부담금 68,000원. 납부기한 2026-08-15. 미납 시 연체금이 부과됩니다.",
-  "explained_text": "건강보험료를 내라는 종이예요. 💰 6만 8천 원을 8월 15일까지 내면 돼요. 안 내면 돈이 더 붙어요.",
-  "consequence": "기한이 지나면 연체료가 더해질 수 있어요",
-  "cards": { "what": "건강보험료 납부", "when": null, "where": null, "amount": "68,000원", "deadline": "2026-08-15" },
+  "explained_text": "이건 건강보험료를 내라는 종이예요. 📮 7월에 내야 하는 돈이에요. 금액은 6만 8천 원이에요. 8월 15일까지 내면 돼요. 은행, 편의점, 또는 휴대폰 앱으로 낼 수 있어요. 어렵지 않아요. 천천히 하면 돼요. 🙂",
+  "consequence": "기한이 지나면 연체료가 조금 더 붙어요. 하지만 늦게라도 낼 수 있으니 너무 걱정하지 않아도 돼요.",
+  "cards": { "what": "건강보험료", "when": "2025년 7월분", "where": "은행 · 편의점 · 앱", "amount": "68,000원", "deadline": "2026-08-15" },
   "risks": [
-    { "id": "rsk_1", "level": "yellow", "type": "기한", "message": "8월 15일이 지나면 연체료가 붙을 수 있어요" }
+    { "id": "rsk_0", "level": "green", "type": "사기", "message": "국민건강보험공단이 보낸 진짜 고지서로 보여요. 안심하세요." },
+    { "id": "rsk_1", "level": "yellow", "type": "기한", "message": "8월 15일이 지나면 연체료가 조금 더 붙을 수 있어요." }
   ],
   "actions": [
-    { "id": "act_1", "text": "은행 앱이나 지로로 6만 8천 원을 내세요", "priority": 1, "is_done": false },
-    { "id": "act_2", "text": "낸 뒤 영수증을 보관하세요", "priority": 2, "is_done": false }
+    { "id": "act_1", "text": "8월 15일 전에 6만 8천 원을 준비해요.", "priority": 1, "is_done": false },
+    { "id": "act_2", "text": "은행 앱이나 편의점에서 납부해요.", "priority": 2, "is_done": false },
+    { "id": "act_3", "text": "다 낸 뒤에는 영수증을 사진으로 남겨요.", "priority": 3, "is_done": false }
   ],
   "reply_drafts": [],
   "created_at": "2026-06-30T07:10:00Z"

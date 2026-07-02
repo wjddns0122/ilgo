@@ -110,7 +110,9 @@ class OnboardingView extends StatelessWidget {
         Text(
           '· 읽기 도우미',
           style: GoogleFonts.notoSansKr(
-              fontSize: context.rs(11.5), color: AppColors.stone),
+            fontSize: context.rs(11.5),
+            color: AppColors.stone,
+          ),
         ),
       ],
     );
@@ -184,7 +186,9 @@ class OnboardingView extends StatelessWidget {
           onTap: _start,
           child: Padding(
             padding: EdgeInsets.symmetric(
-                vertical: context.rs(16), horizontal: context.rs(24)),
+              vertical: context.rs(16),
+              horizontal: context.rs(24),
+            ),
             child: Center(
               child: Text(
                 '시작하기',

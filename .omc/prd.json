@@ -1,0 +1,56 @@
+{
+  "title": "읽고 앱 ↔ 백엔드(Railway) 실서버 연동",
+  "backend": "https://ilgo-backend-production.up.railway.app/v1",
+  "stories": [
+    {
+      "id": "US-01",
+      "title": "네트워킹 코어: BASE_URL/USE_MOCK 기본값 + 토큰 저장 + 인증 인터셉터",
+      "passes": true,
+      "acceptanceCriteria": [
+        "Config.baseUrl 기본값 = https://ilgo-backend-production.up.railway.app/v1, Config.useMock 기본값 = false",
+        "TokenStore가 access/refresh 토큰을 shared_preferences에 저장/조회/삭제한다",
+        "dio 인터셉터가 access_token을 Authorization: Bearer로 붙이고, 401 시 /auth/refresh로 1회 갱신 후 재시도한다"
+      ]
+    },
+    {
+      "id": "US-02",
+      "title": "모델 + Retrofit API 확장 (auth/profile/help/risk detail) + 코드생성",
+      "passes": true,
+      "acceptanceCriteria": [
+        "Risk 모델에 detail(String?), steps(List<String>) 추가",
+        "IlgoApi에 auth(login/register/refresh/logout/me), profile(get/put), actions toggle, replies:regenerate, help-contacts, feedback 엔드포인트 존재",
+        "build_runner --force-jit 성공, flutter analyze 0 issues"
+      ]
+    },
+    {
+      "id": "US-03",
+      "title": "인증 연동: 스플래시 세션복원 · 로그인/회원가입 · 가입완료",
+      "passes": true,
+      "acceptanceCriteria": [
+        "AuthService가 register/login/me/refresh/logout + 토큰 저장을 처리한다",
+        "스플래시가 저장된 토큰으로 /auth/me 확인 → 성공 시 로그인 건너뛰고 홈/온보딩, 실패 시 로그인",
+        "로그인 화면 시작하기 = 실제 register(있으면 login) 후 진행"
+      ]
+    },
+    {
+      "id": "US-04",
+      "title": "분석 저장소 실연동 + 프로필 서버 동기화 + 화면 연결(help/위험상세)",
+      "passes": true,
+      "acceptanceCriteria": [
+        "ApiAnalysisRepository가 analyze/list/getById/delete/toggleAction/regenerateReplies 실동작, Mock도 동일 인터페이스 구현",
+        "ProfileService가 로그인 시 GET/PUT /profile로 동기화(오프라인 로컬 폴백)",
+        "도움받을 곳 화면이 GET /help-contacts 결과를 렌더, 위험 상세가 응답의 detail/steps 사용"
+      ]
+    },
+    {
+      "id": "US-05",
+      "title": "검증 + 부족한 API 보고",
+      "passes": true,
+      "acceptanceCriteria": [
+        "flutter analyze 0 issues, 유닛테스트 통과",
+        "라이브 스모크(register→me→profile→help) 재확인",
+        "백엔드에 없는 기능(소리듣기 TTS 오디오/타이밍 등) 사용자에게 보고"
+      ]
+    }
+  ]
+}

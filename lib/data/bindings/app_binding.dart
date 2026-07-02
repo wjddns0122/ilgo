@@ -6,6 +6,7 @@ import '../../modules/analyze/analyze_controller.dart';
 import '../../modules/home/home_controller.dart';
 import '../../modules/library/library_controller.dart';
 import '../../modules/settings/settings_controller.dart';
+import '../../data/services/auth_service.dart';
 import '../api/ilgo_api.dart';
 import '../repositories/analysis_repository.dart';
 import '../repositories/api_analysis_repository.dart';
@@ -22,6 +23,8 @@ class AppBinding extends Bindings {
       Get.put<AnalysisRepository>(MockAnalysisRepository(), permanent: true);
     } else {
       final api = IlgoApi(buildDio(), baseUrl: Config.baseUrl);
+      Get.put<IlgoApi>(api, permanent: true);
+      Get.put<AuthService>(AuthService(api), permanent: true);
       Get.put<AnalysisRepository>(ApiAnalysisRepository(api), permanent: true);
     }
 
@@ -29,9 +32,11 @@ class AppBinding extends Bindings {
     Get.put(AnalyzeController(Get.find<AnalysisRepository>()),
         permanent: true);
 
-    // Per-screen controllers.
-    Get.lazyPut(() => HomeController());
-    Get.lazyPut(() => LibraryController(Get.find<AnalysisRepository>()));
-    Get.lazyPut(() => SettingsController());
+    // Per-screen controllers. fenix: true so they survive `offAllNamed`
+    // (which disposes the initial-route bindings) and are recreated on demand.
+    Get.lazyPut(() => HomeController(), fenix: true);
+    Get.lazyPut(() => LibraryController(Get.find<AnalysisRepository>()),
+        fenix: true);
+    Get.lazyPut(() => SettingsController(), fenix: true);
   }
 }

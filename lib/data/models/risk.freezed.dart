@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Risk {
 
- String get id; String get level; String get type; String get message;
+ String get id; String get level; String get type; String get message;// Backend-provided rich detail for the risk-detail screen (optional).
+ String? get detail; List<String> get steps;
 /// Create a copy of Risk
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +29,16 @@ $RiskCopyWith<Risk> get copyWith => _$RiskCopyWithImpl<Risk>(this as Risk, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Risk&&(identical(other.id, id) || other.id == id)&&(identical(other.level, level) || other.level == level)&&(identical(other.type, type) || other.type == type)&&(identical(other.message, message) || other.message == message));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Risk&&(identical(other.id, id) || other.id == id)&&(identical(other.level, level) || other.level == level)&&(identical(other.type, type) || other.type == type)&&(identical(other.message, message) || other.message == message)&&(identical(other.detail, detail) || other.detail == detail)&&const DeepCollectionEquality().equals(other.steps, steps));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,level,type,message);
+int get hashCode => Object.hash(runtimeType,id,level,type,message,detail,const DeepCollectionEquality().hash(steps));
 
 @override
 String toString() {
-  return 'Risk(id: $id, level: $level, type: $type, message: $message)';
+  return 'Risk(id: $id, level: $level, type: $type, message: $message, detail: $detail, steps: $steps)';
 }
 
 
@@ -48,7 +49,7 @@ abstract mixin class $RiskCopyWith<$Res>  {
   factory $RiskCopyWith(Risk value, $Res Function(Risk) _then) = _$RiskCopyWithImpl;
 @useResult
 $Res call({
- String id, String level, String type, String message
+ String id, String level, String type, String message, String? detail, List<String> steps
 });
 
 
@@ -65,13 +66,15 @@ class _$RiskCopyWithImpl<$Res>
 
 /// Create a copy of Risk
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? level = null,Object? type = null,Object? message = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? level = null,Object? type = null,Object? message = null,Object? detail = freezed,Object? steps = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,level: null == level ? _self.level : level // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as String,
+as String,detail: freezed == detail ? _self.detail : detail // ignore: cast_nullable_to_non_nullable
+as String?,steps: null == steps ? _self.steps : steps // ignore: cast_nullable_to_non_nullable
+as List<String>,
   ));
 }
 
@@ -156,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String level,  String type,  String message)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String level,  String type,  String message,  String? detail,  List<String> steps)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Risk() when $default != null:
-return $default(_that.id,_that.level,_that.type,_that.message);case _:
+return $default(_that.id,_that.level,_that.type,_that.message,_that.detail,_that.steps);case _:
   return orElse();
 
 }
@@ -177,10 +180,10 @@ return $default(_that.id,_that.level,_that.type,_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String level,  String type,  String message)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String level,  String type,  String message,  String? detail,  List<String> steps)  $default,) {final _that = this;
 switch (_that) {
 case _Risk():
-return $default(_that.id,_that.level,_that.type,_that.message);case _:
+return $default(_that.id,_that.level,_that.type,_that.message,_that.detail,_that.steps);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +200,10 @@ return $default(_that.id,_that.level,_that.type,_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String level,  String type,  String message)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String level,  String type,  String message,  String? detail,  List<String> steps)?  $default,) {final _that = this;
 switch (_that) {
 case _Risk() when $default != null:
-return $default(_that.id,_that.level,_that.type,_that.message);case _:
+return $default(_that.id,_that.level,_that.type,_that.message,_that.detail,_that.steps);case _:
   return null;
 
 }
@@ -212,13 +215,22 @@ return $default(_that.id,_that.level,_that.type,_that.message);case _:
 @JsonSerializable()
 
 class _Risk extends Risk {
-  const _Risk({required this.id, required this.level, required this.type, required this.message}): super._();
+  const _Risk({required this.id, required this.level, required this.type, required this.message, this.detail, final  List<String> steps = const <String>[]}): _steps = steps,super._();
   factory _Risk.fromJson(Map<String, dynamic> json) => _$RiskFromJson(json);
 
 @override final  String id;
 @override final  String level;
 @override final  String type;
 @override final  String message;
+// Backend-provided rich detail for the risk-detail screen (optional).
+@override final  String? detail;
+ final  List<String> _steps;
+@override@JsonKey() List<String> get steps {
+  if (_steps is EqualUnmodifiableListView) return _steps;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_steps);
+}
+
 
 /// Create a copy of Risk
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +245,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Risk&&(identical(other.id, id) || other.id == id)&&(identical(other.level, level) || other.level == level)&&(identical(other.type, type) || other.type == type)&&(identical(other.message, message) || other.message == message));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Risk&&(identical(other.id, id) || other.id == id)&&(identical(other.level, level) || other.level == level)&&(identical(other.type, type) || other.type == type)&&(identical(other.message, message) || other.message == message)&&(identical(other.detail, detail) || other.detail == detail)&&const DeepCollectionEquality().equals(other._steps, _steps));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,level,type,message);
+int get hashCode => Object.hash(runtimeType,id,level,type,message,detail,const DeepCollectionEquality().hash(_steps));
 
 @override
 String toString() {
-  return 'Risk(id: $id, level: $level, type: $type, message: $message)';
+  return 'Risk(id: $id, level: $level, type: $type, message: $message, detail: $detail, steps: $steps)';
 }
 
 
@@ -253,7 +265,7 @@ abstract mixin class _$RiskCopyWith<$Res> implements $RiskCopyWith<$Res> {
   factory _$RiskCopyWith(_Risk value, $Res Function(_Risk) _then) = __$RiskCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String level, String type, String message
+ String id, String level, String type, String message, String? detail, List<String> steps
 });
 
 
@@ -270,13 +282,15 @@ class __$RiskCopyWithImpl<$Res>
 
 /// Create a copy of Risk
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? level = null,Object? type = null,Object? message = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? level = null,Object? type = null,Object? message = null,Object? detail = freezed,Object? steps = null,}) {
   return _then(_Risk(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,level: null == level ? _self.level : level // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as String,
+as String,detail: freezed == detail ? _self.detail : detail // ignore: cast_nullable_to_non_nullable
+as String?,steps: null == steps ? _self._steps : steps // ignore: cast_nullable_to_non_nullable
+as List<String>,
   ));
 }
 
