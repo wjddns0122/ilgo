@@ -10,8 +10,8 @@ import '../../data/services/profile_service.dart';
 import '../../widgets/onb_header.dart';
 
 /// Onboarding step 3/3 — camera + calendar permission request (Figma node 1:364).
-/// Requesting is best-effort: even if denied the app still works on mock data,
-/// and permission can be granted later from 설정. Responsive.
+/// Requesting is best-effort: permission can be granted later from 설정.
+/// Responsive.
 class OnboardingPermissionView extends StatelessWidget {
   const OnboardingPermissionView({super.key});
 

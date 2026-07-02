@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -19,6 +20,9 @@ class AnalyzeController extends GetxController {
   final isLoading = false.obs;
   final result = Rxn<Analysis>();
   final error = RxnString();
+
+  /// True while reply drafts are being regenerated.
+  final isRegenerating = false.obs;
 
   // Remembered for the retry button.
   Uint8List? _lastBytes;
@@ -123,15 +127,40 @@ class AnalyzeController extends GetxController {
     Get.toNamed(Routes.result);
   }
 
-  /// Optimistic local toggle for the to-do checklist.
+  /// Optimistic local toggle for the to-do checklist, best-effort synced to
+  /// the server.
   void toggleAction(String id) {
     final current = result.value;
     if (current == null) return;
-    result.value = current.copyWith(
-      actions: [
-        for (final a in current.actions)
-          if (a.id == id) a.copyWith(isDone: !a.isDone) else a,
-      ],
-    );
+    final updated = [
+      for (final a in current.actions)
+        if (a.id == id) a.copyWith(isDone: !a.isDone) else a,
+    ];
+    result.value = current.copyWith(actions: updated);
+    final item = updated.where((a) => a.id == id).firstOrNull;
+    if (item == null) return;
+    unawaited(_repo
+        .toggleAction(current.id, id, item.isDone)
+        .catchError((_) {})); // keep the optimistic state on failure
+  }
+
+  /// Regenerate reply drafts (native mode) with an optional tone
+  /// ('polite' | 'short'). Keeps the current drafts when nothing comes back.
+  Future<void> regenerateReplies({String? tone}) async {
+    final current = result.value;
+    if (current == null || isRegenerating.value) return;
+    isRegenerating.value = true;
+    try {
+      final drafts = await _repo.regenerateReplies(current.id, tone: tone);
+      if (drafts.isEmpty) {
+        Get.snackbar('알림', '지금은 새 답장을 만들지 못했어요.');
+      } else {
+        result.value = result.value?.copyWith(replyDrafts: drafts);
+      }
+    } catch (_) {
+      Get.snackbar('알림', '답장을 다시 만들지 못했어요. 잠시 후 다시 시도해 주세요.');
+    } finally {
+      isRegenerating.value = false;
+    }
   }
 }

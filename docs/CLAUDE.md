@@ -37,24 +37,15 @@
 `id, status, output_mode, lang, doc_type, summary_one_line, original_text, explained_text, consequence, cards{what,when,where,amount,deadline}, risks[{id,level(green|yellow|red),type,message}], actions[{id,text,priority,is_done}], reply_drafts[{id,korean,note_in_lang}](native만), created_at`. 프론트·백엔드 동일 스키마.
 
 ## 현재 상태
-- 기획/명세/스택 **문서화 완료**.
-- **프론트 스캐폴드 + 목 end-to-end 완료** (2026-07-01): 패키지·freezed 모델·목 JSON·Repository(목/실)·GetX 컨트롤러·전 화면(온보딩→홈→로딩→결과→보관함→설정)·접근성 테마·retrofit 클라이언트.
-- **백엔드 라이브 연동됨** (Railway, JWT 로그인) → `USE_MOCK` 기본값 **false**. 목은 `--dart-define=USE_MOCK=true`.
-- **CEO 기능리뷰 반영 완료** (2026-07-02, `docs/기능리뷰_CEO_2026-07-02.md`): 게스트 모드(로그인 없이 둘러보기, 목 데이터로 동작) · 분석 실패 시 폴백 캐시+예시 배지 · 홈 "예시로 체험하기" 샘플 3종 · 할 일 체크(서버 동기화) · 결과 공유 · D-day 뱃지 · 인앱 기한 알림 다이얼로그(설정 토글 연동, OS 푸시 아님) · 답장 톤 재생성 · 전화 걸기 · 설정 권한 실상태 표시. `flutter analyze` 0 issues, 테스트 9/9 통과.
+- 기획/명세/스택 **문서화 완료**. 코드 아직 없음.
+- 백엔드는 아직 안 붙음 → **프론트는 목 우선**으로 진행 가능.
 
-## 실행
-```bash
-# 실서버(기본): flutter run        # BASE_URL 기본값 = https://ilgo-backend-production.up.railway.app/v1
-# 목(오프라인 데모): flutter run --dart-define=USE_MOCK=true
-# 코드생성: dart run build_runner build --delete-conflicting-outputs --force-jit
-```
-> ⚠️ **build_runner는 반드시 `--force-jit`**. 이 맥 Flutter SDK는 `dart-sdk/bin/utils/gen_snapshot`이 없어 기본(AOT) 모드가 `ProcessException`으로 실패함. `--force-jit`이면 gen_snapshot 불필요.
-> iOS 실기기: `cd ios && pod install` 후 Xcode에서 Runner 서명 팀 설정 → `flutter run`.
-
-## 다음 할 일
-1. **iOS 실기기 디버깅**: 아이폰 케이블 연결·잠금해제·개발자 모드 ON → `flutter run`.
-2. **데모 리허설**: 실서버 워밍업 호출, 데모 기기 사전 로그인(또는 게스트), `USE_MOCK=true` 비상 빌드, 데모 자료 마스킹 (`docs/기능리뷰_CEO_2026-07-02.md` §6 체크리스트).
-3. (선택) 데드코드 정리: `lib/widgets/reply_draft_tile.dart` 등 구 위젯 (발표 무관).
+## 다음 할 일 (새 세션 시작점)
+1. Flutter 스캐폴드: `flutter create ilgo` + `읽고_Flutter_기술스택.md` §8 커맨드로 패키지.
+2. freezed 모델(Analysis 등) + `assets/mock/*.json`(= `읽고_프론트_API명세.md`의 예시 JSON).
+3. Repository 인터페이스 + Mock 구현 + GetX AnalyzeController.
+4. 화면: 온보딩→홈(촬영/캡처)→로딩→결과(요약/토글/카드/신호등/할일)→답장/음성.
+5. 이후 백엔드 나오면 retrofit ApiRepository + `USE_MOCK=false`.
 
 ## 주의/컨벤션
 - 개인정보: 데모 자료(고지서·문자)는 이름·번호·계좌 **마스킹**. 이미지 기본 미저장.

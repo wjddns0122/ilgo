@@ -2,6 +2,8 @@ import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/app_routes.dart';
 import '../../core/responsive.dart';
@@ -114,16 +116,66 @@ class _ResultViewState extends State<ResultView> {
               onPressed: () => Get.back(),
             ),
           ),
-          Text(
-            meta,
-            style: GoogleFonts.notoSansKr(
-              fontSize: context.rs(13.12),
-              color: AppColors.stone,
-            ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                meta,
+                style: GoogleFonts.notoSansKr(
+                  fontSize: context.rs(13.12),
+                  color: AppColors.stone,
+                ),
+              ),
+              SizedBox(width: context.rs(14)),
+              SizedBox(
+                width: context.rs(22),
+                height: context.rs(22),
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  iconSize: context.rs(20),
+                  tooltip: '공유',
+                  icon: const Icon(Icons.ios_share, color: AppColors.ink),
+                  onPressed: () => _share(a),
+                ),
+              ),
+            ],
           ),
         ],
       ),
     );
+  }
+
+  // ── Share ─────────────────────────────────────────────────────────────
+  Future<void> _share(Analysis a) async {
+    await SharePlus.instance.share(ShareParams(text: _shareText(a)));
+  }
+
+  String _shareText(Analysis a) {
+    final b = StringBuffer('[읽고] ${a.docType ?? '분석 결과'}\n');
+    final summary = a.summaryOneLine;
+    if (summary != null && summary.trim().isNotEmpty) b.writeln(summary);
+    final pairs = a.cards == null
+        ? const <(String, String)>[]
+        : _keyPairs(a.cards!);
+    if (pairs.isNotEmpty) {
+      b.writeln();
+      for (final p in pairs) {
+        b.writeln('${p.$1}: ${p.$2}');
+      }
+    }
+    if (a.actions.isNotEmpty) {
+      b.writeln();
+      b.writeln('할 일');
+      for (var i = 0; i < a.actions.length; i++) {
+        b.writeln('${i + 1}. ${a.actions[i].text}');
+      }
+    }
+    if (a.consequence != null && a.consequence!.trim().isNotEmpty) {
+      b.writeln();
+      b.writeln('안 하면: ${a.consequence}');
+    }
+    return b.toString().trimRight();
   }
 
   // ── Summary + listen ──────────────────────────────────────────────────
@@ -461,6 +513,7 @@ class _ResultViewState extends State<ResultView> {
     final hasCards = a.cards != null && _keyPairs(a.cards!).isNotEmpty;
     final hasDeadline =
         a.cards?.deadline != null && a.cards!.deadline!.trim().isNotEmpty;
+    final phone = _phoneOf(a);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -483,31 +536,132 @@ class _ResultViewState extends State<ResultView> {
           SizedBox(height: context.rs(32)),
           _calendarButton(context, a),
         ],
+        if (phone != null) ...[
+          SizedBox(height: hasDeadline ? context.rs(12) : context.rs(32)),
+          _phoneButton(context, phone),
+        ],
       ],
+    );
+  }
+
+  /// First phone-looking number in the document (cards/actions/original).
+  String? _phoneOf(Analysis a) {
+    final source = [
+      a.cards?.what,
+      a.cards?.where,
+      for (final act in a.actions) act.text,
+      a.originalText,
+    ].whereType<String>().join(' ');
+    final m = RegExp(r'(0\d{1,2}[-.\s]?\d{3,4}[-.\s]?\d{4}|1\d{3}[-.\s]?\d{4})')
+        .firstMatch(source);
+    return m?.group(0);
+  }
+
+  Widget _phoneButton(BuildContext context, String number) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: AppColors.forest,
+          side: const BorderSide(color: AppColors.forest),
+          padding: EdgeInsets.symmetric(vertical: context.rs(17)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+        onPressed: () => _dial(number),
+        icon: Icon(Icons.call_outlined, size: context.rs(20)),
+        label: Text(
+          '전화 걸기 · $number',
+          style: GoogleFonts.notoSansKr(fontSize: context.rs(16)),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _dial(String raw) async {
+    final digits = raw.replaceAll(RegExp(r'[^0-9+]'), '');
+    if (digits.isEmpty) return;
+    await launchUrl(
+      Uri(scheme: 'tel', path: digits),
+      mode: LaunchMode.externalApplication,
     );
   }
 
   // ── Tab: 답장 (native only) ────────────────────────────────────────────
   Widget _replyTab(BuildContext context, Analysis a) {
-    if (a.replyDrafts.isEmpty) {
-      return Padding(
-        padding: EdgeInsets.symmetric(vertical: context.rs(20)),
-        child: Text(
-          '이 글에는 준비된 답장이 없어요.',
-          style: GoogleFonts.notoSansKr(
-            fontSize: context.rs(14),
-            color: AppColors.stone,
-          ),
-        ),
-      );
-    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _sectionTitle(context, '이렇게 답장해요'),
-        SizedBox(height: context.rs(16)),
-        for (final draft in a.replyDrafts) _replyRow(context, draft),
+        if (a.replyDrafts.isEmpty)
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: context.rs(20)),
+            child: Text(
+              '이 글에는 준비된 답장이 없어요.',
+              style: GoogleFonts.notoSansKr(
+                fontSize: context.rs(14),
+                color: AppColors.stone,
+              ),
+            ),
+          )
+        else ...[
+          _sectionTitle(context, '이렇게 답장해요'),
+          SizedBox(height: context.rs(16)),
+          for (final draft in a.replyDrafts) _replyRow(context, draft),
+        ],
+        SizedBox(height: context.rs(20)),
+        _regenerateRow(context),
       ],
+    );
+  }
+
+  // ── 답장 다시 만들기 (tone) ────────────────────────────────────────────
+  Widget _regenerateRow(BuildContext context) {
+    final busy = controller.isRegenerating.value;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '마음에 안 들면 새 답장을 만들 수 있어요',
+          style: GoogleFonts.notoSansKr(
+            fontSize: context.rs(13.12),
+            color: AppColors.stone,
+          ),
+        ),
+        SizedBox(height: context.rs(10)),
+        Row(
+          children: [
+            Expanded(
+                child: _toneButton(context, '정중하게 다시', 'polite', busy)),
+            SizedBox(width: context.rs(12)),
+            Expanded(child: _toneButton(context, '짧게 다시', 'short', busy)),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _toneButton(
+      BuildContext context, String label, String tone, bool busy) {
+    return OutlinedButton.icon(
+      style: OutlinedButton.styleFrom(
+        foregroundColor: AppColors.forest,
+        side: const BorderSide(color: AppColors.forest),
+        padding: EdgeInsets.symmetric(vertical: context.rs(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+      onPressed: busy ? null : () => controller.regenerateReplies(tone: tone),
+      icon: busy
+          ? SizedBox(
+              width: context.rs(16),
+              height: context.rs(16),
+              child: const CircularProgressIndicator(strokeWidth: 2),
+            )
+          : Icon(Icons.refresh, size: context.rs(18)),
+      label: Text(
+        label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: GoogleFonts.notoSansKr(fontSize: context.rs(14)),
+      ),
     );
   }
 
@@ -604,49 +758,81 @@ class _ResultViewState extends State<ResultView> {
     );
   }
 
-  // ── 할 일 (numbered list) ──────────────────────────────────────────────
+  // ── 할 일 (tappable checklist — FR-14) ─────────────────────────────────
   Widget _todoList(BuildContext context, List<ActionItem> actions) {
     return Column(
       children: [
         for (var i = 0; i < actions.length; i++) ...[
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: context.rs(12)),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: context.rs(24),
-                  height: context.rs(24),
-                  alignment: Alignment.center,
-                  decoration: const BoxDecoration(
-                    color: AppColors.forest,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Text(
-                    '${i + 1}',
-                    style: GoogleFonts.notoSansKr(
-                      fontSize: context.rs(12),
-                      color: AppColors.paper,
+          InkWell(
+            onTap: () => controller.toggleAction(actions[i].id),
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: context.rs(12)),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: context.rs(24),
+                    height: context.rs(24),
+                    alignment: Alignment.center,
+                    decoration: const BoxDecoration(
+                      color: AppColors.forest,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Text(
+                      '${i + 1}',
+                      style: GoogleFonts.notoSansKr(
+                        fontSize: context.rs(12),
+                        color: AppColors.paper,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(width: context.rs(12)),
-                Expanded(
-                  child: Text(
-                    actions[i].text,
-                    style: GoogleFonts.notoSansKr(
-                      fontSize: context.rs(16),
-                      height: 1.6,
-                      color: AppColors.ink,
+                  SizedBox(width: context.rs(12)),
+                  Expanded(
+                    child: Text(
+                      actions[i].text,
+                      style: GoogleFonts.notoSansKr(
+                        fontSize: context.rs(16),
+                        height: 1.6,
+                        color: actions[i].isDone
+                            ? AppColors.stone
+                            : AppColors.ink,
+                        decoration: actions[i].isDone
+                            ? TextDecoration.lineThrough
+                            : TextDecoration.none,
+                        decorationColor: AppColors.stone,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  SizedBox(width: context.rs(12)),
+                  _checkMark(context, actions[i].isDone),
+                ],
+              ),
             ),
           ),
           Container(height: 1, color: AppColors.hairline),
         ],
       ],
+    );
+  }
+
+  /// "했어요" indicator — filled when done, outlined when pending.
+  Widget _checkMark(BuildContext context, bool done) {
+    final s = context.rs(26);
+    return Container(
+      width: s,
+      height: s,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: done ? AppColors.forest : Colors.transparent,
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: done ? AppColors.forest : AppColors.stone,
+          width: 1.5,
+        ),
+      ),
+      child: done
+          ? Icon(Icons.check, size: context.rs(16), color: AppColors.paper)
+          : null,
     );
   }
 

@@ -5,14 +5,16 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../core/app_routes.dart';
+import '../../core/deadline.dart';
 import '../../data/models/analysis_summary.dart';
 import '../../data/repositories/analysis_repository.dart';
 import '../../data/services/profile_service.dart';
 import '../analyze/analyze_controller.dart';
+import 'deadline_alert_dialog.dart';
 
-/// Home: capture / choose an image (or run a bundled sample) and kick off
-/// an analysis using the current profile (mode + language). Also surfaces the
-/// most recent saved analyses ("최근 기록").
+/// Home: capture / choose an image and kick off an analysis using the current
+/// profile (mode + language). Also surfaces the most recent saved analyses
+/// ("최근 기록").
 class HomeController extends GetxController {
   final ImagePicker _picker = ImagePicker();
 
@@ -22,6 +24,9 @@ class HomeController extends GetxController {
 
   /// Recent saved analyses shown at the bottom of home.
   final recent = <AnalysisSummary>[].obs;
+
+  /// In-app "기한 알림" fires once per app session, not on every home visit.
+  static bool _deadlineAlertShown = false;
 
   @override
   void onInit() {
@@ -33,9 +38,36 @@ class HomeController extends GetxController {
     try {
       final items = await _repo.list();
       recent.assignAll(items.take(5).toList());
+      _maybeShowDeadlineAlert(items);
     } catch (_) {
       recent.clear();
     }
+  }
+
+  /// In-app alert (설정 '기한 알림'): anything due within 7 days pops a
+  /// dialog listing the closest deadlines first.
+  void _maybeShowDeadlineAlert(List<AnalysisSummary> items) {
+    if (_deadlineAlertShown || !_profile.deadlineAlarm.value) return;
+    final upcoming = items
+        .where((e) => Deadline.isUrgent(e.cardDeadline))
+        .toList()
+      ..sort((a, b) => (Deadline.daysLeft(a.cardDeadline) ?? 99)
+          .compareTo(Deadline.daysLeft(b.cardDeadline) ?? 99));
+    if (upcoming.isEmpty) return;
+    _deadlineAlertShown = true;
+    // Let the home screen settle before covering it with a dialog.
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (Get.isDialogOpen ?? false) return;
+      Get.dialog(
+        DeadlineAlertDialog(
+          items: upcoming.take(3).toList(),
+          onOpen: (id) {
+            Get.back(); // close the dialog first
+            openRecord(id);
+          },
+        ),
+      );
+    });
   }
 
   /// Open a recent record on the result screen.
@@ -75,10 +107,6 @@ class HomeController extends GetxController {
     final bytes = await _compress(picked);
     await _run(bytes);
   }
-
-  /// Demo path — runs an analysis without a camera (safe on simulators and as
-  /// a presentation fallback). Mock ignores bytes; live sends a small image.
-  Future<void> runSample() => _run(Uint8List(0));
 
   Future<void> _run(Uint8List bytes) {
     return _analyze.analyze(

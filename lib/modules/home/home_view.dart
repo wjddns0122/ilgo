@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/app_routes.dart';
+import '../../core/deadline.dart';
 import '../../core/responsive.dart';
 import '../../core/theme.dart';
 import '../../data/models/analysis_summary.dart';
@@ -276,6 +277,8 @@ class _RecentRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dLabel = Deadline.dDayLabel(summary.cardDeadline);
+    final urgent = Deadline.isUrgent(summary.cardDeadline);
     return InkWell(
       onTap: onTap,
       child: Padding(
@@ -314,6 +317,31 @@ class _RecentRow extends StatelessWidget {
                           color: AppColors.stone,
                         ),
                       ),
+                      if (dLabel != null) ...[
+                        SizedBox(width: context.rs(8)),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: context.rs(8),
+                            vertical: context.rs(1),
+                          ),
+                          decoration: BoxDecoration(
+                            color: urgent
+                                ? AppColors.riskRedBg
+                                : AppColors.sand,
+                            borderRadius: BorderRadius.circular(999),
+                          ),
+                          child: Text(
+                            dLabel,
+                            style: GoogleFonts.notoSansKr(
+                              fontSize: context.rs(11.5),
+                              fontWeight: FontWeight.w700,
+                              color: urgent
+                                  ? AppColors.riskRed
+                                  : AppColors.forest,
+                            ),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                   SizedBox(height: context.rs(6)),

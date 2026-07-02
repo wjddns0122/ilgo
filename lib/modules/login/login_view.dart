@@ -38,12 +38,6 @@ class _LoginViewState extends State<LoginView> {
     final email = _email.text.trim();
     final pw = _password.text;
 
-    // Mock/offline mode: no backend auth.
-    if (!Get.isRegistered<AuthService>()) {
-      Get.toNamed(Routes.signupComplete, arguments: email);
-      return;
-    }
-
     setState(() => _busy = true);
     try {
       final isNew = await Get.find<AuthService>().startWithEmail(email, pw);
@@ -61,8 +55,10 @@ class _LoginViewState extends State<LoginView> {
     }
   }
 
+  // Existing account (logged in, not a new signup) → home. Onboarding is
+  // reserved for brand-new signups (handled via the signup-complete screen).
   void _toApp() {
-    final onboarding = Get.find<ProfileService>().shouldOnboard;
+    final onboarding = Get.find<ProfileService>().forceOnboarding;
     Get.offAllNamed(onboarding ? Routes.onboarding : Routes.home);
   }
 
@@ -163,7 +159,12 @@ class _LoginViewState extends State<LoginView> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(
                       context.rs(28), context.rs(8), context.rs(28), context.rs(24)),
-                  child: _startButton(context),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _startButton(context),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -259,4 +260,5 @@ class _LoginViewState extends State<LoginView> {
       ),
     );
   }
+
 }

@@ -5,5 +5,5 @@ class DevFlags {
   /// false → 정상 동작 (온보딩 완료했으면 홈으로).
   ///
   /// 온보딩 다 확인했으면 false 로 되돌리세요.
-  static const bool forceOnboarding = true;
+  static const bool forceOnboarding = false;
 }

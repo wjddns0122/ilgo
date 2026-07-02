@@ -1,4 +1,4 @@
-# CLAUDE.md — 읽고 (Ilgo) 프로젝트
+# AGENTS.md — 읽고 (Ilgo) 프로젝트
 
 > 새 세션이 이 파일을 자동으로 읽습니다. 프로젝트 맥락·결정·다음 할 일이 여기 다 있어요.
 > 세부는 아래 문서들을 참조.
@@ -13,12 +13,12 @@
 - 심사(100): 사회가치30 / 창의25 / AI활용20 / 완성15 / 발표10.
 
 ## 핵심 엔진
-`사진/캡처 → (백엔드 프록시) → Claude 멀티모달 1회 호출 → 구조화 JSON(ReadResult) → 카드 UI`.
+`사진/캡처 → (백엔드 프록시) → Codex 멀티모달 1회 호출 → 구조화 JSON(ReadResult) → 카드 UI`.
 모드는 파라미터 분기(`output_mode`: easy_korean|native, `lang`: ko|en).
 
 ## 확정 기술 스택
 - **프론트(Flutter):** GetX(상태+라우팅+DI) · dio+retrofit · freezed+json_serializable · image_picker · flutter_image_compress · flutter_tts · add_2_calendar · url_launcher · share_plus · shared_preferences · google_fonts. 디자인=**Figma MCP** 핸드오프.
-- **백엔드:** Spring Boot · Supabase(PostgreSQL) · Railway 배포 · Swagger UI(springdoc). Claude 키는 서버(Railway env).
+- **백엔드:** Spring Boot · Supabase(PostgreSQL) · Railway 배포 · Swagger UI(springdoc). Codex 키는 서버(Railway env).
 - **개발 방식:** **목데이터로 화면 100% 완성 → `USE_MOCK=false` 한 줄로 실서버 스왑**(Repository 인터페이스 + GetX Bindings).
 
 ## 문서 인덱스 (source of truth)
@@ -38,14 +38,13 @@
 
 ## 현재 상태
 - 기획/명세/스택 **문서화 완료**.
-- **프론트 스캐폴드 + 목 end-to-end 완료** (2026-07-01): 패키지·freezed 모델·목 JSON·Repository(목/실)·GetX 컨트롤러·전 화면(온보딩→홈→로딩→결과→보관함→설정)·접근성 테마·retrofit 클라이언트.
-- **백엔드 라이브 연동됨** (Railway, JWT 로그인) → `USE_MOCK` 기본값 **false**. 목은 `--dart-define=USE_MOCK=true`.
-- **CEO 기능리뷰 반영 완료** (2026-07-02, `docs/기능리뷰_CEO_2026-07-02.md`): 게스트 모드(로그인 없이 둘러보기, 목 데이터로 동작) · 분석 실패 시 폴백 캐시+예시 배지 · 홈 "예시로 체험하기" 샘플 3종 · 할 일 체크(서버 동기화) · 결과 공유 · D-day 뱃지 · 인앱 기한 알림 다이얼로그(설정 토글 연동, OS 푸시 아님) · 답장 톤 재생성 · 전화 걸기 · 설정 권한 실상태 표시. `flutter analyze` 0 issues, 테스트 9/9 통과.
+- **프론트 스캐폴드 + 목 end-to-end 완료** (2026-07-01): 패키지·freezed 모델·목 JSON·Repository(목/실)·GetX 컨트롤러·전 화면(온보딩→홈→로딩→결과→보관함→설정)·접근성 테마·retrofit 클라이언트. `flutter analyze` 0 issues, 유닛테스트 4/4 통과.
+- 백엔드 아직 안 붙음 → **목(`USE_MOCK=true`, 기본값)** 으로 100% 동작.
 
 ## 실행
 ```bash
-# 실서버(기본): flutter run        # BASE_URL 기본값 = https://ilgo-backend-production.up.railway.app/v1
-# 목(오프라인 데모): flutter run --dart-define=USE_MOCK=true
+# 목(기본): flutter run           # = --dart-define=USE_MOCK=true
+# 실서버:  flutter run --dart-define=USE_MOCK=false --dart-define=BASE_URL=https://ilgo-api.up.railway.app/v1
 # 코드생성: dart run build_runner build --delete-conflicting-outputs --force-jit
 ```
 > ⚠️ **build_runner는 반드시 `--force-jit`**. 이 맥 Flutter SDK는 `dart-sdk/bin/utils/gen_snapshot`이 없어 기본(AOT) 모드가 `ProcessException`으로 실패함. `--force-jit`이면 gen_snapshot 불필요.
@@ -53,8 +52,8 @@
 
 ## 다음 할 일
 1. **iOS 실기기 디버깅**: 아이폰 케이블 연결·잠금해제·개발자 모드 ON → `flutter run`.
-2. **데모 리허설**: 실서버 워밍업 호출, 데모 기기 사전 로그인(또는 게스트), `USE_MOCK=true` 비상 빌드, 데모 자료 마스킹 (`docs/기능리뷰_CEO_2026-07-02.md` §6 체크리스트).
-3. (선택) 데드코드 정리: `lib/widgets/reply_draft_tile.dart` 등 구 위젯 (발표 무관).
+2. 백엔드 나오면 `USE_MOCK=false` + `BASE_URL` 주입 (Repository 코드 안 바뀜).
+3. (선택) 할 일 체크 PATCH·답장 재생성 등 P2 API 실연동.
 
 ## 주의/컨벤션
 - 개인정보: 데모 자료(고지서·문자)는 이름·번호·계좌 **마스킹**. 이미지 기본 미저장.

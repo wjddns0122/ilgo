@@ -40,26 +40,20 @@ class _SplashViewState extends State<SplashView> {
   }
 
   Future<void> _next() async {
-    // Real backend: restore a saved session, else go to login.
-    if (Get.isRegistered<AuthService>()) {
-      final ok = await Get.find<AuthService>().restoreSession();
-      if (!mounted) return;
-      if (ok) {
-        await Get.find<ProfileService>().syncFromServer();
-        _toApp();
-      } else {
-        Get.offAllNamed(Routes.login);
-      }
-      return;
+    // Restore a saved session; if valid go straight to home (onboarding is
+    // only for brand-new signups), otherwise go to login.
+    final ok = await Get.find<AuthService>().restoreSession();
+    if (!mounted) return;
+    if (ok) {
+      await Get.find<ProfileService>().syncFromServer();
+      _go(Get.find<ProfileService>().forceOnboarding);
+    } else {
+      Get.offAllNamed(Routes.login);
     }
-    // Mock/offline mode: no auth.
-    _toApp();
   }
 
-  void _toApp() {
-    final onboarding = Get.find<ProfileService>().shouldOnboard;
-    Get.offAllNamed(onboarding ? Routes.onboarding : Routes.home);
-  }
+  void _go(bool onboarding) =>
+      Get.offAllNamed(onboarding ? Routes.onboarding : Routes.home);
 
   @override
   Widget build(BuildContext context) {

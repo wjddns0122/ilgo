@@ -5,11 +5,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/app_routes.dart';
-import '../../core/config.dart' as app_config;
 import '../../core/responsive.dart';
 import '../../core/theme.dart';
-import '../../dev_flags.dart';
-import '../../data/services/profile_service.dart';
 
 /// Signup-complete screen (Figma node 30:831): deep-green celebration with a
 /// check badge + email. Auto-advances into the app after a short pause.
@@ -49,13 +46,8 @@ class _SignupCompleteViewState extends State<SignupCompleteView> {
     super.dispose();
   }
 
-  void _next() {
-    final onboarded = Get.find<ProfileService>().onboarded;
-    final toOnboarding = DevFlags.forceOnboarding ||
-        app_config.Config.forceOnboarding ||
-        !onboarded;
-    Get.offAllNamed(toOnboarding ? Routes.onboarding : Routes.home);
-  }
+  // New signup → always onboarding.
+  void _next() => Get.offAllNamed(Routes.onboarding);
 
   @override
   Widget build(BuildContext context) {

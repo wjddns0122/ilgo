@@ -56,9 +56,12 @@ class ProfileService extends GetxService {
 
   bool get onboarded => _prefs.getBool(_kOnboarded) ?? false;
 
+  /// Dev-only force flag (ignores signup/onboarding state).
+  bool get forceOnboarding => DevFlags.forceOnboarding || Config.forceOnboarding;
+
   /// Whether the app should route to onboarding rather than home.
-  bool get shouldOnboard =>
-      DevFlags.forceOnboarding || Config.forceOnboarding || !onboarded;
+  /// Used in mock/offline mode (no accounts) — real mode keys off signup.
+  bool get shouldOnboard => forceOnboarding || !onboarded;
 
   Future<void> completeOnboarding() => _prefs.setBool(_kOnboarded, true);
 

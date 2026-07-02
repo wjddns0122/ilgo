@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../core/deadline.dart';
 import '../../core/responsive.dart';
 import '../../core/theme.dart';
 import '../../data/models/analysis_summary.dart';
@@ -176,7 +177,9 @@ class _ArchiveRow extends StatelessWidget {
     if (raw == null || raw.isEmpty) return null;
     final d = DateTime.tryParse(raw);
     if (d == null) return null;
-    return '${d.year}년 ${d.month}월 ${d.day}일까지';
+    final base = '${d.year}년 ${d.month}월 ${d.day}일까지';
+    final dday = Deadline.dDayLabel(raw);
+    return dday == null ? base : '$dday · $base';
   }
 
   @override
@@ -263,13 +266,14 @@ class _ArchiveRow extends StatelessWidget {
   }
 
   Widget _deadlineChip(BuildContext context, String label) {
+    final urgent = Deadline.isUrgent(summary.cardDeadline);
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: context.rs(10),
         vertical: context.rs(2),
       ),
       decoration: BoxDecoration(
-        color: AppColors.sand,
+        color: urgent ? AppColors.riskRedBg : AppColors.sand,
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
@@ -278,7 +282,8 @@ class _ArchiveRow extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         style: GoogleFonts.notoSansKr(
           fontSize: context.rs(11.52),
-          color: AppColors.forest,
+          fontWeight: urgent ? FontWeight.w700 : FontWeight.w400,
+          color: urgent ? AppColors.riskRed : AppColors.forest,
         ),
       ),
     );

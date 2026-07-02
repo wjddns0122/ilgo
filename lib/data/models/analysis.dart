@@ -8,7 +8,7 @@ import 'risk.dart';
 part 'analysis.freezed.dart';
 part 'analysis.g.dart';
 
-/// The full engine result. Same schema is used for mock JSON and the live API.
+/// The full engine result returned by the live API.
 @freezed
 abstract class Analysis with _$Analysis {
   const factory Analysis({

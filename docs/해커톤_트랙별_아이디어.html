@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Re-Local 해커톤 — 트랙별 최고 아이디어</title>
+<style>
+  :root{
+    --bg:#0f1117; --panel:#171a23; --panel2:#1d212c; --ink:#e8eaf0; --mut:#9aa3b2;
+    --line:#2a2f3c; --accent:#7c9cff; --accent2:#9b8cff;
+    --silver:#9ca3af; --multi:#f59e0b; --barrier:#22c55e; --care:#38bdf8;
+    --red:#ef4444; --yellow:#eab308; --green:#22c55e;
+    --maxw:980px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:linear-gradient(180deg,#0c0e14,#0f1117 240px);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Noto Sans KR",system-ui,sans-serif;
+    line-height:1.65;font-size:16px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px 120px}
+  header.hero{max-width:var(--maxw);margin:0 auto;padding:48px 20px 24px}
+  h1{font-size:30px;line-height:1.25;margin:0 0 10px;letter-spacing:-.5px}
+  .sub{color:var(--mut);font-size:15px;margin:0}
+  .pill{display:inline-block;background:var(--panel2);border:1px solid var(--line);color:var(--mut);
+    border-radius:999px;padding:4px 12px;font-size:12.5px;margin:6px 6px 0 0}
+  h2{font-size:22px;margin:44px 0 14px;padding-top:14px;border-top:1px solid var(--line);letter-spacing:-.3px}
+  h3{font-size:15px;margin:22px 0 8px;color:var(--accent);font-weight:700;letter-spacing:.2px}
+  p{margin:8px 0}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px;background:var(--panel);border-radius:10px;overflow:hidden}
+  th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:var(--panel2);color:var(--mut);font-weight:600;font-size:12.5px;text-transform:uppercase;letter-spacing:.4px}
+  tr:last-child td{border-bottom:none}
+  code{background:#0a0c11;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:13px;
+    font-family:"SF Mono",ui-monospace,Menlo,monospace;color:#c7d2fe}
+  .lead{background:linear-gradient(135deg,#1a1f30,#171a23);border:1px solid var(--line);border-left:4px solid var(--accent);
+    border-radius:12px;padding:16px 18px;margin:16px 0}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+  @media(max-width:720px){.grid{grid-template-columns:1fr}h1{font-size:24px}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:18px 0;
+    border-top:4px solid var(--line)}
+  .card.silver{border-top-color:var(--silver)}
+  .card.multi{border-top-color:var(--multi)}
+  .card.barrier{border-top-color:var(--barrier)}
+  .card.care{border-top-color:var(--care)}
+  .card h2{border-top:none;padding-top:0;margin-top:0}
+  .tagline{color:var(--mut);font-style:italic;border-left:3px solid var(--line);padding-left:12px;margin:6px 0 14px}
+  .badge{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:6px;margin-left:8px;vertical-align:middle}
+  .b-silver{background:rgba(156,163,175,.18);color:#cbd5e1}
+  .b-multi{background:rgba(245,158,11,.16);color:#fbbf24}
+  .b-barrier{background:rgba(34,197,94,.16);color:#4ade80}
+  .b-care{background:rgba(56,189,248,.16);color:#7dd3fc}
+  .sig{display:inline-flex;gap:5px;align-items:center;font-size:12px}
+  .dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+  .dg{background:var(--green)}.dy{background:var(--yellow)}.dr{background:var(--red)}
+  .callout{background:rgba(124,156,255,.08);border:1px solid rgba(124,156,255,.3);border-radius:12px;padding:14px 18px;margin:16px 0}
+  .callout.win{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.35)}
+  .callout b{color:var(--ink)}
+  ul,ol{margin:8px 0;padding-left:22px}
+  li{margin:4px 0}
+  .rank{display:flex;gap:12px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;padding:14px 16px;margin:10px 0}
+  .rank .n{font-size:22px;flex:0 0 auto}
+  .muted{color:var(--mut);font-size:13.5px}
+  .checklist{list-style:none;padding-left:0}
+  .checklist li::before{content:"☐ ";color:var(--accent)}
+  .toc{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:18px 0;columns:2;column-gap:24px}
+  @media(max-width:720px){.toc{columns:1}}
+  .toc a{display:block;padding:3px 0;font-size:14px}
+  hr{border:none;border-top:1px solid var(--line);margin:28px 0}
+  .foot{color:var(--mut);font-size:12.5px;margin-top:40px;text-align:center}
+  .kpi{font-variant-numeric:tabular-nums;font-weight:700}
+  .star{color:#fbbf24;letter-spacing:-1px}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <h1>AI Re-Local 해커톤 — 트랙별 최고 아이디어</h1>
+  <p class="sub">Flutter 1인 · 무박 2일 · 실제 구동 앱 + 라이브 Claude API 프로토타입용</p>
+  <div>
+    <span class="pill">대주제 · 누군가를 위한 AI를 설계하라</span>
+    <span class="pill">선정 · 트랙별 6~9 후보 → 적대적 채점 → 1개 우승</span>
+    <span class="pill">채점 110점 = 사회30+창의25+AI20+실현20+데모15</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="toc">
+    <a href="#strategy">0. 전략 한 장 요약</a>
+    <a href="#summary">1. 우승작 한눈에</a>
+    <a href="#silver">2. 🥈 실버 — 찰칵 효도</a>
+    <a href="#multi">3. 🌏 다문화 — 오뭐</a>
+    <a href="#barrier">4. ♿ 배리어프리 — 쉬운고지서</a>
+    <a href="#care">5. 🧑‍⚕️ 돌봄 — 교대인계</a>
+    <a href="#ceo">6. CEO 최종 추천</a>
+    <a href="#kit">7. 공통 빌드 키트</a>
+  </div>
+
+  <!-- 0 -->
+  <h2 id="strategy">0. 전략 한 장 요약</h2>
+  <div class="lead">
+    <b>우리만의 무기 = "지금 작동하는 AI".</b> 다른 팀은 Canva 클릭목업(<i>이렇게 될 거예요</i>)을 낸다.
+    우리는 심사위원 앞에서 실제 구동 Flutter 앱에 <b>라이브 Claude 호출</b>을 돌려 <i>지금 됩니다</i>를 보여준다.
+    이 한 순간이 <b>완성도(15)</b>와 <b>AI 활용도(20)</b>에서 격차를 만든다.
+  </div>
+
+  <h3>심사 기준 (100점)</h3>
+  <table>
+    <tr><th>항목</th><th>배점</th><th>우리 전략</th></tr>
+    <tr><td>사회적 가치·공감</td><td class="kpi">30</td><td>구체적 페르소나 1명의 하루를 발표 첫 90초에</td></tr>
+    <tr><td>아이디어 창의성</td><td class="kpi">25</td><td>"번역/요약을 넘어 행동·자기보호까지" 가치사슬 확장</td></tr>
+    <tr><td>AI 활용도</td><td class="kpi">20</td><td>단 1회 Claude 멀티모달 호출이 화면에서 눈에 보이게</td></tr>
+    <tr><td>결과물 완성도</td><td class="kpi">15</td><td>실제 구동 Flutter 앱 (빈/에러/히스토리까지)</td></tr>
+    <tr><td>발표 전달력</td><td class="kpi">10</td><td>7분을 1개 시나리오로, 심사위원 즉석 라이브가 클라이맥스</td></tr>
+  </table>
+
+  <div class="callout">
+    <b>핵심 인사이트 — 4개 중 3개가 같은 엔진.</b> 실버·다문화·배리어프리 우승작은
+    <code>이미지/캡처 1장 → Claude 멀티모달 1회 → JSON → 카드 UI</code> 동일 엔진.
+    엔진 1개 만들어 <b>트랙별로 리스킨</b>하면 2일 안에 어느 것이든, 심지어 여러 개 가능.
+    돌봄(교대인계)만 입력이 <b>음성</b>이라 가장 차별적(받아쓰기가 아니라 추론).
+  </div>
+
+  <!-- 1 -->
+  <h2 id="summary">1. 트랙별 우승작 한눈에</h2>
+  <table>
+    <tr><th>트랙</th><th>우승 앱</th><th>한 줄</th><th>점수<span class="muted">/110</span></th><th>입력</th><th>실현성</th></tr>
+    <tr><td>🥈 실버</td><td><b>찰칵 효도</b></td><td>종이 찍으면 신호등(초록/노랑/빨강)</td><td class="kpi">98</td><td>사진</td><td class="star">★★★★★</td></tr>
+    <tr><td>🌏 다문화</td><td><b>오뭐</b></td><td>한국어 메시지 캡처 → 모국어+위험+답장</td><td class="kpi">103</td><td>캡처</td><td class="star">★★★★★</td></tr>
+    <tr><td>♿ 배리어프리</td><td><b>쉬운고지서</b></td><td>우편물 사진 → 한 문장+쉬운말 토글</td><td class="kpi">106</td><td>사진</td><td class="star">★★★★★</td></tr>
+    <tr><td>🧑‍⚕️ 돌봄</td><td><b>교대인계</b></td><td>두서없는 음성 → 입소자별 인계 카드</td><td class="kpi">102</td><td>음성</td><td class="star">★★★★☆</td></tr>
+  </table>
+  <p class="muted">점수 = 사회가치(30)+창의(25)+AI활용(20)+2일실현성(20,자체가중)+데모임팩트(15). 최종 추천은 <a href="#ceo">6장</a>.</p>
+
+  <!-- 2 SILVER -->
+  <div class="card silver" id="silver">
+    <h2>🥈 실버 트랙 — 찰칵 효도 <span class="badge b-silver">Chalkak Hyodo · 98</span></h2>
+    <p class="tagline">"종이 한 장 찍으면 AI가 신호등으로 답해드려요. <span class="sig"><span class="dot dg"></span>초록</span> <span class="sig"><span class="dot dy"></span>노랑</span> <span class="sig"><span class="dot dr"></span>빨강</span>."</p>
+    <p><b>한 줄 정리</b> · 어르신이 우편물·문자를 찍으면 큰 글씨 3줄 요약 + 사기 신호등 + 손주 톤 음성 안내를 주는 앱.</p>
+
+    <h3>문제 정의</h3>
+    <p>어르신은 문서의 '내용 이해'와 '진위 판단'에서 동시에 소외된다. 작은 글씨 + 행정용어 + 사기 구분 불가가 겹쳐 우편물·문자 한 장이 공포다. 정보격차가 곧 사기 취약성으로 이어지고, 매번 자식에게 "이거 사기야?" 전화로 묻는 의존이 일상이 된다.</p>
+
+    <h3>페르소나</h3>
+    <p>73세 김순자. 건강보험 고지서·관리비 안내문 사이에 스미싱 의심 문자가 섞인다. 작은 글씨를 못 읽어 매번 자식에게 전화. 폰은 전화·카톡만. 고통점: 내용 모름 / 진위 모름 / 할 일 모름 / 묻기 미안함.</p>
+
+    <h3>HMW</h3>
+    <p>글씨가 안 보이고 사기 구분이 안 되는 어르신이, 사진 한 장으로 '무슨 내용인지·진짜인지·뭘 해야 하는지'를 혼자 알게 하려면?</p>
+
+    <h3>가치 제안</h3>
+    <p>'읽기'와 '의심'을 동시에 대신. 사진 한 장 → 큰 글씨 3줄 요약 + 사기 신호등 + 해야 할 일 음성 안내 → 자식에게 전화 없이 안전하게 판단·행동.</p>
+
+    <h3>MVP 기능 (2일 스코프)</h3>
+    <table>
+      <tr><th>기능</th><th>왜</th><th>Claude</th><th>역할</th></tr>
+      <tr><td>사진 1장 촬영/선택</td><td>찍어서 묻기를 입력으로</td><td>✗</td><td>—</td></tr>
+      <tr><td>큰 글씨 3줄 요약</td><td>'읽을 수 없는 벽' 제거</td><td>✓</td><td>비전으로 읽고 핵심 3줄 압축</td></tr>
+      <tr><td>사기 신호등(초/노/빨)</td><td>진위 판단 대신 = 핵심</td><td>✓</td><td>스미싱 패턴 추론 → risk_level+이유</td></tr>
+      <tr><td>할 일 1가지 + 음성</td><td>이해→행동, 귀로</td><td>✓</td><td>action 생성 → flutter_tts 낭독</td></tr>
+      <tr><td>문서함</td><td>나중에 가족과 확인</td><td>✗</td><td>—</td></tr>
+    </table>
+
+    <h3>화면 구성 (6)</h3>
+    <ol>
+      <li><b>홈/찍기</b> — 큰 카메라 버튼 하나, 최근 기록</li>
+      <li><b>분석 중</b> — "AI가 읽고 있어요" 애니메이션</li>
+      <li><b>결과 신호등 (핵심)</b> — 큰 신호등 배너 + 3줄 요약</li>
+      <li><b>왜 위험한가</b> — 빨강 이유 음성+텍스트</li>
+      <li><b>해야 할 일</b> — 한 가지 + 전화 걸기 버튼</li>
+      <li><b>내 문서함</b> — 신호등 색 뱃지 목록</li>
+    </ol>
+
+    <h3>Claude 연동</h3>
+    <p>사진 → base64 → image 블록 + 시스템 프롬프트로 <b>단 1회 호출</b> → JSON → 신호등 렌더 → flutter_tts 낭독. 모델 <code>claude-opus-4-8</code>/<code>claude-sonnet-4-6</code>, temp 0.2.</p>
+    <p class="muted">시스템 프롬프트: "디지털 낯선 어르신 도우미. JSON만: <code>summary3</code>(쉬운말 3줄), <code>risk_level</code>(green|yellow|red), <code>risk_reason</code>, <code>action</code>, <code>amount/due_date</code>. <b>확신 없으면 green 단정 금지, yellow로.</b> 없는 사실 만들지 말 것."</p>
+
+    <h3>Flutter 스택</h3>
+    <p><code>image_picker</code> · <code>dio</code> · <code>flutter_tts</code> · <code>provider</code> · <code>flutter_image_compress</code> · <code>shared_preferences</code>. 키는 <code>--dart-define</code>.</p>
+
+    <h3>2일 빌드 계획</h3>
+    <ul>
+      <li><b>Day0 저녁(2~3h)</b> 셋업 + curl로 멀티모달+JSON 1건 성공 → 프롬프트 확정(80%)</li>
+      <li><b>Day1 오전</b> end-to-end + 실제 고지서/스미싱 샘플로 신호등 튜닝</li>
+      <li><b>Day1 오후</b> 화면3 신호등 UI + 큰글씨/고대비 토큰</li>
+      <li><b>Day1 밤</b> flutter_tts 음성 + 화면4·5 + 문서함</li>
+      <li><b>Day2 오전</b> 홈/빈·에러 + 캐시 폴백</li>
+      <li><b>Day2 오후</b> 라이브 리허설 + 슬라이드/영상/기획서</li>
+    </ul>
+
+    <h3>심사 적합성</h3>
+    <ul>
+      <li><b>사회(30)</b> "이거 사기야?" 전화 장면 + 정보격차→사기 취약성</li>
+      <li><b>창의(25)</b> 요약을 넘어 '진위 판단(신호등)'까지</li>
+      <li><b>AI(20)</b> 요약+쉬운말+사기추론이 단 1회 호출에</li>
+      <li><b>완성(15)</b> 음성·문서함·에러 처리, 어르신 맞춤 큰글씨</li>
+      <li><b>발표(10)</b> 빨강이 뜨는 0.5초</li>
+    </ul>
+
+    <h3>7분 데모</h3>
+    <p>문제(스미싱 띄우고 "진짜?가짜?") → 김순자 전화 의존 → "찍으면 답합니다" → <b>심사위원 즉석 촬영→빨강+음성 "누르지 마세요"</b> + 흐름도 → "다시는 무섭게 종이를 받지 않게".</p>
+
+    <h3>60초 영상</h3>
+    <p class="muted">두려움→안심. 우편함 한숨 → 스미싱에 머뭇 → 촬영→빨강 신호등+"누르지 마세요"→안도 → 로고 "찰칵 효도 — 찍으면 압니다".</p>
+
+    <h3>리스크 &amp; 완화</h3>
+    <table>
+      <tr><th>리스크</th><th>완화</th></tr>
+      <tr><td>사기 false negative(진짜를 초록)</td><td>"확신 없으면 yellow" 규칙, 보수적 분류</td></tr>
+      <tr><td>라이브 지연/실패</td><td>스미싱·고지서 캐시 폴백</td></tr>
+      <tr><td>JSON 깨짐</td><td>prefill <code>{</code> + 재시도 + 요약만이라도</td></tr>
+    </table>
+
+    <h3>차별점</h3>
+    <p>심사위원의 진짜 문자를 그 자리서 찍어 <b>라이브 빨강 사기 신호등</b>. 실제 인식 + 실제 추론이 동시에 = 완성도·AI 증명.</p>
+  </div>
+
+  <!-- 3 MULTI -->
+  <div class="card multi" id="multi">
+    <h2>🌏 다문화 트랙 — 오뭐 (오늘 뭐래?) <span class="badge b-multi">103</span></h2>
+    <p class="tagline">"한국어 메시지 캡처 한 번이면 '나에게 뭘·언제까지·얼마를' 모국어로 풀어주고 위험까지 짚어준다."</p>
+    <p><b>한 줄 정리</b> · 이주노동자가 받은 한국어 카톡/문자/공지를 캡처하면 모국어 의역 + 핵심 추출 + 위험 플래그 + 한국어 답장까지 주는 앱.</p>
+
+    <h3>문제 정의</h3>
+    <p>체류 외국인 250만+(2024). 줄임말·사투리·행정용어·모호한 존댓말 탓에 '무슨 말'을 넘어 '뭘 시키는지·언제까지·돈 손해'를 못 잡는다. 번역기는 직역만 해 집합시간·임금 차감 같은 '행간'을 놓친다 → 일당 깎이거나 부당 정산에 끄덕임.</p>
+
+    <h3>페르소나</h3>
+    <p>스레이몸(35, 캄보디아, 2년차, 비닐하우스). 사장님 "내일 새벽 5시 집합", 관리자 "숙소비 정산", 행정 "신고기한". 매번 동료에게 캡처 보내 묻기 미안, 없으면 집합 놓쳐 일당 깎임, 정중한 답장 못 씀.</p>
+
+    <h3>HMW</h3>
+    <p>한국어 못 읽는 이주노동자가 캡처 한 번으로 '뭘·언제까지·얼마를' 모국어로 이해하고, 위험을 알아채며, 정중한 답장까지 보내게 하려면?</p>
+
+    <h3>가치 제안</h3>
+    <p>번역기가 멈추는 곳에서 시작. 캡처 1장 → 모국어 의역 + 핵심 카드 + 위험 플래그 + 한국어 답장 초안. '이해'를 넘어 '행동'과 '자기 보호'.</p>
+
+    <h3>MVP 기능 (2일 스코프)</h3>
+    <table>
+      <tr><th>기능</th><th>왜</th><th>Claude</th><th>역할</th></tr>
+      <tr><td>화면 캡처 입력</td><td>캡처해 묻기를 그대로</td><td>✓</td><td>멀티모달로 한국어 읽기(OCR 흡수)</td></tr>
+      <tr><td>모국어 의역</td><td>'일당 깐다'→'임금 차감'</td><td>✓</td><td>줄임말·존댓말·화자관계 반영</td></tr>
+      <tr><td>핵심 추출 카드</td><td>무엇/언제/어디/얼마</td><td>✓</td><td>구조화 출력으로 추출</td></tr>
+      <tr><td>위험 플래그 ⚠️</td><td>약자 보호 = 사회가치</td><td>✓</td><td>임금체불·부당공제·과태료 탐지</td></tr>
+      <tr><td>한국어 답장 1탭 생성</td><td>이해→행동, 오해 방지</td><td>✓</td><td>상황 맞춤 답장 2~3개</td></tr>
+      <tr><td>히스토리</td><td>정산 분쟁 증거</td><td>✗</td><td>—</td></tr>
+    </table>
+
+    <h3>화면 구성 (7)</h3>
+    <ol>
+      <li><b>홈/캡처 입력</b> — 큰 버튼 + 최근 미리보기</li>
+      <li><b>분석 로딩</b> — "AI가 읽고 있어요"</li>
+      <li><b>결과 통합 (핵심)</b> — 원문/의역/카드/위험 한 스크롤</li>
+      <li><b>위험 상세</b> — "왜 위험한지" 모국어 + 대응 팁</li>
+      <li><b>답장 생성</b> — 한국어 후보 + 모국어 해설 + 복사</li>
+      <li><b>히스토리</b> — 날짜·화자·요약·위험 뱃지</li>
+      <li><b>언어/설정</b> — 모국어 즉석 전환</li>
+    </ol>
+
+    <h3>Claude 연동</h3>
+    <p>캡처 → base64 → <b>단 1회 멀티모달 호출</b> → JSON. 한 호출에 <b>번역+추출+위험+작문 4능력</b> → AI 활용도 직격.</p>
+    <p class="muted">JSON: <code>ocr_text · translation · summary_cards · risks[{level,type,msg}] · reply_drafts[{korean,note}]</code>. 화자(사장/관리자/관공서) 톤 추정, 없는 사실 금지.</p>
+
+    <h3>Flutter 스택</h3>
+    <p><code>image_picker</code> · <code>dio</code> · <code>provider</code> · <code>hive</code> · Clipboard/<code>share_plus</code> · Noto Sans 번들. 데모 모국어 1개(크메르) 고정, <code>target_lang</code>만 파라미터.</p>
+
+    <h3>2일 빌드 계획</h3>
+    <ul>
+      <li><b>Day0</b> 셋업 + 멀티모달+JSON 1건 → 프롬프트 확정</li>
+      <li><b>Day1 오전</b> end-to-end + 의역/위험 튜닝</li>
+      <li><b>Day1 오후</b> 화면3 통합 결과 UI + 위험 색상</li>
+      <li><b>Day1 밤</b> 답장+클립보드 + 히스토리 + 위험 상세</li>
+      <li><b>Day2 오전</b> 홈/설정 + 폰트 + 폴백</li>
+      <li><b>Day2 오후</b> 라이브 리허설 + 슬라이드/영상</li>
+    </ul>
+
+    <h3>심사 적합성</h3>
+    <ul>
+      <li><b>사회(30)</b> 250만+ + '동료에게 캡처' 장면, 임금체불 보호</li>
+      <li><b>창의(25)</b> 캡처행동→인터페이스(학습비용0) + 가치 확장</li>
+      <li><b>AI(20)</b> 한 호출·한 화면 4능력 → "단순 번역기 아니다"</li>
+      <li><b>완성(15)</b> 7화면 + 실서버 + 다국어 전환</li>
+      <li><b>발표(10)</b> 진짜 카톡 즉석 캡처 → 위험 빨강 + 답장 라이브</li>
+    </ul>
+
+    <h3>7분 데모</h3>
+    <p>"외국인 250만, 매일 한국어 카톡" → 스레이몸 → "직역 아닌 이해+행동" → <b>심사위원 폰 카톡 캡처 → 크메르어+'5시 집합'+빨강 임금주의+답장 복사</b> + 흐름도 → "번역기가 아니라 약자의 방패".</p>
+
+    <h3>60초 영상</h3>
+    <p class="muted">비닐하우스 아침 카톡 → 동료에게 보내려다 멈칫 → 오뭐로 결과(의역+카드+빨강+답장)→표정 풀림 → 복사→정시 출근 → "번역을 넘어, 행동까지".</p>
+
+    <h3>리스크 &amp; 완화</h3>
+    <table>
+      <tr><th>리스크</th><th>완화</th></tr>
+      <tr><td>카톡 작은글씨/행간 위험 탐지 흔들림</td><td>검증 샘플 3~4장으로 프롬프트 고정</td></tr>
+      <tr><td>위험 오탐 → 신뢰 손상</td><td>'주의' 톤, 법률자문 아님 명시</td></tr>
+      <tr><td>JSON 깨짐</td><td>형식 강제 + 재시도 + 번역만이라도</td></tr>
+    </table>
+
+    <h3>차별점</h3>
+    <p>심사위원 폰 진짜 카톡 즉석 캡처 → 라이브 1회 호출로 의역+카드+빨강 위험+복사 답장이 한 화면에. '지금 작동하는 AI'가 우위.</p>
+  </div>
+
+  <!-- 4 BARRIER -->
+  <div class="card barrier" id="barrier">
+    <h2>♿ 배리어프리 트랙 — 쉬운고지서 <span class="badge b-barrier">Easy Letter · 106</span></h2>
+    <p class="tagline">"어려운 우편물 사진 한 장이면, 무슨 일을 언제까지 해야 하는지 알려드려요."</p>
+    <p><b>한 줄 정리</b> · 발달장애인·저문해층이 행정/금융 우편물을 찍으면 한 문장 요약 + 쉬운말 토글 + 할 일 체크리스트 + 캘린더 등록까지 주는 앱.</p>
+
+    <h3>문제 정의</h3>
+    <p>관료적 문장과 작은 글씨는 발달장애인·저문해층에게 '읽을 수 없는 벽'. 발달장애 약 26만, 최저 문해 성인 200만+. '누가/무엇을/얼마/언제까지/안 하면'을 뽑아주는 도구가 없어 기한을 놓쳐 연체·불이익 반복, 매번 보호자에게 설명을 구걸.</p>
+
+    <h3>페르소나</h3>
+    <p>김민수(28, 경증 발달장애). 원룸 자립 시작, 마트 보조. 흰 봉투(건강보험·과태료·재계약)가 오면 '본인부담금'·'소멸시효'에 막혀 서랍에 미루다 연체. "또 물어봐서 죄송한데…"가 입에 붙음.</p>
+
+    <h3>HMW</h3>
+    <p>어려운 우편물을 사진 한 장으로 찍었을 때, 김민수가 누구에게도 묻지 않고 '무엇을·얼마를·언제까지'를 스스로 이해하고 기한 안에 행동하게 하려면?</p>
+
+    <h3>가치 제안</h3>
+    <p>찍으면 5초 만에 "8월 15일까지 건강보험료 6만 8천 원을 내야 해요" 한 문장 카드. 원문↔쉬운말 토글, 할 일 1·2·3, '안 하면?', 전화·캘린더 버튼까지. 의존을 자립으로 바꾸는 '읽기 동반자'.</p>
+
+    <h3>MVP 기능 (2일 스코프)</h3>
+    <table>
+      <tr><th>기능</th><th>왜</th><th>Claude</th><th>역할</th></tr>
+      <tr><td>우편물 사진 1장</td><td>인지부담 0</td><td>✗</td><td>—</td></tr>
+      <tr><td>비전 단일 호출 구조화</td><td>OCR+의미+요약+행동+쉬운말 1회</td><td>✓</td><td>8필드 JSON 반환</td></tr>
+      <tr><td>한 문장 핵심 카드</td><td>가장 먼저 알 단 하나</td><td>✓</td><td>summary 압축</td></tr>
+      <tr><td>원문↔쉬운말 토글</td><td>AI 변환 눈앞 증명=AI핵심</td><td>✓</td><td>original·easyText 함께</td></tr>
+      <tr><td>할 일 1·2·3 + '안 내면?'</td><td>이해→행동</td><td>✓</td><td>actions[]+consequence</td></tr>
+      <tr><td>전화 / 캘린더 추가</td><td>자립적 완료</td><td>✗</td><td>—</td></tr>
+    </table>
+
+    <h3>화면 구성 (7)</h3>
+    <ol>
+      <li><b>홈/찍기</b> — 큰 카메라 버튼 + 지난 기록</li>
+      <li><b>분석 중</b> — "AI가 편지를 읽고 있어요"</li>
+      <li><b>핵심 요약 카드 (메인)</b> — 큰 글씨 한 문장 + 금액·기한 뱃지</li>
+      <li><b>원문↔쉬운말 토글 (핵심 데모)</b> — 즉석 before/after</li>
+      <li><b>할 일 + 안 하면?</b> — 체크리스트 + 결과 설명</li>
+      <li><b>액션/완료</b> — 전화·캘린더 실제 앱 열림</li>
+      <li><b>내 우편함</b> — 다가오는 기한 정렬(자립 증거)</li>
+    </ol>
+
+    <h3>Claude 연동</h3>
+    <p>사진 → base64 → <b>단 1회 호출</b> → JSON 8필드 → 카드 1:1. 모델 <code>claude-opus-4-8</code>/<code>claude-sonnet-4-6</code>, temp 0.2.</p>
+    <p class="muted">JSON: <code>summary · documentType · amount · dueDate · originalText · easyText · actions[] · consequence</code>. easyText는 초2 수준·이모지 1개·존댓말. "불확실하면 null(추측 금지)". prefill <code>{</code>.</p>
+
+    <h3>Flutter 스택</h3>
+    <p><code>image_picker</code> · <code>dio</code> · <code>provider</code> · <code>url_launcher</code>(tel:) · <code>add_2_calendar</code> · <code>google_fonts</code>(Noto Sans KR) · <code>flutter_image_compress</code>. <code>LetterResult</code> 모델 1개.</p>
+
+    <h3>2일 빌드 계획</h3>
+    <ul>
+      <li><b>Day1 0~5h</b> 셋업 + 멀티모달 호출 + 실제 종이 고지서 OCR 검증</li>
+      <li><b>Day1 5~8h</b> 프롬프트+JSON 튜닝, 고지서 3~4종 쉬운말 반복(점수 핵심)</li>
+      <li><b>Day1 8~12h</b> 화면3·4(요약 카드 + 토글) + 큰폰트·고대비</li>
+      <li><b>Day2 12~18h</b> 홈/로딩 + 체크리스트 + 전화·캘린더 실제 동작</li>
+      <li><b>Day2 18~24h</b> 리사이즈·에러·캐시 + 리허설 3회 + 영상/슬라이드/비상녹화</li>
+    </ul>
+    <p class="muted">컷 1순위: 화면7, google_fonts. 사수: 사진→Claude→요약→토글→캘린더.</p>
+
+    <h3>심사 적합성</h3>
+    <ul>
+      <li><b>사회(30)</b> 26만·200만 + "또 죄송한데…", '의존을 자립으로'</li>
+      <li><b>창의(25)</b> '토글=AI 변환 before/after를 눈으로'</li>
+      <li><b>AI(20)</b> 1회 호출 8필드, '사진1→Claude1→JSON8→화면6' 흐름도</li>
+      <li><b>완성(15)</b> 캘린더 등록까지 진짜 동작, 당사자 맞춤 UI</li>
+      <li><b>발표(10)</b> 즉석 종이 고지서 촬영이 클라이맥스 + 비상 녹화</li>
+    </ul>
+
+    <h3>7분 데모</h3>
+    <p>흰 봉투 "못 읽는다면?" 26만·200만 → 김민수 "또 죄송한데" → "사진 한 장이면" → <b>무대 종이 고지서 즉석 촬영→"8/15까지 6.8만"→토글→체크리스트→캘린더 꽂힘</b> + 흐름도 → "다시는 죄송하다 않게".</p>
+
+    <h3>60초 영상</h3>
+    <p class="muted">"글자는 보이는데 뜻을 모릅니다" → 봉투 미루고 '엄마 이거 뭐야?' → 촬영→카드+토글→캘린더 등록, 미소 "이제 혼자 할 수 있어요" → "사진 한 장이면 끝".</p>
+
+    <h3>리스크 &amp; 완화</h3>
+    <table>
+      <tr><th>리스크</th><th>완화</th></tr>
+      <tr><td>금액·마감일 오인식/추측(치명)</td><td>"불확실하면 null" + 원문 토글 대조 + 사전 검증 고지서</td></tr>
+      <tr><td>라이브 네트워크/지연</td><td>오프라인 캐시 + 비상 녹화 임베드</td></tr>
+      <tr><td>JSON 파싱 실패</td><td>prefill <code>{</code> + try/catch + '다시 찍어주세요'</td></tr>
+      <tr><td>당사자 UI 부적합 지적</td><td>큰폰트·고대비·한 화면 한 정보·존댓말, 페르소나서 도출 연결</td></tr>
+    </table>
+
+    <h3>차별점</h3>
+    <p>무대 종이 고지서를 그 자리서 촬영하면 5초 만에 'AI가 진짜로 읽고' 한 문장 + 토글 + 캘린더 자동 등록까지 동작. 목업은 '될 거예요', 우리는 '지금 됩니다'.</p>
+  </div>
+
+  <!-- 5 CARE -->
+  <div class="card care" id="care">
+    <h2>🧑‍⚕️ 돌봄 트랙 — 교대인계 <span class="badge b-care">Gyodae-Ingye · 102</span></h2>
+    <p class="tagline">"말로 쏟아낸 하루가, 다음 근무자를 위한 인계장으로 — 뒤죽박죽 음성 한 덩어리를 입소자별 카드 여러 장으로."</p>
+    <p><b>한 줄 정리</b> · 요양보호사가 근무 끝에 두서없이 말하면 Claude가 입소자별·카테고리별 인계 카드로 분해하고 위험·할 일을 추론하는 앱.</p>
+
+    <h3>문제 정의</h3>
+    <p>진짜 기록 부담은 '단건 기록'이 아니라 '교대 인계'다. 머릿속 12명 정보가 뒤섞여 있고, 구조화 인계장으로 옮기는 게 가장 무겁고 누락 시 낙상·투약 사고로 직결. 손글씨/타이핑 약한 50~60대 베테랑은 '1건씩 입력' 솔루션에서 소외(입력이 더 일). 현장은 '한 번에 쏟아내고 AI가 정리'를 원함.</p>
+
+    <h3>페르소나</h3>
+    <p>야간 요양보호사 김순자(54). 오전 7시 퇴근 직전, 입소자 12명 변동을 손글씨로 옮기느라 30분째. 한자어 의료용어 표기 어려워 누락 발생. 디지털 앱은 '입력이 더 일'이라 외면.</p>
+
+    <h3>HMW</h3>
+    <p>손글씨·타이핑에 약한 베테랑이 근무 끝에 두서없이 말만 하면, 다음 근무자가 바로 쓸 입소자별 인계장과 위험 알림이 자동 생성되게 하려면?</p>
+
+    <h3>가치 제안</h3>
+    <p>'입력'을 '말하기'로. 2~3분 말하면 한 덩어리 음성이 입소자별·카테고리별 카드 + '낮번 우선 확인 TOP3'로 정돈. 받아쓰기가 아니라 추론.</p>
+
+    <h3>MVP 기능 (2일 스코프)</h3>
+    <table>
+      <tr><th>기능</th><th>왜</th><th>Claude</th><th>역할</th></tr>
+      <tr><td>음성 녹음 + 텍스트 표시</td><td>쓰는 대신 말하게</td><td>✗(디바이스 STT)</td><td>—</td></tr>
+      <tr><td>텍스트 붙여넣기 폴백</td><td>STT 실패 대비</td><td>✗</td><td>—</td></tr>
+      <tr><td>입소자별 자동 분리</td><td>섞인 한 덩어리→N명</td><td>✓</td><td>다중 엔티티 분해</td></tr>
+      <tr><td>카테고리 구조화</td><td>활력·식사·배변·수면·통증·투약·낙상</td><td>✓</td><td>항목별 JSON</td></tr>
+      <tr><td>누락 위험 추론→액션 승격</td><td>'혈압 높았는데 약 언급 없음'</td><td>✓</td><td>미명시 위험 추론</td></tr>
+      <tr><td>낙상·투약 플래그 + TOP3</td><td>환자 안전=핵심</td><td>✓</td><td>위험 감지 + 우선순위</td></tr>
+    </table>
+
+    <h3>화면 구성 (7)</h3>
+    <ol>
+      <li><b>홈/녹음</b> — 큰 마이크 버튼 + 텍스트 폴백 진입</li>
+      <li><b>녹음 중/인식</b> — 실시간 STT 텍스트, 탭 보정</li>
+      <li><b>정리 중</b> — "입소자별로 나누고 있어요"(분해 연출)</li>
+      <li><b>인계 보드 (핵심)</b> — 입소자 카드 그리드 + 낙상·투약 빨강 점등</li>
+      <li><b>카드 상세</b> — 시간순 변동 + 근거 문장 + 액션</li>
+      <li><b>TOP3</b> — 가장 위험한 액션 3개 고정</li>
+      <li><b>내보내기</b> — 텍스트/이미지 공유</li>
+    </ol>
+
+    <h3>Claude 연동</h3>
+    <p>디바이스 STT(<code>speech_to_text</code>)가 음성→텍스트 → 비정형 장문을 <b>단 1회 호출</b>로 입소자별·카테고리별 구조화. 모델 <code>claude-opus-4-8</code>(추론)/<code>claude-sonnet-4-6</code>.</p>
+    <p class="muted">JSON: <code>residents[{name,items[],risks[],actions[]}] · top3_actions</code>. <b>음성에 없는 사실 만들지 말 것</b>, 추정은 표시. AI 흐름: STT(디바이스)→Claude 추론 1회 — "받아쓰기 아닌 추론" 강조.</p>
+
+    <h3>Flutter 스택</h3>
+    <p><code>speech_to_text</code> · <code>dio</code> · <code>provider</code> · <code>hive</code> · <code>share_plus</code>. <b>텍스트 붙여넣기 폴백 필수</b>(STT 무대 실패 대비). 키 <code>--dart-define</code>.</p>
+
+    <h3>2일 빌드 계획</h3>
+    <ul>
+      <li><b>Day0</b> 셋업 + STT 권한 + '뒤섞인 텍스트→입소자별 JSON' 1건 → 프롬프트 확정</li>
+      <li><b>Day1 오전</b> STT→Claude→파싱 end-to-end + 시드 3~4명 분해 튜닝</li>
+      <li><b>Day1 오후</b> 화면4 인계 보드(카드+칩+위험 점등) + 상세</li>
+      <li><b>Day1 밤</b> TOP3 + 녹음/인식+탭보정 + 텍스트 폴백</li>
+      <li><b>Day2 오전</b> 홈/내보내기/기록 + 폴백</li>
+      <li><b>Day2 오후</b> 사전 검증 음성 리허설 + 슬라이드/영상</li>
+    </ul>
+
+    <h3>심사 적합성</h3>
+    <ul>
+      <li><b>사회(30)</b> 인계 누락→낙상·투약 '환자 안전' + 50대 종사자 음성 포용</li>
+      <li><b>창의(25)</b> '단건' 아닌 '교대 인계' 재정의 + 분해+위험 추론</li>
+      <li><b>AI(20)</b> 받아쓰기 아닌 '비구조 장문→다중 엔티티 구조화+추론'</li>
+      <li><b>완성(15)</b> 위험 점등·TOP3·내보내기까지</li>
+      <li><b>발표(10)</b> 음성이 카드로 쪼개져 점등되는 연출</li>
+    </ul>
+
+    <h3>7분 데모</h3>
+    <p>손글씨 인계장에 묶인 퇴근, "누락=사고" → 김순자 → "말만 하세요" → <b>시나리오 음성(또는 텍스트 폴백) 입력→카드 분해·정렬+낙상/투약 빨강+TOP3 생성</b> "받아쓰기가 아니라 추론" + 흐름도 → "손 아닌 입을 쓰게, 사고를 막고 소외를 포용으로".</p>
+
+    <h3>60초 영상</h3>
+    <p class="muted">새벽 펜으로 빼곡히 적다 한숨, 7:00 → "12명 다 적기엔 시간이…" → 말하기→카드 분해·정렬+낙상 빨강+TOP3 → 다음 근무자 "오늘은 김씨 낙상 주의군요" → "말하면 인계장이 됩니다".</p>
+
+    <h3>리스크 &amp; 완화</h3>
+    <table>
+      <tr><th>리스크</th><th>완화</th></tr>
+      <tr><td>STT 오인식(소음·사투리·의료용어)</td><td>사전 검증 음성 + 탭 보정 + <b>텍스트 폴백</b></td></tr>
+      <tr><td>위험 플래그 환각(의료 책임)</td><td>"없는 사실 금지" + 추정 표시 + "AI 보조·최종 확인 사람"</td></tr>
+      <tr><td>라이브 지연/실패</td><td>사전 분석 캐시 + 비상 녹화</td></tr>
+    </table>
+
+    <h3>차별점</h3>
+    <p>무대에서 두서없는 음성 한 덩어리를 실제 입력→라이브 호출로 입소자별 카드 분해+위험 점등+TOP3가 눈앞에 생성. 입력이 음성이라 4개 중 AI 추론력이 가장 차별적.</p>
+  </div>
+
+  <!-- 6 CEO -->
+  <h2 id="ceo">6. CEO 최종 추천 — 딱 하나 고른다면</h2>
+  <p class="muted">무박 2일 · Flutter 1인 기준 우선순위:</p>
+
+  <div class="rank"><div class="n">🥇</div><div><b>쉬운고지서 (배리어프리) — 최고 추천.</b> 점수 1위(106). 입력이 <b>사진 1장</b>이라 무대서 깨질 단일 실패점 거의 없음(STT·실시간 없음). '원문↔쉬운말 토글'이 AI 변환을 눈에 박고, 캘린더 자동 등록이 완성도 증명. <b>가장 안전하면서 천장 높음.</b></div></div>
+  <div class="rank"><div class="n">🥈</div><div><b>오뭐 (다문화).</b> 점수 2위(103). 같은 사진/캡처 엔진인데 <b>번역+추출+위험+답장 4능력</b>이 한 화면에 떠 AI 활용도(20)를 가장 강하게. 임금 위험 메시지가 묵직. 쉬운고지서와 <b>코드 자산 공유</b>.</div></div>
+  <div class="rank"><div class="n">🥉</div><div><b>교대인계 (돌봄).</b> 차별성 1등(음성→추론). "받아쓰기 아닌 추론" 한 방. 단 STT가 유일 리스크 → <b>텍스트 폴백 필수</b>. 안정성 한 단계 아래.</div></div>
+  <div class="rank"><div class="n">4</div><div><b>찰칵 효도 (실버).</b> 가장 따뜻하고 데모 극적(빨강 사기 신호등). 단 사기 오판(false negative)이 신뢰 깸 → 보수적 분류 규칙이 생명.</div></div>
+
+  <div class="callout win">
+    <b>결정적 한 수 — 멀티 트랙 전략.</b> 실버·다문화·배리어프리는 <b>동일 엔진</b>(<code>사진/캡처 → Claude 멀티모달 1회 → JSON → 카드</code>).
+    <ul>
+      <li><b>Day0~Day1 오전</b> 공용 엔진을 1번만 단단히(<code>image_picker → base64 → Anthropic 호출 → JSON 파싱 → 카드 위젯</code>)</li>
+      <li><b>Day1 오후~Day2</b> 시스템 프롬프트 + 카드 UI만 트랙별로 교체</li>
+      <li>결과: <b>메인 1개를 완성도 높게</b>, 시간 남으면 두 번째 트랙 즉시 파생</li>
+    </ul>
+    <b>나의 추천: 쉬운고지서(배리어프리)를 메인 → 같은 엔진으로 오뭐(다문화) 보너스.</b> 안전성·점수·재사용성·발표 임팩트 균형 최적.
+  </div>
+
+  <!-- 7 KIT -->
+  <h2 id="kit">7. 공통 빌드 키트 (어느 트랙이든)</h2>
+
+  <h3>공용 Claude 호출 골격</h3>
+  <ul>
+    <li>엔드포인트 <code>POST https://api.anthropic.com/v1/messages</code></li>
+    <li>헤더 <code>x-api-key</code>(--dart-define) · <code>anthropic-version: 2023-06-01</code> · <code>content-type: application/json</code></li>
+    <li>body <code>model · max_tokens · messages:[{role:user, content:[{type:image, source:{type:base64}}, {type:text}]}] · system</code></li>
+    <li>JSON 강제: assistant prefill <code>{</code> + <code>temperature:0.2</code>, Flutter <code>jsonDecode</code> + try/catch + 재시도 1회</li>
+  </ul>
+
+  <h3>공통 안전망 (발표 리스크 0)</h3>
+  <ul>
+    <li>라이브 실패 대비 <b>사전 분석 결과 캐시</b> 1건 항상 보유</li>
+    <li>데모 전 과정 <b>비상 녹화 영상</b>을 슬라이드에 임베드(0초 전환)</li>
+    <li>이미지 1280px 다운스케일로 업로드 속도·비용 안정화</li>
+  </ul>
+
+  <h3>발표 7분 공식 (전 트랙 공통)</h3>
+  <div class="lead">문제(통계+장면) → 우리가 만난 사람(페르소나) → 서비스 한 줄 → 라이브 시연(심사위원 참여) → "이게 다 Claude 1회 호출" 흐름도 → 사회적 가치 한 문장</div>
+
+  <h3>결과물 체크리스트 (PDF 제출 기준)</h3>
+  <ul class="checklist">
+    <li>클릭 가능한 앱 화면 5장+ → <b>실제 구동 Flutter 앱으로 대체(상위호환)</b></li>
+    <li>발표 슬라이드 8장 내외 (문제~가치~AI 흐름도)</li>
+    <li>60초 소개영상 (캡컷+Canva)</li>
+    <li>서비스 기획서 (이 문서가 초안)</li>
+    <li>AI 활용 내역 슬라이드 1장 (필수 평가 항목)</li>
+  </ul>
+
+  <p class="foot">생성: /plan-ceo-review 워크플로우 (트랙별 6~9 후보 → 적대적 채점 → 우승작 상세화) · 점수는 내부 채점 기준</p>
+
+</div>
+</body>
+</html>

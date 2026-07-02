@@ -3,6 +3,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ilgo/data/models/analysis.dart';
+import 'package:ilgo/data/models/analysis_summary.dart';
 import 'package:ilgo/data/models/enums.dart';
 
 void main() {
@@ -70,6 +71,38 @@ void main() {
       expect(a.actions, isEmpty);
       expect(a.replyDrafts, isEmpty);
       expect(a.cards, isNull);
+    });
+  });
+
+  group('AnalysisListResponse.fromJson', () {
+    test('parses paginated list with real API data', () {
+      final json = {
+        "items": [
+          {
+            "id": "c9f4636b-a05d-4137-93eb-d5b6249d2290",
+            "doc_type": "고지서",
+            "summary_one_line": "2009년 2월 전기요금 62,210원을 3월 5일까지 내야 합니다.",
+            "top_risk_level": "yellow",
+            "card_deadline": "2009-03-05",
+            "created_at": "2026-07-02T00:33:32.962395Z"
+          },
+          {
+            "id": "a903fc61-042b-471b-a7d0-d94c393fa326",
+            "doc_type": "고지서",
+            "summary_one_line": "2009년 2월분 전기요금 62,210원을 3월 5일까지 내야 합니다.",
+            "top_risk_level": "yellow",
+            "card_deadline": "2009-03-05",
+            "created_at": "2026-07-02T00:15:33.983207Z"
+          }
+        ],
+        "next_cursor": null
+      };
+
+      final response = AnalysisListResponse.fromJson(json);
+      expect(response.items.length, 2);
+      expect(response.items[0].id, 'c9f4636b-a05d-4137-93eb-d5b6249d2290');
+      expect(response.items[1].docType, '고지서');
+      expect(response.nextCursor, isNull);
     });
   });
 }

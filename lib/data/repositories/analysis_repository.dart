@@ -5,8 +5,8 @@ import '../models/analysis_summary.dart';
 import '../models/enums.dart';
 import '../models/reply_draft.dart';
 
-/// The single seam the UI depends on. Swap Mock ↔ Api in [AppBinding] via
-/// `Config.useMock` — no screen code changes.
+/// The single seam the UI depends on. Backed by the live API
+/// ([ApiAnalysisRepository]), wired in [AppBinding].
 abstract class AnalysisRepository {
   /// Send one image, get a structured [Analysis] back.
   Future<Analysis> analyze({
