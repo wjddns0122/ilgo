@@ -24,6 +24,7 @@ String tobagiAsset(TobagiState s) => _assets[s]!;
 /// home greetings). Named constants so callers don't hardcode paths.
 const tobagiLetterAsset = 'assets/character/LetterTobak.png';
 const tobagiPhotoAsset = 'assets/character/TakingPhotoTobak.png';
+const tobagiJejuAsset = 'assets/character/JejuTobak.png';
 
 /// Parse a backend `character_state` string to a [TobagiState], or null if the
 /// value is missing / unrecognised (client then falls back to risk-derivation).

@@ -5,8 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/app_routes.dart';
 import '../../core/responsive.dart';
 import '../../core/theme.dart';
+import '../../data/models/tobagi.dart';
 import '../../data/services/auth_service.dart';
 import '../../data/services/profile_service.dart';
+import '../../widgets/tobagi_image.dart';
 
 /// Email + password login screen (Figma node 30:769).
 /// "시작하기" registers a new account (or logs in if the email exists).
@@ -116,7 +118,25 @@ class _LoginViewState extends State<LoginView> {
                             style: GoogleFonts.notoSansKr(
                                 fontSize: context.rs(20), color: AppColors.stone),
                           ),
-                          SizedBox(height: context.rs(32)),
+                          SizedBox(height: context.rs(24)),
+                          Row(
+                            children: [
+                              const TobagiImage(tobagiJejuAsset, size: 64),
+                              SizedBox(width: context.rs(12)),
+                              Expanded(
+                                child: Text(
+                                  '천천히 해도 괜찮아. 내가 같이 있을게.',
+                                  style: GoogleFonts.notoSansKr(
+                                    fontSize: context.rs(15),
+                                    height: 1.5,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.forest,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: context.rs(24)),
                           _label(context, '이메일'),
                           SizedBox(height: context.rs(10)),
                           _field(
