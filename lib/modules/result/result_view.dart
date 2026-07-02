@@ -6,6 +6,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/app_routes.dart';
+import '../../core/help_recommend.dart';
 import '../../core/responsive.dart';
 import '../../core/theme.dart';
 import '../../data/models/action_item.dart';
@@ -138,7 +139,7 @@ class _ResultViewState extends State<ResultView> {
                   iconSize: context.rs(20),
                   tooltip: '공유',
                   icon: const Icon(Icons.ios_share, color: AppColors.ink),
-                  onPressed: () => _share(a),
+                  onPressed: () => _share(context, a),
                 ),
               ),
             ],
@@ -149,8 +150,111 @@ class _ResultViewState extends State<ResultView> {
   }
 
   // ── Share ─────────────────────────────────────────────────────────────
-  Future<void> _share(Analysis a) async {
-    await SharePlus.instance.share(ShareParams(text: _shareText(a)));
+  /// Offer two share flavours: a plain result, or a "help request" that asks a
+  /// family member / colleague to check together (stronger social framing).
+  Future<void> _share(BuildContext context, Analysis a) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: AppColors.paper,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(height: ctx.rs(8)),
+            _shareOption(
+              ctx,
+              Icons.volunteer_activism,
+              '도움 요청으로 공유',
+              '가족·동료에게 "같이 확인해줘"',
+              () {
+                Navigator.of(ctx).pop();
+                SharePlus.instance
+                    .share(ShareParams(text: _helpRequestText(a)));
+              },
+            ),
+            _shareOption(
+              ctx,
+              Icons.ios_share,
+              '결과 공유',
+              '요약과 핵심만',
+              () {
+                Navigator.of(ctx).pop();
+                SharePlus.instance.share(ShareParams(text: _shareText(a)));
+              },
+            ),
+            SizedBox(height: ctx.rs(12)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _shareOption(
+    BuildContext context,
+    IconData icon,
+    String title,
+    String subtitle,
+    VoidCallback onTap,
+  ) {
+    return ListTile(
+      onTap: onTap,
+      leading: Icon(icon, color: AppColors.forest, size: context.rs(26)),
+      title: Text(
+        title,
+        style: GoogleFonts.notoSansKr(
+          fontSize: context.rs(17),
+          fontWeight: FontWeight.w700,
+          color: AppColors.ink,
+        ),
+      ),
+      subtitle: Text(
+        subtitle,
+        style: GoogleFonts.notoSansKr(
+          fontSize: context.rs(13.6),
+          color: AppColors.stone,
+        ),
+      ),
+    );
+  }
+
+  /// "도움 요청" template — summary + top risk + 1–2 to-dos + recommended
+  /// contact. Never includes the original text or the image (privacy).
+  String _helpRequestText(Analysis a) {
+    final b = StringBuffer('[읽고] 제가 받은 글을 쉽게 정리했어요.\n\n');
+    final summary = a.summaryOneLine?.trim();
+    b.writeln(
+        '요약: ${(summary != null && summary.isNotEmpty) ? summary : (a.docType ?? '분석 결과')}');
+    final top = _topRisk(a);
+    if (top != null) {
+      b.writeln('위험: ${_RiskLook.of(top.level).label} · ${top.type} — ${top.message}');
+    }
+    if (a.actions.isNotEmpty) {
+      b.writeln();
+      b.writeln('해야 할 일:');
+      final n = a.actions.length < 2 ? a.actions.length : 2;
+      for (var i = 0; i < n; i++) {
+        b.writeln('${i + 1}. ${a.actions[i].text}');
+      }
+    }
+    final rec = recommendedHelp(top?.type ?? '');
+    if (rec.tier1.isNotEmpty) {
+      final c = rec.tier1.first;
+      b.writeln();
+      b.writeln('도움받을 곳: ${c.title} ${c.phone}');
+    }
+    b.writeln();
+    b.write('혹시 같이 확인해줄 수 있나요?');
+    return b.toString();
+  }
+
+  /// Highest-severity risk (red > yellow/unknown > green), or null.
+  Risk? _topRisk(Analysis a) {
+    if (a.risks.isEmpty) return null;
+    int sev(String l) => l == 'red' ? 3 : (l == 'green' ? 1 : 2);
+    return a.risks.reduce((x, y) => sev(y.level) > sev(x.level) ? y : x);
   }
 
   String _shareText(Analysis a) {
