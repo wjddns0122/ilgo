@@ -1,8 +1,0 @@
-{
-  "items": [
-    { "id": "anl_0001", "doc_type": "고지서", "summary_one_line": "8월 15일까지 건강보험료 6만 8천 원…", "top_risk_level": "yellow", "card_deadline": "2026-08-15", "created_at": "2026-06-30T07:10:00Z" },
-    { "id": "anl_0003", "doc_type": "고지서", "summary_one_line": "9월 1일까지 주차 과태료 4만 원…", "top_risk_level": "red", "card_deadline": "2026-09-01", "created_at": "2026-06-30T07:25:00Z" },
-    { "id": "anl_0002", "doc_type": "메시지", "summary_one_line": "Tomorrow 5 AM meetup. If late, pay cut.", "top_risk_level": "red", "card_deadline": null, "created_at": "2026-06-30T07:20:00Z" }
-  ],
-  "next_cursor": null
-}
