@@ -14,6 +14,7 @@ import '../../data/models/analysis.dart';
 import '../../data/models/cards.dart';
 import '../../data/models/reply_draft.dart';
 import '../../data/models/risk.dart';
+import '../../widgets/tobagi_easy_view.dart';
 import '../analyze/analyze_controller.dart';
 
 /// Result screen — easy-Korean 고지서 layout (Figma node 1:828).
@@ -76,6 +77,8 @@ class _ResultViewState extends State<ResultView> {
                       _header(context, a),
                       SizedBox(height: context.rs(26)),
                       _summary(context, a),
+                      SizedBox(height: context.rs(20)),
+                      TobagiEasyView(a),
                       SizedBox(height: context.rs(28)),
                       _risks(context, a.risks),
                       SizedBox(height: context.rs(32)),
