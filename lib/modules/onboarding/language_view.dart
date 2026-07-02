@@ -46,7 +46,7 @@ class _OnboardingLanguageViewState extends State<OnboardingLanguageView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                OnbHeader(step: 2, onBack: () => Get.back()),
+                OnbHeader(step: 2, total: 4, onBack: () => Get.back()),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Padding(
@@ -227,6 +227,6 @@ class _OnboardingLanguageViewState extends State<OnboardingLanguageView> {
 
   Future<void> _next() async {
     await Get.find<ProfileService>().setProfile(language: _selected!);
-    Get.toNamed(Routes.onboardingPermission); // 권한(3/3)
+    Get.toNamed(Routes.onboardingTextSize); // 글씨 크기(3/4)
   }
 }

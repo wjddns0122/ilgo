@@ -31,7 +31,7 @@ class _OnboardingModeViewState extends State<OnboardingModeView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                OnbHeader(step: 1, onBack: () => Get.back()),
+                OnbHeader(step: 1, total: 4, onBack: () => Get.back()),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Padding(
@@ -145,9 +145,9 @@ class _OnboardingModeViewState extends State<OnboardingModeView> {
       // 내 언어로 → 언어 선택(2/3).
       Get.toNamed(Routes.onboardingLanguage);
     } else {
-      // 쉬운 한국어 → 언어 선택 불필요, 바로 권한(3/3).
+      // 쉬운 한국어 → 언어 선택 불필요, 바로 글씨 크기(3/4).
       await profile.setProfile(language: 'ko');
-      Get.toNamed(Routes.onboardingPermission);
+      Get.toNamed(Routes.onboardingTextSize);
     }
   }
 }

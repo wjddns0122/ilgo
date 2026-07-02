@@ -6,6 +6,7 @@ abstract class Routes {
   static const onboarding = '/onboarding';
   static const onboardingMode = '/onboarding/mode';
   static const onboardingLanguage = '/onboarding/language';
+  static const onboardingTextSize = '/onboarding/text-size';
   static const onboardingPermission = '/onboarding/permission';
   static const home = '/home';
   static const camera = '/camera';

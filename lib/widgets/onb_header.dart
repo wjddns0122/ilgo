@@ -37,6 +37,8 @@ class OnbHeader extends StatelessWidget {
       case 2:
         Get.toNamed(Routes.onboardingLanguage);
       case 3:
+        Get.toNamed(Routes.onboardingTextSize);
+      case 4:
         Get.toNamed(Routes.onboardingPermission);
     }
   }

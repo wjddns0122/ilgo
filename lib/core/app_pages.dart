@@ -18,6 +18,7 @@ import '../modules/library/library_view.dart';
 import '../modules/onboarding/language_view.dart';
 import '../modules/onboarding/mode_view.dart';
 import '../modules/onboarding/permission_view.dart';
+import '../modules/onboarding/text_size_view.dart';
 import '../modules/onboarding/onboarding_view.dart';
 import '../modules/result/result_view.dart';
 import '../modules/help/help_view.dart';
@@ -39,6 +40,9 @@ abstract class AppPages {
     GetPage(
         name: Routes.onboardingLanguage,
         page: () => const OnboardingLanguageView()),
+    GetPage(
+        name: Routes.onboardingTextSize,
+        page: () => const OnboardingTextSizeView()),
     GetPage(
         name: Routes.onboardingPermission,
         page: () => const OnboardingPermissionView()),

@@ -26,7 +26,7 @@ class OnboardingPermissionView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                OnbHeader(step: 3, onBack: () => Get.back()),
+                OnbHeader(step: 4, total: 4, onBack: () => Get.back()),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Padding(
