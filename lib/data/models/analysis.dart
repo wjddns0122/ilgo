@@ -23,6 +23,11 @@ abstract class Analysis with _$Analysis {
     // doc_type heuristic when present; null until the backend ships them.
     @JsonKey(name: 'doc_class') String? docClass,
     @JsonKey(name: 'is_document') bool? isDocument,
+    // 또바기 companion, AI-chosen (optional). The backend may pick which
+    // character state fits the document (warn/caution/safe/victim) and a short
+    // line; the client falls back to a risk-derived state / caption when absent.
+    @JsonKey(name: 'character_state') String? characterState,
+    @JsonKey(name: 'character_line') String? characterLine,
     @JsonKey(name: 'summary_one_line') String? summaryOneLine,
     @JsonKey(name: 'original_text') String? originalText,
     @JsonKey(name: 'explained_text') String? explainedText,

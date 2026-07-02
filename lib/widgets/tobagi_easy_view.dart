@@ -24,10 +24,12 @@ class TobagiEasyView extends StatelessWidget {
   Color _cheek(TobagiState s) {
     switch (s) {
       case TobagiState.warn:
+      case TobagiState.victim:
         return const Color(0xFFB04A3A);
       case TobagiState.caution:
         return const Color(0xFFC0902A);
       case TobagiState.safe:
+      case TobagiState.cheer:
         return const Color(0xFF3B7A57);
       default:
         return AppColors.forest;
@@ -42,7 +44,9 @@ class TobagiEasyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final line = tobagiResultLine(analysis);
+    final allDone =
+        analysis.actions.isNotEmpty && analysis.actions.every((e) => e.isDone);
+    final line = tobagiResultLine(analysis, allActionsDone: allDone);
     final summary = analysis.summaryOneLine?.trim() ?? '';
     final cheek = _cheek(line.state);
 

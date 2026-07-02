@@ -5,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/app_routes.dart';
 import '../../core/responsive.dart';
 import '../../core/theme.dart';
+import '../../data/models/tobagi.dart';
+import '../../widgets/tobagi_image.dart';
 
 /// First-run intro screen. Implemented from Figma (file vQjZTBlx…, node 1:55):
 /// cream paper background, deep-green brand, three feature rows, one CTA.
@@ -32,7 +34,25 @@ class OnboardingView extends StatelessWidget {
                         children: [
                           SizedBox(height: context.rs(10)),
                           _brand(context),
-                          SizedBox(height: context.rs(32)),
+                          SizedBox(height: context.rs(24)),
+                          Row(
+                            children: [
+                              const TobagiImage(tobagiLetterAsset, size: 72),
+                              SizedBox(width: context.rs(14)),
+                              Expanded(
+                                child: Text(
+                                  '안녕! 나는 또바기야.\n어려운 글이 오면 나한테 보여줘.',
+                                  style: GoogleFonts.notoSansKr(
+                                    fontSize: context.rs(15),
+                                    height: 1.55,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.forest,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: context.rs(24)),
                           _heading(context),
                           SizedBox(height: context.rs(16)),
                           Text(

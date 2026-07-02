@@ -20,7 +20,10 @@ mixin _$Analysis {
  String get id; String get status;// done | processing | failed
 @JsonKey(name: 'output_mode') String get outputMode; String get lang;@JsonKey(name: 'doc_type') String? get docType;// Explicit classification signals (backend enum). Preferred over the
 // doc_type heuristic when present; null until the backend ships them.
-@JsonKey(name: 'doc_class') String? get docClass;@JsonKey(name: 'is_document') bool? get isDocument;@JsonKey(name: 'summary_one_line') String? get summaryOneLine;@JsonKey(name: 'original_text') String? get originalText;@JsonKey(name: 'explained_text') String? get explainedText; String? get consequence; Cards? get cards; List<Risk> get risks; List<ActionItem> get actions;@JsonKey(name: 'reply_drafts') List<ReplyDraft> get replyDrafts;@JsonKey(name: 'created_at') String get createdAt;
+@JsonKey(name: 'doc_class') String? get docClass;@JsonKey(name: 'is_document') bool? get isDocument;// 또바기 companion, AI-chosen (optional). The backend may pick which
+// character state fits the document (warn/caution/safe/victim) and a short
+// line; the client falls back to a risk-derived state / caption when absent.
+@JsonKey(name: 'character_state') String? get characterState;@JsonKey(name: 'character_line') String? get characterLine;@JsonKey(name: 'summary_one_line') String? get summaryOneLine;@JsonKey(name: 'original_text') String? get originalText;@JsonKey(name: 'explained_text') String? get explainedText; String? get consequence; Cards? get cards; List<Risk> get risks; List<ActionItem> get actions;@JsonKey(name: 'reply_drafts') List<ReplyDraft> get replyDrafts;@JsonKey(name: 'created_at') String get createdAt;
 /// Create a copy of Analysis
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -33,16 +36,16 @@ $AnalysisCopyWith<Analysis> get copyWith => _$AnalysisCopyWithImpl<Analysis>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Analysis&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.outputMode, outputMode) || other.outputMode == outputMode)&&(identical(other.lang, lang) || other.lang == lang)&&(identical(other.docType, docType) || other.docType == docType)&&(identical(other.docClass, docClass) || other.docClass == docClass)&&(identical(other.isDocument, isDocument) || other.isDocument == isDocument)&&(identical(other.summaryOneLine, summaryOneLine) || other.summaryOneLine == summaryOneLine)&&(identical(other.originalText, originalText) || other.originalText == originalText)&&(identical(other.explainedText, explainedText) || other.explainedText == explainedText)&&(identical(other.consequence, consequence) || other.consequence == consequence)&&(identical(other.cards, cards) || other.cards == cards)&&const DeepCollectionEquality().equals(other.risks, risks)&&const DeepCollectionEquality().equals(other.actions, actions)&&const DeepCollectionEquality().equals(other.replyDrafts, replyDrafts)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Analysis&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.outputMode, outputMode) || other.outputMode == outputMode)&&(identical(other.lang, lang) || other.lang == lang)&&(identical(other.docType, docType) || other.docType == docType)&&(identical(other.docClass, docClass) || other.docClass == docClass)&&(identical(other.isDocument, isDocument) || other.isDocument == isDocument)&&(identical(other.characterState, characterState) || other.characterState == characterState)&&(identical(other.characterLine, characterLine) || other.characterLine == characterLine)&&(identical(other.summaryOneLine, summaryOneLine) || other.summaryOneLine == summaryOneLine)&&(identical(other.originalText, originalText) || other.originalText == originalText)&&(identical(other.explainedText, explainedText) || other.explainedText == explainedText)&&(identical(other.consequence, consequence) || other.consequence == consequence)&&(identical(other.cards, cards) || other.cards == cards)&&const DeepCollectionEquality().equals(other.risks, risks)&&const DeepCollectionEquality().equals(other.actions, actions)&&const DeepCollectionEquality().equals(other.replyDrafts, replyDrafts)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,outputMode,lang,docType,docClass,isDocument,summaryOneLine,originalText,explainedText,consequence,cards,const DeepCollectionEquality().hash(risks),const DeepCollectionEquality().hash(actions),const DeepCollectionEquality().hash(replyDrafts),createdAt);
+int get hashCode => Object.hash(runtimeType,id,status,outputMode,lang,docType,docClass,isDocument,characterState,characterLine,summaryOneLine,originalText,explainedText,consequence,cards,const DeepCollectionEquality().hash(risks),const DeepCollectionEquality().hash(actions),const DeepCollectionEquality().hash(replyDrafts),createdAt);
 
 @override
 String toString() {
-  return 'Analysis(id: $id, status: $status, outputMode: $outputMode, lang: $lang, docType: $docType, docClass: $docClass, isDocument: $isDocument, summaryOneLine: $summaryOneLine, originalText: $originalText, explainedText: $explainedText, consequence: $consequence, cards: $cards, risks: $risks, actions: $actions, replyDrafts: $replyDrafts, createdAt: $createdAt)';
+  return 'Analysis(id: $id, status: $status, outputMode: $outputMode, lang: $lang, docType: $docType, docClass: $docClass, isDocument: $isDocument, characterState: $characterState, characterLine: $characterLine, summaryOneLine: $summaryOneLine, originalText: $originalText, explainedText: $explainedText, consequence: $consequence, cards: $cards, risks: $risks, actions: $actions, replyDrafts: $replyDrafts, createdAt: $createdAt)';
 }
 
 
@@ -53,7 +56,7 @@ abstract mixin class $AnalysisCopyWith<$Res>  {
   factory $AnalysisCopyWith(Analysis value, $Res Function(Analysis) _then) = _$AnalysisCopyWithImpl;
 @useResult
 $Res call({
- String id, String status,@JsonKey(name: 'output_mode') String outputMode, String lang,@JsonKey(name: 'doc_type') String? docType,@JsonKey(name: 'doc_class') String? docClass,@JsonKey(name: 'is_document') bool? isDocument,@JsonKey(name: 'summary_one_line') String? summaryOneLine,@JsonKey(name: 'original_text') String? originalText,@JsonKey(name: 'explained_text') String? explainedText, String? consequence, Cards? cards, List<Risk> risks, List<ActionItem> actions,@JsonKey(name: 'reply_drafts') List<ReplyDraft> replyDrafts,@JsonKey(name: 'created_at') String createdAt
+ String id, String status,@JsonKey(name: 'output_mode') String outputMode, String lang,@JsonKey(name: 'doc_type') String? docType,@JsonKey(name: 'doc_class') String? docClass,@JsonKey(name: 'is_document') bool? isDocument,@JsonKey(name: 'character_state') String? characterState,@JsonKey(name: 'character_line') String? characterLine,@JsonKey(name: 'summary_one_line') String? summaryOneLine,@JsonKey(name: 'original_text') String? originalText,@JsonKey(name: 'explained_text') String? explainedText, String? consequence, Cards? cards, List<Risk> risks, List<ActionItem> actions,@JsonKey(name: 'reply_drafts') List<ReplyDraft> replyDrafts,@JsonKey(name: 'created_at') String createdAt
 });
 
 
@@ -70,7 +73,7 @@ class _$AnalysisCopyWithImpl<$Res>
 
 /// Create a copy of Analysis
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? status = null,Object? outputMode = null,Object? lang = null,Object? docType = freezed,Object? docClass = freezed,Object? isDocument = freezed,Object? summaryOneLine = freezed,Object? originalText = freezed,Object? explainedText = freezed,Object? consequence = freezed,Object? cards = freezed,Object? risks = null,Object? actions = null,Object? replyDrafts = null,Object? createdAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? status = null,Object? outputMode = null,Object? lang = null,Object? docType = freezed,Object? docClass = freezed,Object? isDocument = freezed,Object? characterState = freezed,Object? characterLine = freezed,Object? summaryOneLine = freezed,Object? originalText = freezed,Object? explainedText = freezed,Object? consequence = freezed,Object? cards = freezed,Object? risks = null,Object? actions = null,Object? replyDrafts = null,Object? createdAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
@@ -79,7 +82,9 @@ as String,lang: null == lang ? _self.lang : lang // ignore: cast_nullable_to_non
 as String,docType: freezed == docType ? _self.docType : docType // ignore: cast_nullable_to_non_nullable
 as String?,docClass: freezed == docClass ? _self.docClass : docClass // ignore: cast_nullable_to_non_nullable
 as String?,isDocument: freezed == isDocument ? _self.isDocument : isDocument // ignore: cast_nullable_to_non_nullable
-as bool?,summaryOneLine: freezed == summaryOneLine ? _self.summaryOneLine : summaryOneLine // ignore: cast_nullable_to_non_nullable
+as bool?,characterState: freezed == characterState ? _self.characterState : characterState // ignore: cast_nullable_to_non_nullable
+as String?,characterLine: freezed == characterLine ? _self.characterLine : characterLine // ignore: cast_nullable_to_non_nullable
+as String?,summaryOneLine: freezed == summaryOneLine ? _self.summaryOneLine : summaryOneLine // ignore: cast_nullable_to_non_nullable
 as String?,originalText: freezed == originalText ? _self.originalText : originalText // ignore: cast_nullable_to_non_nullable
 as String?,explainedText: freezed == explainedText ? _self.explainedText : explainedText // ignore: cast_nullable_to_non_nullable
 as String?,consequence: freezed == consequence ? _self.consequence : consequence // ignore: cast_nullable_to_non_nullable
@@ -185,10 +190,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String status, @JsonKey(name: 'output_mode')  String outputMode,  String lang, @JsonKey(name: 'doc_type')  String? docType, @JsonKey(name: 'doc_class')  String? docClass, @JsonKey(name: 'is_document')  bool? isDocument, @JsonKey(name: 'summary_one_line')  String? summaryOneLine, @JsonKey(name: 'original_text')  String? originalText, @JsonKey(name: 'explained_text')  String? explainedText,  String? consequence,  Cards? cards,  List<Risk> risks,  List<ActionItem> actions, @JsonKey(name: 'reply_drafts')  List<ReplyDraft> replyDrafts, @JsonKey(name: 'created_at')  String createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String status, @JsonKey(name: 'output_mode')  String outputMode,  String lang, @JsonKey(name: 'doc_type')  String? docType, @JsonKey(name: 'doc_class')  String? docClass, @JsonKey(name: 'is_document')  bool? isDocument, @JsonKey(name: 'character_state')  String? characterState, @JsonKey(name: 'character_line')  String? characterLine, @JsonKey(name: 'summary_one_line')  String? summaryOneLine, @JsonKey(name: 'original_text')  String? originalText, @JsonKey(name: 'explained_text')  String? explainedText,  String? consequence,  Cards? cards,  List<Risk> risks,  List<ActionItem> actions, @JsonKey(name: 'reply_drafts')  List<ReplyDraft> replyDrafts, @JsonKey(name: 'created_at')  String createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Analysis() when $default != null:
-return $default(_that.id,_that.status,_that.outputMode,_that.lang,_that.docType,_that.docClass,_that.isDocument,_that.summaryOneLine,_that.originalText,_that.explainedText,_that.consequence,_that.cards,_that.risks,_that.actions,_that.replyDrafts,_that.createdAt);case _:
+return $default(_that.id,_that.status,_that.outputMode,_that.lang,_that.docType,_that.docClass,_that.isDocument,_that.characterState,_that.characterLine,_that.summaryOneLine,_that.originalText,_that.explainedText,_that.consequence,_that.cards,_that.risks,_that.actions,_that.replyDrafts,_that.createdAt);case _:
   return orElse();
 
 }
@@ -206,10 +211,10 @@ return $default(_that.id,_that.status,_that.outputMode,_that.lang,_that.docType,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String status, @JsonKey(name: 'output_mode')  String outputMode,  String lang, @JsonKey(name: 'doc_type')  String? docType, @JsonKey(name: 'doc_class')  String? docClass, @JsonKey(name: 'is_document')  bool? isDocument, @JsonKey(name: 'summary_one_line')  String? summaryOneLine, @JsonKey(name: 'original_text')  String? originalText, @JsonKey(name: 'explained_text')  String? explainedText,  String? consequence,  Cards? cards,  List<Risk> risks,  List<ActionItem> actions, @JsonKey(name: 'reply_drafts')  List<ReplyDraft> replyDrafts, @JsonKey(name: 'created_at')  String createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String status, @JsonKey(name: 'output_mode')  String outputMode,  String lang, @JsonKey(name: 'doc_type')  String? docType, @JsonKey(name: 'doc_class')  String? docClass, @JsonKey(name: 'is_document')  bool? isDocument, @JsonKey(name: 'character_state')  String? characterState, @JsonKey(name: 'character_line')  String? characterLine, @JsonKey(name: 'summary_one_line')  String? summaryOneLine, @JsonKey(name: 'original_text')  String? originalText, @JsonKey(name: 'explained_text')  String? explainedText,  String? consequence,  Cards? cards,  List<Risk> risks,  List<ActionItem> actions, @JsonKey(name: 'reply_drafts')  List<ReplyDraft> replyDrafts, @JsonKey(name: 'created_at')  String createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _Analysis():
-return $default(_that.id,_that.status,_that.outputMode,_that.lang,_that.docType,_that.docClass,_that.isDocument,_that.summaryOneLine,_that.originalText,_that.explainedText,_that.consequence,_that.cards,_that.risks,_that.actions,_that.replyDrafts,_that.createdAt);case _:
+return $default(_that.id,_that.status,_that.outputMode,_that.lang,_that.docType,_that.docClass,_that.isDocument,_that.characterState,_that.characterLine,_that.summaryOneLine,_that.originalText,_that.explainedText,_that.consequence,_that.cards,_that.risks,_that.actions,_that.replyDrafts,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -226,10 +231,10 @@ return $default(_that.id,_that.status,_that.outputMode,_that.lang,_that.docType,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String status, @JsonKey(name: 'output_mode')  String outputMode,  String lang, @JsonKey(name: 'doc_type')  String? docType, @JsonKey(name: 'doc_class')  String? docClass, @JsonKey(name: 'is_document')  bool? isDocument, @JsonKey(name: 'summary_one_line')  String? summaryOneLine, @JsonKey(name: 'original_text')  String? originalText, @JsonKey(name: 'explained_text')  String? explainedText,  String? consequence,  Cards? cards,  List<Risk> risks,  List<ActionItem> actions, @JsonKey(name: 'reply_drafts')  List<ReplyDraft> replyDrafts, @JsonKey(name: 'created_at')  String createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String status, @JsonKey(name: 'output_mode')  String outputMode,  String lang, @JsonKey(name: 'doc_type')  String? docType, @JsonKey(name: 'doc_class')  String? docClass, @JsonKey(name: 'is_document')  bool? isDocument, @JsonKey(name: 'character_state')  String? characterState, @JsonKey(name: 'character_line')  String? characterLine, @JsonKey(name: 'summary_one_line')  String? summaryOneLine, @JsonKey(name: 'original_text')  String? originalText, @JsonKey(name: 'explained_text')  String? explainedText,  String? consequence,  Cards? cards,  List<Risk> risks,  List<ActionItem> actions, @JsonKey(name: 'reply_drafts')  List<ReplyDraft> replyDrafts, @JsonKey(name: 'created_at')  String createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Analysis() when $default != null:
-return $default(_that.id,_that.status,_that.outputMode,_that.lang,_that.docType,_that.docClass,_that.isDocument,_that.summaryOneLine,_that.originalText,_that.explainedText,_that.consequence,_that.cards,_that.risks,_that.actions,_that.replyDrafts,_that.createdAt);case _:
+return $default(_that.id,_that.status,_that.outputMode,_that.lang,_that.docType,_that.docClass,_that.isDocument,_that.characterState,_that.characterLine,_that.summaryOneLine,_that.originalText,_that.explainedText,_that.consequence,_that.cards,_that.risks,_that.actions,_that.replyDrafts,_that.createdAt);case _:
   return null;
 
 }
@@ -241,7 +246,7 @@ return $default(_that.id,_that.status,_that.outputMode,_that.lang,_that.docType,
 @JsonSerializable()
 
 class _Analysis implements Analysis {
-  const _Analysis({this.id = '', required this.status, @JsonKey(name: 'output_mode') required this.outputMode, required this.lang, @JsonKey(name: 'doc_type') this.docType, @JsonKey(name: 'doc_class') this.docClass, @JsonKey(name: 'is_document') this.isDocument, @JsonKey(name: 'summary_one_line') this.summaryOneLine, @JsonKey(name: 'original_text') this.originalText, @JsonKey(name: 'explained_text') this.explainedText, this.consequence, this.cards, final  List<Risk> risks = const <Risk>[], final  List<ActionItem> actions = const <ActionItem>[], @JsonKey(name: 'reply_drafts') final  List<ReplyDraft> replyDrafts = const <ReplyDraft>[], @JsonKey(name: 'created_at') this.createdAt = ''}): _risks = risks,_actions = actions,_replyDrafts = replyDrafts;
+  const _Analysis({this.id = '', required this.status, @JsonKey(name: 'output_mode') required this.outputMode, required this.lang, @JsonKey(name: 'doc_type') this.docType, @JsonKey(name: 'doc_class') this.docClass, @JsonKey(name: 'is_document') this.isDocument, @JsonKey(name: 'character_state') this.characterState, @JsonKey(name: 'character_line') this.characterLine, @JsonKey(name: 'summary_one_line') this.summaryOneLine, @JsonKey(name: 'original_text') this.originalText, @JsonKey(name: 'explained_text') this.explainedText, this.consequence, this.cards, final  List<Risk> risks = const <Risk>[], final  List<ActionItem> actions = const <ActionItem>[], @JsonKey(name: 'reply_drafts') final  List<ReplyDraft> replyDrafts = const <ReplyDraft>[], @JsonKey(name: 'created_at') this.createdAt = ''}): _risks = risks,_actions = actions,_replyDrafts = replyDrafts;
   factory _Analysis.fromJson(Map<String, dynamic> json) => _$AnalysisFromJson(json);
 
 // Empty when the backend returns a result it chose not to persist
@@ -256,6 +261,11 @@ class _Analysis implements Analysis {
 // doc_type heuristic when present; null until the backend ships them.
 @override@JsonKey(name: 'doc_class') final  String? docClass;
 @override@JsonKey(name: 'is_document') final  bool? isDocument;
+// 또바기 companion, AI-chosen (optional). The backend may pick which
+// character state fits the document (warn/caution/safe/victim) and a short
+// line; the client falls back to a risk-derived state / caption when absent.
+@override@JsonKey(name: 'character_state') final  String? characterState;
+@override@JsonKey(name: 'character_line') final  String? characterLine;
 @override@JsonKey(name: 'summary_one_line') final  String? summaryOneLine;
 @override@JsonKey(name: 'original_text') final  String? originalText;
 @override@JsonKey(name: 'explained_text') final  String? explainedText;
@@ -297,16 +307,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Analysis&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.outputMode, outputMode) || other.outputMode == outputMode)&&(identical(other.lang, lang) || other.lang == lang)&&(identical(other.docType, docType) || other.docType == docType)&&(identical(other.docClass, docClass) || other.docClass == docClass)&&(identical(other.isDocument, isDocument) || other.isDocument == isDocument)&&(identical(other.summaryOneLine, summaryOneLine) || other.summaryOneLine == summaryOneLine)&&(identical(other.originalText, originalText) || other.originalText == originalText)&&(identical(other.explainedText, explainedText) || other.explainedText == explainedText)&&(identical(other.consequence, consequence) || other.consequence == consequence)&&(identical(other.cards, cards) || other.cards == cards)&&const DeepCollectionEquality().equals(other._risks, _risks)&&const DeepCollectionEquality().equals(other._actions, _actions)&&const DeepCollectionEquality().equals(other._replyDrafts, _replyDrafts)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Analysis&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.outputMode, outputMode) || other.outputMode == outputMode)&&(identical(other.lang, lang) || other.lang == lang)&&(identical(other.docType, docType) || other.docType == docType)&&(identical(other.docClass, docClass) || other.docClass == docClass)&&(identical(other.isDocument, isDocument) || other.isDocument == isDocument)&&(identical(other.characterState, characterState) || other.characterState == characterState)&&(identical(other.characterLine, characterLine) || other.characterLine == characterLine)&&(identical(other.summaryOneLine, summaryOneLine) || other.summaryOneLine == summaryOneLine)&&(identical(other.originalText, originalText) || other.originalText == originalText)&&(identical(other.explainedText, explainedText) || other.explainedText == explainedText)&&(identical(other.consequence, consequence) || other.consequence == consequence)&&(identical(other.cards, cards) || other.cards == cards)&&const DeepCollectionEquality().equals(other._risks, _risks)&&const DeepCollectionEquality().equals(other._actions, _actions)&&const DeepCollectionEquality().equals(other._replyDrafts, _replyDrafts)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,outputMode,lang,docType,docClass,isDocument,summaryOneLine,originalText,explainedText,consequence,cards,const DeepCollectionEquality().hash(_risks),const DeepCollectionEquality().hash(_actions),const DeepCollectionEquality().hash(_replyDrafts),createdAt);
+int get hashCode => Object.hash(runtimeType,id,status,outputMode,lang,docType,docClass,isDocument,characterState,characterLine,summaryOneLine,originalText,explainedText,consequence,cards,const DeepCollectionEquality().hash(_risks),const DeepCollectionEquality().hash(_actions),const DeepCollectionEquality().hash(_replyDrafts),createdAt);
 
 @override
 String toString() {
-  return 'Analysis(id: $id, status: $status, outputMode: $outputMode, lang: $lang, docType: $docType, docClass: $docClass, isDocument: $isDocument, summaryOneLine: $summaryOneLine, originalText: $originalText, explainedText: $explainedText, consequence: $consequence, cards: $cards, risks: $risks, actions: $actions, replyDrafts: $replyDrafts, createdAt: $createdAt)';
+  return 'Analysis(id: $id, status: $status, outputMode: $outputMode, lang: $lang, docType: $docType, docClass: $docClass, isDocument: $isDocument, characterState: $characterState, characterLine: $characterLine, summaryOneLine: $summaryOneLine, originalText: $originalText, explainedText: $explainedText, consequence: $consequence, cards: $cards, risks: $risks, actions: $actions, replyDrafts: $replyDrafts, createdAt: $createdAt)';
 }
 
 
@@ -317,7 +327,7 @@ abstract mixin class _$AnalysisCopyWith<$Res> implements $AnalysisCopyWith<$Res>
   factory _$AnalysisCopyWith(_Analysis value, $Res Function(_Analysis) _then) = __$AnalysisCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String status,@JsonKey(name: 'output_mode') String outputMode, String lang,@JsonKey(name: 'doc_type') String? docType,@JsonKey(name: 'doc_class') String? docClass,@JsonKey(name: 'is_document') bool? isDocument,@JsonKey(name: 'summary_one_line') String? summaryOneLine,@JsonKey(name: 'original_text') String? originalText,@JsonKey(name: 'explained_text') String? explainedText, String? consequence, Cards? cards, List<Risk> risks, List<ActionItem> actions,@JsonKey(name: 'reply_drafts') List<ReplyDraft> replyDrafts,@JsonKey(name: 'created_at') String createdAt
+ String id, String status,@JsonKey(name: 'output_mode') String outputMode, String lang,@JsonKey(name: 'doc_type') String? docType,@JsonKey(name: 'doc_class') String? docClass,@JsonKey(name: 'is_document') bool? isDocument,@JsonKey(name: 'character_state') String? characterState,@JsonKey(name: 'character_line') String? characterLine,@JsonKey(name: 'summary_one_line') String? summaryOneLine,@JsonKey(name: 'original_text') String? originalText,@JsonKey(name: 'explained_text') String? explainedText, String? consequence, Cards? cards, List<Risk> risks, List<ActionItem> actions,@JsonKey(name: 'reply_drafts') List<ReplyDraft> replyDrafts,@JsonKey(name: 'created_at') String createdAt
 });
 
 
@@ -334,7 +344,7 @@ class __$AnalysisCopyWithImpl<$Res>
 
 /// Create a copy of Analysis
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? status = null,Object? outputMode = null,Object? lang = null,Object? docType = freezed,Object? docClass = freezed,Object? isDocument = freezed,Object? summaryOneLine = freezed,Object? originalText = freezed,Object? explainedText = freezed,Object? consequence = freezed,Object? cards = freezed,Object? risks = null,Object? actions = null,Object? replyDrafts = null,Object? createdAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? status = null,Object? outputMode = null,Object? lang = null,Object? docType = freezed,Object? docClass = freezed,Object? isDocument = freezed,Object? characterState = freezed,Object? characterLine = freezed,Object? summaryOneLine = freezed,Object? originalText = freezed,Object? explainedText = freezed,Object? consequence = freezed,Object? cards = freezed,Object? risks = null,Object? actions = null,Object? replyDrafts = null,Object? createdAt = null,}) {
   return _then(_Analysis(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
@@ -343,7 +353,9 @@ as String,lang: null == lang ? _self.lang : lang // ignore: cast_nullable_to_non
 as String,docType: freezed == docType ? _self.docType : docType // ignore: cast_nullable_to_non_nullable
 as String?,docClass: freezed == docClass ? _self.docClass : docClass // ignore: cast_nullable_to_non_nullable
 as String?,isDocument: freezed == isDocument ? _self.isDocument : isDocument // ignore: cast_nullable_to_non_nullable
-as bool?,summaryOneLine: freezed == summaryOneLine ? _self.summaryOneLine : summaryOneLine // ignore: cast_nullable_to_non_nullable
+as bool?,characterState: freezed == characterState ? _self.characterState : characterState // ignore: cast_nullable_to_non_nullable
+as String?,characterLine: freezed == characterLine ? _self.characterLine : characterLine // ignore: cast_nullable_to_non_nullable
+as String?,summaryOneLine: freezed == summaryOneLine ? _self.summaryOneLine : summaryOneLine // ignore: cast_nullable_to_non_nullable
 as String?,originalText: freezed == originalText ? _self.originalText : originalText // ignore: cast_nullable_to_non_nullable
 as String?,explainedText: freezed == explainedText ? _self.explainedText : explainedText // ignore: cast_nullable_to_non_nullable
 as String?,consequence: freezed == consequence ? _self.consequence : consequence // ignore: cast_nullable_to_non_nullable

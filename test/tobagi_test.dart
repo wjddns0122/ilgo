@@ -72,4 +72,50 @@ void main() {
       expect(noSummary.speakText, noSummary.caption);
     });
   });
+
+  group('backend override + all-done', () {
+    Analysis mk(Map<String, dynamic> extra) => Analysis.fromJson(<String, dynamic>{
+          'status': 'done',
+          'output_mode': 'easy_korean',
+          'lang': 'ko',
+          ...extra,
+        });
+
+    test('valid character_state overrides the risk-derived state', () {
+      final a = mk({
+        'character_state': 'victim',
+        'risks': [
+          {'id': 'r', 'level': 'green', 'type': '사기', 'message': 'm'}
+        ],
+      });
+      expect(tobagiStateForResult(a), TobagiState.victim);
+    });
+
+    test('invalid character_state falls back to the risk-derived state', () {
+      final a = mk({
+        'character_state': 'nonsense',
+        'risks': [
+          {'id': 'r', 'level': 'red', 'type': '사기', 'message': 'm'}
+        ],
+      });
+      expect(tobagiStateForResult(a), TobagiState.warn);
+    });
+
+    test('character_line overrides the client caption', () {
+      final a = mk({'character_line': '내가 도와줄게', 'summary_one_line': 's'});
+      expect(tobagiResultLine(a).caption, '내가 도와줄게');
+    });
+
+    test('all actions done → cheer (ignores AI line)', () {
+      final a = mk({
+        'character_line': '위험해요',
+        'risks': [
+          {'id': 'r', 'level': 'red', 'type': '사기', 'message': 'm'}
+        ],
+      });
+      final line = tobagiResultLine(a, allActionsDone: true);
+      expect(line.state, TobagiState.cheer);
+      expect(line.caption, contains('잘했어'));
+    });
+  });
 }

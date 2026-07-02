@@ -6,6 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/responsive.dart';
 import '../../core/theme.dart';
+import '../../data/models/tobagi.dart';
+import '../../widgets/tobagi_image.dart';
 import 'analyze_controller.dart';
 
 /// Analyzing / loading screen (Figma node 1:583).
@@ -99,7 +101,9 @@ class _AnalyzeViewState extends State<AnalyzeView>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _badge(context, phase.icon),
-          SizedBox(height: context.rs(40)),
+          SizedBox(height: context.rs(24)),
+          TobagiImage(tobagiAsset(TobagiState.thinking), size: 64),
+          SizedBox(height: context.rs(16)),
           Text(
             '읽고가 읽고 있어요',
             style: GoogleFonts.notoSansKr(

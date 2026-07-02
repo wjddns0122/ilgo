@@ -7,6 +7,8 @@ import '../../core/deadline.dart';
 import '../../core/responsive.dart';
 import '../../core/theme.dart';
 import '../../data/models/analysis_summary.dart';
+import '../../data/models/tobagi.dart';
+import '../../widgets/tobagi_image.dart';
 import 'home_controller.dart';
 
 /// Main screen (Figma node 1:2095): capture actions + recent records.
@@ -50,7 +52,25 @@ class HomeView extends GetView<HomeController> {
                               color: AppColors.stone,
                             ),
                           ),
-                          SizedBox(height: context.rs(32)),
+                          SizedBox(height: context.rs(24)),
+                          Row(
+                            children: [
+                              const TobagiImage(tobagiPhotoAsset, size: 64),
+                              SizedBox(width: context.rs(12)),
+                              Expanded(
+                                child: Text(
+                                  '오늘도 어려운 글 있으면 나한테 찍어줘.',
+                                  style: GoogleFonts.notoSansKr(
+                                    fontSize: context.rs(15),
+                                    height: 1.5,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.forest,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: context.rs(24)),
                           _ActionCard(
                             icon: Icons.photo_camera_outlined,
                             title: '종이 찍기',

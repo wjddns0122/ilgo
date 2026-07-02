@@ -7,6 +7,8 @@ import '../../core/app_routes.dart';
 import '../../core/help_recommend.dart';
 import '../../core/responsive.dart';
 import '../../core/theme.dart';
+import '../../data/models/tobagi.dart';
+import '../../widgets/tobagi_image.dart';
 
 /// Risk detail (Figma node 30:1592): explains *why* a risk was flagged
 /// green/yellow/red, with step-by-step guidance and help CTAs.
@@ -397,13 +399,22 @@ class _RiskDetailViewState extends State<RiskDetailView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    v.guide,
-                    style: GoogleFonts.notoSansKr(
-                      fontSize: context.rs(18),
-                      height: 1.6,
-                      color: AppColors.ink,
-                    ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TobagiImage(tobagiAsset(TobagiState.victim), size: 52),
+                      SizedBox(width: context.rs(12)),
+                      Expanded(
+                        child: Text(
+                          v.guide,
+                          style: GoogleFonts.notoSansKr(
+                            fontSize: context.rs(18),
+                            height: 1.6,
+                            color: AppColors.ink,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: context.rs(14)),
                   for (final c in v.contacts) _contactCard(context, c),

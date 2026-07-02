@@ -5,9 +5,11 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/app_routes.dart';
 import '../../core/responsive.dart';
 import '../../core/theme.dart';
+import '../../data/models/tobagi.dart';
 import '../../data/services/profile_service.dart';
 import '../../widgets/onb_header.dart';
 import '../../widgets/text_size_picker.dart';
+import '../../widgets/tobagi_image.dart';
 
 /// Onboarding step 3/4 — pick a comfortable text size, shown right after the
 /// mode/language choice so 저문해·발달장애 users set a readable size before they
@@ -63,7 +65,25 @@ class _OnboardingTextSizeViewState extends State<OnboardingTextSizeView> {
                               color: AppColors.stone,
                             ),
                           ),
-                          SizedBox(height: context.rs(28)),
+                          SizedBox(height: context.rs(20)),
+                          Row(
+                            children: [
+                              TobagiImage(tobagiAsset(TobagiState.idle), size: 56),
+                              SizedBox(width: context.rs(12)),
+                              Expanded(
+                                child: Text(
+                                  '글씨 잘 보여? 크게도 할 수 있어.',
+                                  style: GoogleFonts.notoSansKr(
+                                    fontSize: context.rs(15),
+                                    height: 1.5,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.forest,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: context.rs(20)),
                           TextSizePicker(
                             initialScale: _profile.textScale.value,
                             onChanged: (s) => _scale = s,
