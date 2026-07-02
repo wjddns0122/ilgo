@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <title>읽고 — AI 활용 흐름도 (발표 슬라이드)</title>
+  <style>
+    :root {
+      --olive: #8A9A5B;
+      --olive-deep: #71814A;
+      --olive-soft: #ADBA85;
+      --dark-green: #2D4A3A;
+      --cream: #F5F4EC;
+      --paper: #F2F3EF;
+      --card: #FFFFFF;
+      --ink: #333333;
+      --ink-soft: #666666;
+      --red: #C0504D;
+      --yellow: #D9A441;
+      --green: #6E8B3D;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      background: #3a3d36;
+      font-family: 'Pretendard Variable', Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      color: var(--ink);
+    }
+
+    /* ── 화면 보기 ── */
+    .hint {
+      max-width: 1280px;
+      margin: 24px auto 0;
+      padding: 14px 20px;
+      border-radius: 12px;
+      background: #20221d;
+      color: #cfd6c0;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .hint b {
+      color: #fff;
+    }
+
+    .deck {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+      padding: 32px 0 80px;
+    }
+
+    /* ── 슬라이드 공통 ── */
+    .slide {
+      width: 1280px;
+      height: 720px;
+      position: relative;
+      overflow: hidden;
+      background: var(--paper);
+      box-shadow: 0 8px 40px rgba(0, 0, 0, .45);
+      display: flex;
+      flex-direction: column;
+      padding: 44px 64px 40px;
+    }
+
+    .slide.olive {
+      background: var(--olive);
+      color: #fff;
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      color: var(--ink-soft);
+      font-weight: 600;
+    }
+
+    .slide.olive .meta {
+      color: rgba(255, 255, 255, .85);
+    }
+
+    .meta .prog {
+      font-size: 12px;
+      font-weight: 500;
+      color: #999;
+    }
+
+    .slide.olive .meta .prog {
+      color: rgba(255, 255, 255, .6);
+    }
+
+    .eyebrow {
+      text-align: center;
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--olive-deep);
+      margin-top: 14px;
+    }
+
+    .slide.olive .eyebrow {
+      color: var(--cream);
+    }
+
+    h1.title {
+      text-align: center;
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: -.5px;
+      margin-top: 6px;
+    }
+
+    p.lede {
+      text-align: center;
+      font-size: 16.5px;
+      color: var(--ink-soft);
+      margin-top: 10px;
+      line-height: 1.65;
+    }
+
+    .slide.olive p.lede {
+      color: rgba(255, 255, 255, .92);
+    }
+
+    .body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .card {
+      background: var(--card);
+      color: var(--ink);
+      border-radius: 16px;
+      padding: 22px 26px;
+      box-shadow: 0 2px 10px rgba(45, 74, 58, .08);
+    }
+
+    .card h3 {
+      font-size: 19px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      font-size: 14.5px;
+      line-height: 1.65;
+      color: var(--ink-soft);
+    }
+
+    .card .tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--olive-deep);
+      letter-spacing: .06em;
+      margin-bottom: 6px;
+    }
+
+    .pill {
+      display: inline-block;
+      background: var(--dark-green);
+      color: #fff;
+      border-radius: 999px;
+      padding: 7px 18px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .kbd {
+      font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+      background: #eef0e8;
+      border-radius: 6px;
+      padding: 1px 7px;
+      font-size: .92em;
+      color: var(--dark-green);
+      font-weight: 700;
+    }
+
+    .slide.olive .kbd {
+      background: rgba(255, 255, 255, .18);
+      color: #fff;
+    }
+
+    code.block {
+      display: block;
+      font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+      white-space: pre;
+      background: #26301f;
+      color: #dbe6c4;
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 12.5px;
+      line-height: 1.6;
+      overflow: hidden;
+    }
+
+    .compact .card {
+      padding: 14px 20px;
+    }
+
+    .compact code.block {
+      padding: 12px 16px;
+      font-size: 11.5px;
+      line-height: 1.5;
+    }
+
+    .footer-brand {
+      position: absolute;
+      left: 64px;
+      bottom: 26px;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: .04em;
+    }
+
+    .slide.olive .footer-brand {
+      color: #fff;
+    }
+
+    .footer-page {
+      display: none;
+    }
+
+    .slide.olive .footer-page {
+      color: rgba(255, 255, 255, .6);
+    }
+
+    /* 흐름도 */
+    .flow {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+    }
+
+    .flow .step {
+      flex: 1;
+      background: var(--card);
+      border-radius: 14px;
+      padding: 16px 14px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(45, 74, 58, .08);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 6px;
+    }
+
+    .flow .step .ico {
+      font-size: 26px;
+    }
+
+    .flow .step h4 {
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .flow .step p {
+      font-size: 12px;
+      color: var(--ink-soft);
+      line-height: 1.5;
+    }
+
+    .flow .arrow {
+      align-self: center;
+      font-size: 22px;
+      color: var(--olive-deep);
+      font-weight: 800;
+      padding: 0 8px;
+    }
+
+    .step.hero {
+      background: var(--dark-green);
+      color: #fff;
+    }
+
+    .step.hero p {
+      color: rgba(255, 255, 255, .8);
+    }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .grid4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .bignum {
+      font-size: 52px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      color: var(--dark-green);
+      line-height: 1;
+    }
+
+    .bignum small {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink-soft);
+      letter-spacing: 0;
+    }
+
+    .risk-dot {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 6px;
+      vertical-align: baseline;
+    }
+
+    ul.clean {
+      list-style: none;
+    }
+
+    ul.clean li {
+      position: relative;
+      padding-left: 18px;
+      font-size: 14.5px;
+      line-height: 1.7;
+      color: var(--ink);
+    }
+
+    ul.clean li::before {
+      content: "";
+      position: absolute;
+      left: 2px;
+      top: .62em;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--olive);
+    }
+
+    /* ── 인쇄(PDF 추출) ── */
+    @page {
+      size: 1280px 720px;
+      margin: 0;
+    }
+
+    @media print {
+
+      html,
+      body {
+        background: #fff;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-shadow: none !important;
+        text-shadow: none !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .hint {
+        display: none;
+      }
+
+      .deck {
+        display: block;
+        padding: 0;
+        gap: 0;
+      }
+
+      .slide {
+        box-shadow: none;
+        page-break-after: always;
+        break-after: page;
+        margin: 0;
+      }
+
+      .slide:last-child {
+        page-break-after: auto;
+        break-after: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="hint">
+    <b>PDF 추출 방법</b> — Chrome에서 이 파일 열기 → <b>⌘P</b> → 대상 <b>PDF로 저장</b> → 설정에서 <b>여백: 없음</b>, <b>배경 그래픽: 켜기</b>, 용지 크기는
+    자동(슬라이드 크기 반영) → 저장.
+    특정 슬라이드만 추출하려면 인쇄 대화상자의 <b>페이지 범위</b>에 슬라이드 번호(예: <b>3</b> 또는 <b>2-4</b>)를 입력하면 낱장 PDF가 됩니다.
+  </div>
+
+  <div class="deck">
+
+    <!-- ════════ SLIDE 1 · 섹션 커버 ════════ -->
+    <section class="slide olive">
+      <div class="meta"><span>Young Creator Crew</span><span>( 2026 빛나는 인재 AI Re-Local 해커톤 프로그램)</span></div>
+      <div class="body" style="align-items:center;text-align:center;">
+        <div style="font-size:20px;font-weight:700;color:var(--cream);letter-spacing:.08em;">AI Workflow</div>
+        <div style="font-size:64px;font-weight:800;letter-spacing:-1px;margin-top:12px;">AI 활용 흐름도</div>
+        <p style="font-size:21px;margin-top:26px;line-height:1.7;color:rgba(255,255,255,.95);">
+          읽고는 <b>AI로 만들어진</b> 앱이자, <b>AI로 작동하는</b> 앱입니다.<br>
+          제품의 심장과 개발 과정 전체, 두 곳에 AI를 썼습니다.
+        </p>
+        <div style="display:flex;gap:16px;margin-top:38px;justify-content:center;">
+          <span class="pill" style="background:var(--dark-green);">① 제품 속 AI — 멀티모달 LLM 분석 엔진</span>
+          <span class="pill" style="background:rgba(255,255,255,.16);">② 개발 속 AI — Claude Code 에이전트 하네스</span>
+        </div>
+      </div>
+      <div class="footer-brand">AI RE-LOCAL 해커톤</div>
+      <div class="footer-page">01</div>
+    </section>
+
+    <!-- ════════ SLIDE 2 · AI를 두 번 썼습니다 ════════ -->
+    <section class="slide">
+      <div class="meta"><span>Young Creator Crew</span><span>( 2026 빛나는 인재 AI Re-Local 해커톤 프로그램)</span></div>
+      <div class="eyebrow">AI Workflow</div>
+      <h1 class="title">AI를 두 번 썼습니다</h1>
+      <p class="lede">다른 팀이 목업으로 보여줄 때, 저희는 실제 구동 앱과 라이브 AI로 보여드립니다.</p>
+      <div class="body">
+        <div class="grid2">
+          <div class="card" style="border-top:6px solid var(--dark-green);">
+            <span class="tag">PRODUCT · 제품 엔진</span>
+            <h3>멀티모달 AI가 곧 서비스</h3>
+            <p style="margin-bottom:10px;">사진 한 장을 AI가 직접 읽고, 뜻·위험·기한·할 일을 <b>구조화된 JSON 한 번</b>에 돌려줍니다. OCR 없이 이미지에서
+              바로 이해합니다.</p>
+            <ul class="clean">
+              <li>이미지 → <b>LLM 1회 호출</b> → 결과 카드 (라이브 시연)</li>
+              <li>쉬운 한국어 / 영어 모드 — 파라미터 분기 하나로 두 사용자 지원</li>
+              <li>신호등 위험 판정 · 할 일 · 답장 초안 · 캐릭터 표정까지 AI가 결정</li>
+            </ul>
+          </div>
+          <div class="card" style="border-top:6px solid var(--olive);">
+            <span class="tag">PROCESS · 개발 하네스</span>
+            <h3>Claude Code 에이전트가 팀원</h3>
+            <p style="margin-bottom:10px;">기획서 작성부터 Flutter 앱·Spring 백엔드 구현, 코드 리뷰까지 <b>AI 코딩 에이전트 하네스</b>를 구축해 5명 팀이 3일
+              만에 실서비스를 완성했습니다.</p>
+            <ul class="clean">
+              <li>문서(PRD·API명세) → <b>작업지시서</b> → 서브에이전트 병렬 개발</li>
+              <li>Figma MCP로 디자인 시안을 코드로 핸드오프</li>
+              <li>목데이터 우선 개발 → 한 줄 스왑으로 실서버 전환</li>
+            </ul>
+          </div>
+        </div>
+        <div style="margin-top:22px;text-align:center;">
+          <span class="pill" style="background:var(--olive-deep);">심사 기준 “AI 툴 활용도 20점” — 도구 사용을 넘어, 제품 코어와 개발 공정 전체가 AI
+            위에서 돌아갑니다</span>
+        </div>
+      </div>
+      <div class="footer-brand" style="color:var(--dark-green);">읽고 · Ilgo</div>
+      <div class="footer-page">02</div>
+    </section>
+
+    <!-- ════════ SLIDE 3 · 제품 AI 파이프라인 ════════ -->
+    <section class="slide">
+      <div class="meta"><span>Young Creator Crew</span><span>( 2026 빛나는 인재 AI Re-Local 해커톤 프로그램)</span></div>
+      <div class="eyebrow">Product Pipeline</div>
+      <h1 class="title">사진 한 장이 카드가 되기까지</h1>
+      <p class="lede">앱은 AI를 모릅니다. 서버가 모델을 대신 부르고, 앱은 완성된 답만 받습니다.</p>
+      <div class="body">
+        <div class="flow">
+          <div class="step">
+            <div class="ico">📷</div>
+            <h4>사진 · 캡처</h4>
+            <p>고지서 촬영,<br>카톡·문자 캡처</p>
+          </div>
+          <div class="arrow">→</div>
+          <div class="step">
+            <div class="ico">🗜️</div>
+            <h4>이미지 압축</h4>
+            <p>flutter_image_compress<br>5MB 이하 최적화</p>
+          </div>
+          <div class="arrow">→</div>
+          <div class="step">
+            <div class="ico">🛡️</div>
+            <h4>백엔드 프록시</h4>
+            <p>Spring Boot · Railway<br><b>API 키는 서버에만</b></p>
+          </div>
+          <div class="arrow">→</div>
+          <div class="step hero">
+            <div class="ico">🤖</div>
+            <h4>멀티모달 LLM<br>1회 호출</h4>
+            <p>메인 gemini-3-flash-preview<br>폴백 gpt-5.4 · temp 0.2</p>
+          </div>
+          <div class="arrow">→</div>
+          <div class="step">
+            <div class="ico">🧾</div>
+            <h4>ReadResult JSON</h4>
+            <p>파싱 · 검증 후<br>Supabase 저장</p>
+          </div>
+          <div class="arrow">→</div>
+          <div class="step">
+            <div class="ico">📱</div>
+            <h4>카드 UI</h4>
+            <p>신호등 · 할 일 · TTS<br>캘린더 · 답장 · 공유</p>
+          </div>
+        </div>
+        <div class="grid2" style="margin-top:24px;">
+          <div class="card">
+            <h3 style="font-size:16px;">모드는 파라미터 하나로 분기</h3>
+            <p><span class="kbd">output_mode=easy_korean</span> → 김민수에게 쉬운 한국어, <span
+                class="kbd">output_mode=native&nbsp;·&nbsp;lang=en</span> → 마리아에게 영어. 같은 엔진, 같은 호출로 배리어프리·다문화 두 트랙을 동시에
+              해결합니다.</p>
+          </div>
+          <div class="card">
+            <h3 style="font-size:16px;">왜 “1회 호출”인가</h3>
+            <p>OCR → 번역 → 요약을 따로 부르면 느리고 비싸고 실패 지점이 늘어납니다. 멀티모달 호출 한 번에 읽기·풀이·위험판정·할 일 추출을 끝내 <b>속도·비용·안정성</b>을 모두
+              잡았습니다.</p>
+          </div>
+        </div>
+      </div>
+      <div class="footer-brand" style="color:var(--dark-green);">읽고 · Ilgo</div>
+      <div class="footer-page">03</div>
+    </section>
+
+    <!-- ════════ SLIDE 4 · 프롬프트 하네스 ════════ -->
+    <section class="slide">
+      <div class="meta"><span>Young Creator Crew</span><span>( 2026 빛나는 인재 AI Re-Local 해커톤 프로그램)</span></div>
+      <div class="eyebrow">Prompt Harness</div>
+      <h1 class="title">AI가 마음대로 말하지 못하게 — 답을 강제하는 설계</h1>
+      <p class="lede">취약계층에게 틀린 답은 불편이 아니라 피해입니다. 프롬프트를 ‘계약’으로 만들었습니다.</p>
+      <div class="body">
+        <div class="compact" style="display:grid;grid-template-columns:1.05fr 1fr;gap:22px;">
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div class="card">
+              <h3 style="font-size:16px;">① JSON 스키마 강제</h3>
+              <p>응답이 <span class="kbd">"{"</span> 로 시작하도록 강제(prefill·구조화 출력 모드)해 <b>JSON 외의 답을 원천 차단</b>. temperature 0.2로
+                형식 이탈 최소화. 파싱 실패 시 자동 재시도 → 그래도 실패하면 <span class="kbd">422</span>로 명확히 격리.</p>
+            </div>
+            <div class="card">
+              <h3 style="font-size:16px;">② 사실 통제 규칙 (시스템 프롬프트)</h3>
+              <p>“금액·날짜는 원문 그대로 인용 / 불확실하면 <b>null</b> / 없는 사실 생성 금지.” 환각을 스키마 수준에서 봉쇄합니다.</p>
+            </div>
+            <div class="card">
+              <h3 style="font-size:16px;">③ 안전 편향 — 확신 없으면 노랑</h3>
+              <p><span class="risk-dot" style="background:var(--green)"></span><span class="risk-dot"
+                  style="background:var(--yellow)"></span><span class="risk-dot" style="background:var(--red)"></span>
+                위험 판정이 애매하면 무조건 <b>yellow</b>로 상향 — 사기를 ‘안전’으로 놓치는 false negative를 구조적으로 방지. 스미싱·임금차감·부당공제·과태료·신고기한을 위험
+                유형으로 명시.</p>
+            </div>
+            <div class="card">
+              <h3 style="font-size:16px;">④ 실패까지 설계 — 모델 이중화</h3>
+              <p>메인 <span class="kbd">gemini-3-flash-preview</span> 장애 시 <b>gpt-5.4로 자동 전환</b>, 그마저 실패(<span class="kbd">502</span>)하면 폴백 캐시 + ‘예시’ 배지로 응답 — 발표 데모가 절대 멈추지 않습니다.</p>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <code class="block">// 프론트·백엔드가 공유하는 데이터 계약 — ReadResult
+{
+  "doc_type": "notice",
+  "summary_one_line": "2월 전기요금 62,210원을
+                       3월 5일까지 내야 합니다.",
+  "explained_text": "…쉬운 말 풀이…",
+  "cards": { "what", "when", "where",
+             "amount", "deadline" },
+  "risks":   [{ "level": "green|yellow|red",
+                "type", "message" }],
+  "actions": [{ "text", "priority" }],
+  "reply_drafts": [{ "korean", "note_in_lang" }],
+  "consequence": "안 내면 연체료가 붙어요."
+}</code>
+            <div class="card" style="background:var(--dark-green);color:#fff;">
+              <p style="color:rgba(255,255,255,.92);font-size:14px;">이 스키마 하나가 <b>프롬프트 출력 = API 응답 = Flutter freezed
+                  모델</b>로 그대로 이어집니다. AI 출력이 곧 타입 안전한 코드가 되는 구조.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-brand" style="color:var(--dark-green);">읽고 · Ilgo</div>
+      <div class="footer-page">04</div>
+    </section>
+
+    <!-- ════════ SLIDE 5 · 또바기 캐릭터 AI ════════ -->
+    <section class="slide">
+      <div class="meta"><span>Young Creator Crew</span><span>( 2026 빛나는 인재 AI Re-Local 해커톤 프로그램)</span></div>
+      <div class="eyebrow">Character AI</div>
+      <h1 class="title">또바기 — 표정과 위로까지 AI가 고릅니다</h1>
+      <p class="lede">숫자와 경고만으로는 부족합니다. 같은 분석 호출 안에서 AI가 감정 신호를 함께 결정합니다.</p>
+      <div class="body">
+        <div class="grid4">
+          <div class="card" style="text-align:center;">
+            <div style="font-size:34px;">🚨</div>
+            <h3 style="font-size:17px;margin-top:6px;">warn</h3>
+            <p>스미싱·사기 감지<br>“이 링크 누르지 마세요!”</p>
+          </div>
+          <div class="card" style="text-align:center;">
+            <div style="font-size:34px;">⚠️</div>
+            <h3 style="font-size:17px;margin-top:6px;">caution</h3>
+            <p>기한·금액 주의<br>“3월 5일까지 잊지 마요.”</p>
+          </div>
+          <div class="card" style="text-align:center;">
+            <div style="font-size:34px;">😊</div>
+            <h3 style="font-size:17px;margin-top:6px;">safe</h3>
+            <p>안전한 문서<br>“이건 안전해 보여. 걱정 마.”</p>
+          </div>
+          <div class="card" style="text-align:center;">
+            <div style="font-size:34px;">🤝</div>
+            <h3 style="font-size:17px;margin-top:6px;">victim</h3>
+            <p>이미 피해 정황<br>“늦지 않았어요. 지금 바로<br>112에 신고해요.”</p>
+          </div>
+        </div>
+        <div class="grid2" style="margin-top:22px;">
+          <div class="card">
+            <h3 style="font-size:16px;">추가 호출 없이, 같은 응답 안에서</h3>
+            <p>분석 시스템 프롬프트에 <span class="kbd">character_state</span> 선택 기준을 넣어, 문서 이해와 감정 신호 결정이 <b>단일 호출</b>로 끝납니다. 답장
+              초안의 톤 바꾸기(정중하게/짧게)만 별도 재호출.</p>
+          </div>
+          <div class="card">
+            <h3 style="font-size:16px;">AI 출력을 절대 그대로 믿지 않기</h3>
+            <p>서버가 이상한 값을 보내면 프론트가 <b>위험도 기반 표정으로 자동 폴백</b>. enum 4개 외 값은 무시. AI가 실수해도 사용자 화면은 항상 올바릅니다.</p>
+          </div>
+        </div>
+      </div>
+      <div class="footer-brand" style="color:var(--dark-green);">읽고 · Ilgo</div>
+      <div class="footer-page">05</div>
+    </section>
+
+    <!-- ════════ SLIDE 6 · 아이디어 회의 ════════ -->
+    <section class="slide">
+      <div class="meta"><span>Young Creator Crew</span><span>( 2026 빛나는 인재 AI Re-Local 해커톤 프로그램)</span></div>
+      <div class="eyebrow">Ideation</div>
+      <h1 class="title">아이디어 회의 — 30개를 1개로 좁힌 적대적 채점</h1>
+      <p class="lede">제주 현장 관찰과 팀 회의에서 나온 아이디어를 AI가 발산시키고, 다시 AI가 공격했습니다.</p>
+      <div class="body">
+        <div class="flow">
+          <div class="step">
+            <div class="ico">💡</div>
+            <h4>후보 발산</h4>
+            <p>팀 회의 × Claude 브레인스토밍<br>트랙별 6~9개, 총 ~30개</p>
+          </div>
+          <div class="arrow">→</div>
+          <div class="step">
+            <div class="ico">⚔️</div>
+            <h4>적대적 채점</h4>
+            <p>자체 110점 루브릭으로<br>AI가 모든 후보를 공격·채점</p>
+          </div>
+          <div class="arrow">→</div>
+          <div class="step">
+            <div class="ico">🏆</div>
+            <h4>트랙 우승작</h4>
+            <p>쉬운고지서 106점<br>오뭐(오늘 뭐래?) 103점</p>
+          </div>
+          <div class="arrow">→</div>
+          <div class="step hero">
+            <div class="ico">🔗</div>
+            <h4>통합 통찰</h4>
+            <p>“겉은 다른 앱,<br>속은 같은 엔진”</p>
+          </div>
+          <div class="arrow">→</div>
+          <div class="step">
+            <div class="ico">📮</div>
+            <h4>읽고 탄생</h4>
+            <p>배리어프리 + 다문화<br>한 엔진으로 동시 출전</p>
+          </div>
+        </div>
+        <div class="grid2" style="margin-top:24px;">
+          <div class="card">
+            <h3 style="font-size:16px;">채점표부터 심사기준으로 설계</h3>
+            <p>사회가치(30)·창의(25)·AI활용(20)에 <b>2일 실현성(20)·데모 임팩트(15)</b>를 더한 110점 루브릭을 만들어, AI가 심사위원 입장에서 후보를 떨어뜨리게 했습니다.
+              감이 아니라 점수로 결정.</p>
+          </div>
+          <div class="card">
+            <h3 style="font-size:16px;">회의록이 곧 프롬프트</h3>
+            <p>관찰 메모와 회의 내용을 전부 문서로 만들어 AI에 투입했고, 탈락 이유와 <b>트랙 전환 시나리오(flip note)</b>까지 문서로 남겨 언제든 결정을 재검토할 수 있게 했습니다.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="footer-brand" style="color:var(--dark-green);">읽고 · Ilgo</div>
+      <div class="footer-page">06</div>
+    </section>
+
+    <!-- ════════ SLIDE 7 · 기획 검증 126 에이전트 ════════ -->
+    <section class="slide">
+      <div class="meta"><span>Young Creator Crew</span><span>( 2026 빛나는 인재 AI Re-Local 해커톤 프로그램)</span></div>
+      <div class="eyebrow">Plan Review</div>
+      <h1 class="title">코드보다 먼저, 에이전트 126개가 기획을 심사했습니다</h1>
+      <p class="lede">gstack의 <span class="kbd">plan-ceo-review</span> 스킬을 Opus 4.8 + ultracode 멀티에이전트 오케스트레이션으로 실행.</p>
+      <div class="body">
+        <div class="grid4" style="text-align:center;margin-bottom:22px;">
+          <div class="card">
+            <div class="bignum">126<small>개</small></div>
+            <p style="margin-top:8px;">투입된 서브에이전트<br>총합</p>
+          </div>
+          <div class="card">
+            <div class="bignum">82<small>개</small></div>
+            <p style="margin-top:8px;">동시 의견 제시<br>(다관점 리뷰 패널)</p>
+          </div>
+          <div class="card">
+            <div class="bignum">40<small>개</small></div>
+            <p style="margin-top:8px;">교차 검증<br>(적대적 반박)</p>
+          </div>
+          <div class="card">
+            <div class="bignum">4<small>개</small></div>
+            <p style="margin-top:8px;">정밀 채점<br>(심사기준 루브릭)</p>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="card">
+            <h3 style="font-size:16px;">사람 한 명이 못 보는 각도를 병렬로</h3>
+            <p>82개 에이전트가 창업자·심사위원·김민수·마리아·엔지니어 등 서로 다른 시점에서 <b>동시에</b> 기획을 뜯었고, 40개 검증 에이전트가 근거 없는 지적을 걸러낸 뒤, 4개가
+              심사기준(사회가치·창의·AI활용·완성도)으로 최종 채점했습니다.</p>
+          </div>
+          <div class="card">
+            <h3 style="font-size:16px;">결과 — 구멍은 코드 전에 메운다</h3>
+            <p>이 리뷰에서 나온 지적이 게스트 모드, 분석 실패 폴백, 예시 체험, 위험별 도움 CTA 같은 개선으로 이어졌습니다. 사람 CEO 리뷰와 합쳐 <b>이중 심사망</b> — AI가 만들고
+              AI가 먼저 떨어뜨립니다.</p>
+          </div>
+        </div>
+      </div>
+      <div class="footer-brand" style="color:var(--dark-green);">읽고 · Ilgo</div>
+      <div class="footer-page">07</div>
+    </section>
+
+    <!-- ════════ SLIDE 8 · 개발 하네스 ════════ -->
+    <section class="slide">
+      <div class="meta"><span>Young Creator Crew</span><span>( 2026 빛나는 인재 AI Re-Local 해커톤 프로그램)</span></div>
+      <div class="eyebrow">Dev Harness</div>
+      <h1 class="title">개발 하네스 — AI 에이전트 팀으로 만든 앱</h1>
+      <p class="lede">Claude Code(AI 코딩 에이전트)에게 ‘기억·설계도·작업지시’를 주는 하네스를 만들어 개발 속도를 끌어올렸습니다.</p>
+      <div class="body">
+        <div class="flow" style="margin-bottom:22px;">
+          <div class="step">
+            <div class="ico">🧠</div>
+            <h4>CLAUDE.md<br>프로젝트 두뇌</h4>
+            <p>맥락·결정·할 일을 문서화,<br>새 세션마다 자동 로드</p>
+          </div>
+          <div class="arrow">→</div>
+          <div class="step">
+            <div class="ico">📚</div>
+            <h4>설계 문서 8종</h4>
+            <p>PRD · 기능명세 · API명세<br>ERD · 기술스택 (AI와 공동 작성)</p>
+          </div>
+          <div class="arrow">→</div>
+          <div class="step">
+            <div class="ico">📋</div>
+            <h4>작업지시서 발행</h4>
+            <p>프론트/백엔드/캐릭터 별<br>지시서로 분할</p>
+          </div>
+          <div class="arrow">→</div>
+          <div class="step hero">
+            <div class="ico">🤖</div>
+            <h4>서브에이전트<br>병렬 개발</h4>
+            <p>Flutter 앱 · Spring 백엔드<br>동시 구현 + 코드 리뷰</p>
+          </div>
+          <div class="arrow">→</div>
+          <div class="step">
+            <div class="ico">✅</div>
+            <h4>검증 루프</h4>
+            <p>analyze · 테스트<br>사람 리뷰 → 반영</p>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+          <div class="card">
+            <span class="tag">SKILL 01</span>
+            <h3 style="font-size:16px;">Figma MCP 디자인 핸드오프</h3>
+            <p>Figma 시안을 MCP로 에이전트가 직접 읽어 Flutter 위젯으로 변환 — 디자이너와 개발 사이 전달 손실 제거.</p>
+          </div>
+          <div class="card">
+            <span class="tag">SKILL 02</span>
+            <h3 style="font-size:16px;">Mock-first 개발</h3>
+            <p>목 JSON으로 전 화면 완성 후 <span class="kbd">USE_MOCK=false</span> 한 줄로 실서버 스왑(Repository 인터페이스 + DI). 백엔드를 기다리지
+              않는 병렬 공정.</p>
+          </div>
+          <div class="card">
+            <span class="tag">SKILL 03</span>
+            <h3 style="font-size:16px;">코드 생성 자동화</h3>
+            <p>freezed + json_serializable로 ReadResult 스키마에서 모델·직렬화 코드 자동 생성 — AI가 정의한 계약이 그대로 컴파일 타임 안전성이 됩니다.</p>
+          </div>
+        </div>
+      </div>
+      <div class="footer-brand" style="color:var(--dark-green);">읽고 · Ilgo</div>
+      <div class="footer-page">08</div>
+    </section>
+
+    <!-- ════════ SLIDE 9 · 멀티 AI 오케스트레이션 ════════ -->
+    <section class="slide">
+      <div class="meta"><span>Young Creator Crew</span><span>( 2026 빛나는 인재 AI Re-Local 해커톤 프로그램)</span></div>
+      <div class="eyebrow">Orchestration</div>
+      <h1 class="title">세 AI가 한 팀 — 지휘하고, 검증하고, 잇습니다</h1>
+      <p class="lede">한 모델에 다 맡기지 않았습니다. 회사가 다른 AI 셋에게 역할을 나누고, 도구 연결은 전부 MCP로 표준화했습니다.</p>
+      <div class="body">
+        <div style="display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:16px;align-items:stretch;">
+          <div class="card" style="text-align:center;border-top:5px solid var(--olive);">
+            <span class="tag">VERIFY</span>
+            <h3 style="font-size:17px;">Codex — 코드 검증</h3>
+            <p>Claude가 만든 코드를 <b>다른 회사 AI가 교차 리뷰</b>. 같은 모델은 같은 맹점을 공유하기 때문에, 검증자는 일부러 다른 두뇌를 씁니다.</p>
+          </div>
+          <div class="card" style="text-align:center;background:var(--dark-green);color:#fff;">
+            <span class="tag" style="color:var(--olive-soft);">ORCHESTRATOR</span>
+            <h3 style="font-size:17px;">Claude — 메인 오케스트레이터</h3>
+            <p style="color:rgba(255,255,255,.88);">작업 분배·작업지시서 발행·서브에이전트 지휘·결과 통합. ralph 루프와 126개 리뷰 패널도 Claude가 지휘했습니다.</p>
+          </div>
+          <div class="card" style="text-align:center;border-top:5px solid var(--olive);">
+            <span class="tag">DESIGN</span>
+            <h3 style="font-size:17px;">Gemini(agy) — 디자인 연동</h3>
+            <p>Figma MCP를 통해 디자인 시안을 직접 읽고 <b>Flutter 위젯으로 핸드오프</b>. 디자이너와 개발 사이 전달 손실 제거.</p>
+          </div>
+        </div>
+        <div class="grid2" style="margin-top:20px;">
+          <div class="card">
+            <h3 style="font-size:16px;">🎨 Figma MCP — 디자인이 곧 입력</h3>
+            <p>스크린샷 복붙이 아니라 프로토콜로 시안 데이터를 읽습니다. 색·간격·컴포넌트 구조가 그대로 코드 근거가 됩니다.</p>
+          </div>
+          <div class="card">
+            <h3 style="font-size:16px;">🗄️ Supabase MCP — DB도 대화로</h3>
+            <p>스키마 확인·마이그레이션·데이터 점검을 에이전트가 MCP로 직접 수행 — ERD 문서와 실제 DB의 불일치를 즉시 잡아냅니다.</p>
+          </div>
+        </div>
+        <div style="margin-top:20px;text-align:center;">
+          <span class="pill" style="background:var(--olive-deep);">역할 분리(만드는 AI ≠ 검증하는 AI) × MCP 표준 연결 — 오케스트레이션이 곧 품질 장치</span>
+        </div>
+      </div>
+      <div class="footer-brand" style="color:var(--dark-green);">읽고 · Ilgo</div>
+      <div class="footer-page">09</div>
+    </section>
+
+    <!-- ════════ SLIDE 10 · 오픈소스 스킬 스택 ════════ -->
+    <section class="slide">
+      <div class="meta"><span>Young Creator Crew</span><span>( 2026 빛나는 인재 AI Re-Local 해커톤 프로그램)</span></div>
+      <div class="eyebrow">Skill Stack</div>
+      <h1 class="title">Claude Code 위에 얹은 오픈소스 스킬 스택 4종</h1>
+      <p class="lede">맨몸의 AI가 아니라, 검증된 스킬 프레임워크를 조합해 ‘일하는 방식’ 자체를 설계했습니다.</p>
+      <div class="body">
+        <div class="grid4">
+          <div class="card" style="border-top:5px solid var(--dark-green);">
+            <span class="tag">PROCESS</span>
+            <h3 style="font-size:17px;">superpowers</h3>
+            <p style="margin-bottom:8px;">브레인스토밍 → TDD → 체계적 디버깅 → <b>완료 전 검증</b>까지, 행동하기 전에 반드시 절차 스킬을 거치게 강제하는 규율 레이어.
+            </p>
+            <p style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--olive-deep);">
+              github.com/obra/superpowers</p>
+          </div>
+          <div class="card" style="border-top:5px solid var(--olive);">
+            <span class="tag">REVIEW</span>
+            <h3 style="font-size:17px;">gstack</h3>
+            <p style="margin-bottom:8px;"><span class="kbd">plan-ceo-review</span> 등 리뷰 스킬 모음. 기획·디자인·QA를 창업자 시선으로 심사 —
+              앞 장의 126개 에이전트 리뷰가 이 스킬입니다.</p>
+            <p style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--olive-deep);">
+              github.com/garrytan/gstack</p>
+          </div>
+          <div class="card" style="border-top:5px solid var(--dark-green);">
+            <span class="tag">EXECUTION</span>
+            <h3 style="font-size:17px;">oh-my-claudecode</h3>
+            <p style="margin-bottom:8px;">멀티에이전트 실행 엔진. <b>ralph 루프</b>·에이전트 팀·자동 QA 사이클로 “될 때까지”를 시스템으로 만듭니다. (다음 장)
+            </p>
+            <p style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--olive-deep);">
+              github.com/yeachan-heo/oh-my-claudecode</p>
+          </div>
+          <div class="card" style="border-top:5px solid var(--olive);">
+            <span class="tag">CONTEXT</span>
+            <h3 style="font-size:17px;">caveman</h3>
+            <p style="margin-bottom:8px;">응답·서브에이전트 출력을 압축해 토큰을 ~75% 절감. 긴 개발 세션에서도 컨텍스트가 마르지 않게 하는 절약 레이어.</p>
+            <p style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--olive-deep);">
+              github.com/juliusbrussee/caveman</p>
+          </div>
+        </div>
+        <div style="margin-top:22px;text-align:center;">
+          <span class="pill" style="background:var(--dark-green);">규율(superpowers) × 심사(gstack) × 실행(omc) × 절약(caveman)
+            — 네 층이 곧 저희의 개발 하네스입니다</span>
+        </div>
+      </div>
+      <div class="footer-brand" style="color:var(--dark-green);">읽고 · Ilgo</div>
+      <div class="footer-page">10</div>
+    </section>
+
+    <!-- ════════ SLIDE 10 · ralph 루프 ════════ -->
+    <section class="slide">
+      <div class="meta"><span>Young Creator Crew</span><span>( 2026 빛나는 인재 AI Re-Local 해커톤 프로그램)</span></div>
+      <div class="eyebrow">Coding Loop</div>
+      <h1 class="title">구현은 ralph 루프 — 끝을 알고, 끝날 때까지 돕니다</h1>
+      <p class="lede">oh-my-claudecode의 ralph는 완료까지 스스로 도는 실행 루프. 루프의 최대 적인 ‘모호함’을 컨텍스트 엔지니어링으로 제거했습니다.</p>
+      <div class="body">
+        <div class="flow" style="margin-bottom:22px;">
+          <div class="step">
+            <div class="ico">📋</div>
+            <h4>작업지시서 로드</h4>
+            <p>완료 기준(DoD)이<br>명시된 태스크</p>
+          </div>
+          <div class="arrow">→</div>
+          <div class="step">
+            <div class="ico">⌨️</div>
+            <h4>구현</h4>
+            <p>Flutter · Spring<br>코드 작성</p>
+          </div>
+          <div class="arrow">→</div>
+          <div class="step">
+            <div class="ico">🔍</div>
+            <h4>검증</h4>
+            <p>analyze · 테스트<br>명세 대조</p>
+          </div>
+          <div class="arrow">→</div>
+          <div class="step">
+            <div class="ico">↩️</div>
+            <h4>미달 시 재시도</h4>
+            <p>실패 원인을 컨텍스트에<br>담아 루프 반복</p>
+          </div>
+          <div class="arrow">→</div>
+          <div class="step hero">
+            <div class="ico">✅</div>
+            <h4>종료 판정</h4>
+            <p>별도 검증 리뷰어가<br>완료 선언 — 자기 채점 금지</p>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+          <div class="card">
+            <h3 style="font-size:16px;">종료조건을 코드처럼 명시</h3>
+            <p>“<b>flutter analyze 0건 · 테스트 전부 통과 · API 명세 일치</b>”를 작업지시서에 박아, 루프가 무한히 돌거나 어중간하게 멈추는 일을 없앴습니다.</p>
+          </div>
+          <div class="card">
+            <h3 style="font-size:16px;">컨텍스트 엔지니어링</h3>
+            <p>CLAUDE.md(프로젝트 두뇌) + 문서 인덱스 + caveman 압축으로, 긴 루프에서도 에이전트가 <b>같은 사실 위에서</b> 일하게 유지 — 모호한 지시가 곧 버그이기 때문입니다.
+            </p>
+          </div>
+          <div class="card">
+            <h3 style="font-size:16px;">구현과 심판의 분리</h3>
+            <p>코드를 짠 에이전트가 아닌 <b>별도 리뷰어 에이전트</b>가 종료를 판정합니다. “내가 보기엔 다 됐어요”를 시스템 차원에서 금지.</p>
+          </div>
+        </div>
+      </div>
+      <div class="footer-brand" style="color:var(--dark-green);">읽고 · Ilgo</div>
+      <div class="footer-page">11</div>
+    </section>
+
+    <!-- ════════ SLIDE 11 · 품질 루프 & 수치 ════════ -->
+    <section class="slide">
+      <div class="meta"><span>Young Creator Crew</span><span>( 2026 빛나는 인재 AI Re-Local 해커톤 프로그램)</span></div>
+      <div class="eyebrow">Quality Loop</div>
+      <h1 class="title">AI가 만들고, 사람이 심사하고, AI가 고칩니다</h1>
+      <p class="lede">에이전트 산출물을 그대로 믿지 않고, 리뷰 → 문서화 → 재작업의 루프를 돌렸습니다.</p>
+      <div class="body">
+        <div class="grid4" style="margin-bottom:22px;text-align:center;">
+          <div class="card">
+            <div class="bignum">1<small>회</small></div>
+            <p style="margin-top:8px;">문서 분석당<br>LLM 호출 수</p>
+          </div>
+          <div class="card">
+            <div class="bignum">0<small>건</small></div>
+            <p style="margin-top:8px;">flutter analyze<br>이슈</p>
+          </div>
+          <div class="card">
+            <div class="bignum">9/9</div>
+            <p style="margin-top:8px;">테스트<br>통과</p>
+          </div>
+          <div class="card">
+            <div class="bignum">2<small>트랙</small></div>
+            <p style="margin-top:8px;">배리어프리 + 다문화<br>한 엔진으로 동시 대응</p>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="card">
+            <h3 style="font-size:16px;">사람의 리뷰가 방향을 잡습니다</h3>
+            <p>CEO 기능 리뷰에서 나온 지적을 문서로 만들어 에이전트에 재투입 — 게스트 모드, 분석 실패 폴백, 예시 체험, D-day 뱃지, 답장 톤 재생성 등 <b>10개 개선을 하루에
+                반영</b>했습니다.</p>
+          </div>
+          <div class="card">
+            <h3 style="font-size:16px;">데모 안전망도 AI 산출물로</h3>
+            <p>개발용 목 JSON을 <b>라이브 실패 시 폴백 캐시</b>로 재활용. 오프라인 비상 빌드(<span class="kbd">USE_MOCK=true</span>)까지 준비되어 시연은 어떤
+              상황에도 진행됩니다. 실서버는 Railway에 배포, JWT 로그인 연동 완료.</p>
+          </div>
+        </div>
+      </div>
+      <div class="footer-brand" style="color:var(--dark-green);">읽고 · Ilgo</div>
+      <div class="footer-page">12</div>
+    </section>
+
+    <!-- ════════ SLIDE 8 · 책임 있는 AI ════════ -->
+    <section class="slide olive">
+      <div class="meta"><span>Young Creator Crew</span><span>( 2026 빛나는 인재 AI Re-Local 해커톤 프로그램)</span></div>
+      <div class="eyebrow">Responsible AI</div>
+      <h1 class="title" style="color:#fff;">책임 있게 쓰기 위한 네 가지 약속</h1>
+      <div class="body">
+        <div class="grid4" style="margin-top:8px;">
+          <div class="card">
+            <span class="tag">POINT 01</span>
+            <h3 style="font-size:17px;">마지막 판단은 사람이</h3>
+            <p>AI의 답은 참고일 뿐, 중요한 결정은 항상 사람이 확인합니다. 위험한 문서는 112·118 같은 공식 기관으로 안내합니다.</p>
+          </div>
+          <div class="card">
+            <span class="tag">POINT 02</span>
+            <h3 style="font-size:17px;">개인정보는 모으지 않기</h3>
+            <p>찍은 사진은 분석이 끝나면 저장하지 않는 것이 기본입니다. 꼭 필요한 정보만, 꼭 필요한 만큼만 다룹니다.</p>
+          </div>
+          <div class="card">
+            <span class="tag">POINT 03</span>
+            <h3 style="font-size:17px;">모르면 모른다고 하기</h3>
+            <p>확실하지 않은 위험은 ‘안전’이라 말하지 않고 ‘주의’로 알립니다. 없는 내용은 지어내지 않도록 설계했습니다.</p>
+          </div>
+          <div class="card">
+            <span class="tag">POINT 04</span>
+            <h3 style="font-size:17px;">소외된 사람 먼저</h3>
+            <p>큰 글씨, 쉬운 말, 음성 안내 — AI의 혜택에서 밀려나기 쉬운 사람을 첫 번째 사용자로 생각하고 만들었습니다.</p>
+          </div>
+        </div>
+        <p style="text-align:center;font-size:22px;font-weight:800;margin-top:44px;color:#fff;">
+          “기술은 모두를 위한 것이어야 합니다.”
+        </p>
+        <p style="text-align:center;font-size:15px;color:rgba(255,255,255,.85);margin-top:8px;">
+          AI를 가장 필요한 곳에, 가장 신중하게 — 팀 읽고
+        </p>
+      </div>
+      <div class="footer-brand">AI RE-LOCAL 해커톤</div>
+      <div class="footer-page">13</div>
+    </section>
+
+  </div>
+</body>
+
+</html>
