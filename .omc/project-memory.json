@@ -173,8 +173,8 @@
     },
     {
       "path": "lib/core/app_pages.dart",
-      "accessCount": 43,
-      "lastAccessed": 1782981612812,
+      "accessCount": 46,
+      "lastAccessed": 1782993859701,
       "type": "file"
     },
     {
@@ -185,14 +185,14 @@
     },
     {
       "path": "lib/core/app_routes.dart",
-      "accessCount": 25,
-      "lastAccessed": 1782981608539,
+      "accessCount": 27,
+      "lastAccessed": 1782993773628,
       "type": "file"
     },
     {
       "path": "lib/modules/home/home_controller.dart",
-      "accessCount": 22,
-      "lastAccessed": 1782963719748,
+      "accessCount": 25,
+      "lastAccessed": 1782992388379,
       "type": "file"
     },
     {
@@ -208,15 +208,15 @@
       "type": "file"
     },
     {
-      "path": "lib/data/bindings/app_binding.dart",
-      "accessCount": 16,
-      "lastAccessed": 1782957150031,
+      "path": "lib/modules/home/home_view.dart",
+      "accessCount": 17,
+      "lastAccessed": 1782992659848,
       "type": "file"
     },
     {
-      "path": "lib/modules/home/home_view.dart",
-      "accessCount": 15,
-      "lastAccessed": 1782982912914,
+      "path": "lib/data/bindings/app_binding.dart",
+      "accessCount": 16,
+      "lastAccessed": 1782957150031,
       "type": "file"
     },
     {
@@ -310,6 +310,12 @@
       "type": "file"
     },
     {
+      "path": "lib/data/api/ilgo_api.dart",
+      "accessCount": 7,
+      "lastAccessed": 1782993514473,
+      "type": "file"
+    },
+    {
       "path": "lib/dev_flags.dart",
       "accessCount": 6,
       "lastAccessed": 1782956748783,
@@ -319,12 +325,6 @@
       "path": "test/widget_test.dart",
       "accessCount": 6,
       "lastAccessed": 1782973484107,
-      "type": "file"
-    },
-    {
-      "path": "lib/data/api/ilgo_api.dart",
-      "accessCount": 6,
-      "lastAccessed": 1782980728368,
       "type": "file"
     },
     {

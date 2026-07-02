@@ -5,6 +5,7 @@ import '../modules/analyze/connection_failed_view.dart';
 import '../modules/analyze/not_a_document_view.dart';
 import '../modules/analyze/unreadable_view.dart';
 import '../modules/login/login_view.dart';
+import '../modules/login/signup_view.dart';
 import '../modules/login/signup_complete_view.dart';
 import '../modules/splash/splash_view.dart';
 import '../modules/camera/camera_view.dart';
@@ -33,6 +34,7 @@ abstract class AppPages {
   static final routes = <GetPage<dynamic>>[
     GetPage(name: Routes.splash, page: () => const SplashView()),
     GetPage(name: Routes.login, page: () => const LoginView()),
+    GetPage(name: Routes.signup, page: () => const SignupView()),
     GetPage(
         name: Routes.signupComplete, page: () => const SignupCompleteView()),
     GetPage(name: Routes.onboarding, page: () => const OnboardingView()),

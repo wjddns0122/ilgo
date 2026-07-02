@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:flutter/widgets.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -28,10 +30,38 @@ class HomeController extends GetxController {
   /// In-app "기한 알림" fires once per app session, not on every home visit.
   static bool _deadlineAlertShown = false;
 
+  /// Scroll-driven header: collapses when scrolling down, reveals on scroll up.
+  final scrollController = ScrollController();
+  final headerVisible = true.obs;
+
   @override
   void onInit() {
     super.onInit();
+    scrollController.addListener(_onScroll);
     loadRecent();
+  }
+
+  /// Near the top the header is always shown; otherwise it follows the
+  /// last scroll gesture direction (down → hide, up → show).
+  void _onScroll() {
+    if (scrollController.offset <= 24) {
+      headerVisible.value = true;
+      return;
+    }
+    final dir = scrollController.position.userScrollDirection;
+    if (dir == ScrollDirection.reverse) {
+      headerVisible.value = false;
+    } else if (dir == ScrollDirection.forward) {
+      headerVisible.value = true;
+    }
+  }
+
+  @override
+  void onClose() {
+    scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
+    super.onClose();
   }
 
   Future<void> loadRecent() async {

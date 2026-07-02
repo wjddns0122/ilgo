@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 
 import '../../core/token_store.dart';
@@ -36,22 +35,6 @@ class AuthService extends GetxService {
 
   Future<void> login(String email, String password) async {
     await _store(await _api.login({'email': email, 'password': password}));
-  }
-
-  /// Register a new account; if the email already exists, fall back to login.
-  /// Returns true when a NEW account was created.
-  Future<bool> startWithEmail(String email, String password) async {
-    try {
-      await register(email, password);
-      return true;
-    } on DioException catch (e) {
-      final code = e.response?.statusCode ?? 0;
-      if (code == 400 || code == 409 || code == 422) {
-        await login(email, password);
-        return false;
-      }
-      rethrow;
-    }
   }
 
   Future<void> logout() async {

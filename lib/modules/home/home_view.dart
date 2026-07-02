@@ -26,9 +26,19 @@ class HomeView extends GetView<HomeController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _header(context),
+                Obx(
+                  () => AnimatedSize(
+                    duration: const Duration(milliseconds: 220),
+                    curve: Curves.easeOut,
+                    alignment: Alignment.topCenter,
+                    child: controller.headerVisible.value
+                        ? _header(context)
+                        : const SizedBox(width: double.infinity),
+                  ),
+                ),
                 Expanded(
                   child: SingleChildScrollView(
+                    controller: controller.scrollController,
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: context.rs(28)),
                       child: Column(
@@ -103,6 +113,7 @@ class HomeView extends GetView<HomeController> {
   }
 
   Widget _header(BuildContext context) {
+    final now = DateTime.now();
     return Padding(
       padding: EdgeInsets.fromLTRB(
         context.rs(28),
@@ -114,7 +125,7 @@ class HomeView extends GetView<HomeController> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            '읽고 · 오늘',
+            '읽고 · ${now.month}월 ${now.day}일',
             style: GoogleFonts.notoSansKr(
               fontSize: context.rs(18.4),
               height: 1.5,

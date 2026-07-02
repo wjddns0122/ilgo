@@ -10,65 +10,73 @@ import '../../data/services/auth_service.dart';
 import '../../data/services/profile_service.dart';
 import 'auth_widgets.dart';
 
-/// Email + password login screen (Figma node 30:769). Login only — new
-/// accounts are created on the dedicated [Routes.signup] screen.
-class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+/// Email + password signup screen. Register only — an existing account logs in
+/// on [Routes.login]. On success the account is created and the flow advances
+/// to the signup-complete → onboarding screens.
+class SignupView extends StatefulWidget {
+  const SignupView({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<SignupView> createState() => _SignupViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _SignupViewState extends State<SignupView> {
   final _email = TextEditingController();
   final _password = TextEditingController();
+  final _confirm = TextEditingController();
   bool _obscure = true;
+  bool _obscureConfirm = true;
   bool _busy = false;
 
   @override
   void initState() {
     super.initState();
-    // Prefill the email when arriving here from the signup screen (e.g. the
-    // user tried to sign up with an already-registered address).
+    // Prefill the email when arriving from the login screen.
     final args = Get.arguments;
     if (args is String && args.trim().isNotEmpty) _email.text = args.trim();
   }
 
+  bool get _mismatch =>
+      _confirm.text.isNotEmpty && _confirm.text != _password.text;
+
   bool get _valid =>
-      _email.text.trim().isNotEmpty && _password.text.length >= 6;
+      _email.text.trim().isNotEmpty &&
+      _password.text.length >= 6 &&
+      _confirm.text == _password.text;
 
   @override
   void dispose() {
     _email.dispose();
     _password.dispose();
+    _confirm.dispose();
     super.dispose();
   }
 
-  Future<void> _login() async {
+  Future<void> _signup() async {
     if (!_valid || _busy) return;
     final email = _email.text.trim();
     final pw = _password.text;
 
     setState(() => _busy = true);
     try {
-      await Get.find<AuthService>().login(email, pw);
+      await Get.find<AuthService>().register(email, pw);
       await Get.find<ProfileService>().syncFromServer();
       if (!mounted) return;
-      _toApp();
+      Get.toNamed(Routes.signupComplete, arguments: email);
     } on DioException catch (e) {
       if (mounted) setState(() => _busy = false);
       final code = e.response?.statusCode ?? 0;
-      if (code == 400 || code == 401 || code == 404 || code == 422) {
+      if (code == 400 || code == 409 || code == 422) {
         Get.snackbar(
-          '로그인 실패',
-          '이메일 또는 비밀번호가 맞지 않아요.',
+          '가입 실패',
+          '이미 가입된 이메일이에요.',
           snackPosition: SnackPosition.BOTTOM,
           mainButton: TextButton(
             onPressed: () {
               if (Get.isSnackbarOpen) Get.closeCurrentSnackbar();
-              Get.toNamed(Routes.signup, arguments: email);
+              _toLogin(email);
             },
-            child: const Text('회원가입 하기'),
+            child: const Text('로그인 하기'),
           ),
         );
       } else {
@@ -81,15 +89,17 @@ class _LoginViewState extends State<LoginView> {
   }
 
   void _genericError() {
-    Get.snackbar('로그인 실패', '잠시 후 다시 시도해 주세요.',
+    Get.snackbar('가입 실패', '잠시 후 다시 시도해 주세요.',
         snackPosition: SnackPosition.BOTTOM);
   }
 
-  // Existing account (logged in) → home. Onboarding is reserved for brand-new
-  // signups (handled via the signup-complete screen).
-  void _toApp() {
-    final onboarding = Get.find<ProfileService>().forceOnboarding;
-    Get.offAllNamed(onboarding ? Routes.onboarding : Routes.home);
+  // Back to login. If we were pushed from login, pop; otherwise replace.
+  void _toLogin(String email) {
+    if (Navigator.canPop(context)) {
+      Get.back();
+    } else {
+      Get.offNamed(Routes.login, arguments: email);
+    }
   }
 
   @override
@@ -104,21 +114,38 @@ class _LoginViewState extends State<LoginView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(
-                      context.rs(20), context.rs(12), context.rs(20), 0),
-                  child: authBackButton(context, canPop: canPop),
-                ),
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: context.rs(28)),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: context.rs(8)),
-                          Text(
-                            '다시 오셨네요\n로그인할게요',
+                  child: CustomScrollView(
+                    slivers: [
+                      // Floating header: hides on scroll-down, snaps back on
+                      // scroll-up.
+                      SliverAppBar(
+                        floating: true,
+                        snap: true,
+                        automaticallyImplyLeading: false,
+                        backgroundColor: AppColors.paper,
+                        surfaceTintColor: Colors.transparent,
+                        elevation: 0,
+                        scrolledUnderElevation: 0,
+                        toolbarHeight: context.rs(46),
+                        leadingWidth: context.rs(60),
+                        leading: canPop
+                            ? Padding(
+                                padding: EdgeInsets.only(left: context.rs(20)),
+                                child: authBackButton(context, canPop: true),
+                              )
+                            : null,
+                      ),
+                      SliverPadding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: context.rs(28)),
+                        sliver: SliverToBoxAdapter(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: context.rs(8)),
+                              Text(
+                                '이메일로\n시작할게요',
                             style: GoogleFonts.notoSansKr(
                               fontSize: context.rs(30),
                               height: 1.35,
@@ -129,7 +156,7 @@ class _LoginViewState extends State<LoginView> {
                           ),
                           SizedBox(height: context.rs(12)),
                           Text(
-                            '이메일과 비밀번호를 넣어주세요.',
+                            '이메일과 비밀번호만 있으면 돼요.',
                             style: GoogleFonts.notoSansKr(
                                 fontSize: context.rs(20),
                                 color: AppColors.stone),
@@ -170,9 +197,36 @@ class _LoginViewState extends State<LoginView> {
                                 fontSize: context.rs(15),
                                 color: AppColors.stone),
                           ),
+                          SizedBox(height: context.rs(18)),
+                          authLabel(context, '비밀번호 확인'),
+                          SizedBox(height: context.rs(10)),
+                          authField(
+                            context,
+                            controller: _confirm,
+                            hint: '••••••••',
+                            obscure: _obscureConfirm,
+                            onChanged: (_) => setState(() {}),
+                            suffix: authObscureToggle(
+                              context,
+                              obscure: _obscureConfirm,
+                              onToggle: () => setState(
+                                  () => _obscureConfirm = !_obscureConfirm),
+                            ),
+                          ),
+                          SizedBox(height: context.rs(8)),
+                          Text(
+                            _mismatch ? '비밀번호가 서로 달라요.' : '한 번 더 넣어주세요.',
+                            style: GoogleFonts.notoSansKr(
+                              fontSize: context.rs(15),
+                              color:
+                                  _mismatch ? AppColors.riskRed : AppColors.stone,
+                            ),
+                          ),
                         ],
                       ),
                     ),
+                  ),
+                    ],
                   ),
                 ),
                 Padding(
@@ -183,18 +237,17 @@ class _LoginViewState extends State<LoginView> {
                     children: [
                       authPrimaryButton(
                         context,
-                        label: '로그인',
+                        label: '회원가입',
                         enabled: _valid,
                         busy: _busy,
-                        onTap: _login,
+                        onTap: _signup,
                       ),
                       SizedBox(height: context.rs(4)),
                       authSwitchLink(
                         context,
-                        leading: '계정이 없으신가요?',
-                        action: '회원가입',
-                        onTap: () =>
-                            Get.toNamed(Routes.signup, arguments: _email.text.trim()),
+                        leading: '이미 계정이 있으신가요?',
+                        action: '로그인',
+                        onTap: () => _toLogin(_email.text.trim()),
                       ),
                     ],
                   ),

@@ -1,7 +1,0 @@
-{
-  "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"cd /Users/nojeong-un/devs/ilgo\\necho \\\"=== HEAD file ===\\\"; cat .git/HEAD 2>&1\\necho \\\"=== rev-parse HEAD ===\\\"; git rev-parse HEAD 2>&1\\necho \\\"=== status ===\\\"; git status 2>&1 | head -2...",
-  "error": "Exit code 128\n=== HEAD file ===\nref: refs/heads/main\n=== rev-parse HEAD ===\na472b62af42c44d437fabbc650be6fb27509abad\n=== status ===\nfatal: bad object HEAD\n=== branch -a ===\n* main\n  remotes/origin/HEAD -> origin/main\n  remotes/origin/main\n=== reflog -3 ===\nfatal: bad object HEAD\n=== log -3 ===\nfatal: bad object HEAD",
-  "timestamp": "2026-07-02T08:35:25.727Z",
-  "retry_count": 2
-}
