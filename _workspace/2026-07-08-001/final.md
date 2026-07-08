@@ -117,52 +117,39 @@ lib/
 
 ## 발표 자료
 
-원본 PDF: [읽고 발표 자료](capture/읽고_ppt_pdf.pdf)
+원본 PDF: [읽고 발표 자료](capture/ilgo_presentation.pdf)
 
-`capture/읽고_ppt_pdf.pdf`도 README에서 바로 볼 수 있도록 페이지별 이미지로 렌더링했습니다.
+`capture/ilgo_presentation.pdf`도 README에서 바로 볼 수 있도록 페이지별 이미지로 렌더링했습니다.
 
 <p>
-<img src="capture/pdf_pages/ilgo_ppt_page-01.png" width="420" alt="읽고 발표 자료 01쪽">
-<img src="capture/pdf_pages/ilgo_ppt_page-02.png" width="420" alt="읽고 발표 자료 02쪽">
-<br>
-<img src="capture/pdf_pages/ilgo_ppt_page-03.png" width="420" alt="읽고 발표 자료 03쪽">
-<img src="capture/pdf_pages/ilgo_ppt_page-04.png" width="420" alt="읽고 발표 자료 04쪽">
-<br>
-<img src="capture/pdf_pages/ilgo_ppt_page-05.png" width="420" alt="읽고 발표 자료 05쪽">
-<img src="capture/pdf_pages/ilgo_ppt_page-06.png" width="420" alt="읽고 발표 자료 06쪽">
-<br>
-<img src="capture/pdf_pages/ilgo_ppt_page-07.png" width="420" alt="읽고 발표 자료 07쪽">
-<img src="capture/pdf_pages/ilgo_ppt_page-08.png" width="420" alt="읽고 발표 자료 08쪽">
-<br>
-<img src="capture/pdf_pages/ilgo_ppt_page-09.png" width="420" alt="읽고 발표 자료 09쪽">
-<img src="capture/pdf_pages/ilgo_ppt_page-10.png" width="420" alt="읽고 발표 자료 10쪽">
-<br>
-<img src="capture/pdf_pages/ilgo_ppt_page-11.png" width="420" alt="읽고 발표 자료 11쪽">
-<img src="capture/pdf_pages/ilgo_ppt_page-12.png" width="420" alt="읽고 발표 자료 12쪽">
-<br>
-<img src="capture/pdf_pages/ilgo_ppt_page-13.png" width="420" alt="읽고 발표 자료 13쪽">
-<img src="capture/pdf_pages/ilgo_ppt_page-14.png" width="420" alt="읽고 발표 자료 14쪽">
-<br>
-<img src="capture/pdf_pages/ilgo_ppt_page-15.png" width="420" alt="읽고 발표 자료 15쪽">
-<img src="capture/pdf_pages/ilgo_ppt_page-16.png" width="420" alt="읽고 발표 자료 16쪽">
-<br>
-<img src="capture/pdf_pages/ilgo_ppt_page-17.png" width="420" alt="읽고 발표 자료 17쪽">
-<img src="capture/pdf_pages/ilgo_ppt_page-18.png" width="420" alt="읽고 발표 자료 18쪽">
-<br>
-<img src="capture/pdf_pages/ilgo_ppt_page-19.png" width="420" alt="읽고 발표 자료 19쪽">
-<img src="capture/pdf_pages/ilgo_ppt_page-20.png" width="420" alt="읽고 발표 자료 20쪽">
-<br>
-<img src="capture/pdf_pages/ilgo_ppt_page-21.png" width="420" alt="읽고 발표 자료 21쪽">
-<img src="capture/pdf_pages/ilgo_ppt_page-22.png" width="420" alt="읽고 발표 자료 22쪽">
-<br>
-<img src="capture/pdf_pages/ilgo_ppt_page-23.png" width="420" alt="읽고 발표 자료 23쪽">
-<img src="capture/pdf_pages/ilgo_ppt_page-24.png" width="420" alt="읽고 발표 자료 24쪽">
-<br>
-<img src="capture/pdf_pages/ilgo_ppt_page-25.png" width="420" alt="읽고 발표 자료 25쪽">
-<img src="capture/pdf_pages/ilgo_ppt_page-26.png" width="420" alt="읽고 발표 자료 26쪽">
-<br>
-<img src="capture/pdf_pages/ilgo_ppt_page-27.png" width="420" alt="읽고 발표 자료 27쪽">
-<img src="capture/pdf_pages/ilgo_ppt_page-28.png" width="420" alt="읽고 발표 자료 28쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-01.png" width="100%" alt="읽고 발표 자료 01쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-02.png" width="100%" alt="읽고 발표 자료 02쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-03.png" width="100%" alt="읽고 발표 자료 03쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-04.png" width="100%" alt="읽고 발표 자료 04쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-05.png" width="100%" alt="읽고 발표 자료 05쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-06.png" width="100%" alt="읽고 발표 자료 06쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-07.png" width="100%" alt="읽고 발표 자료 07쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-08.png" width="100%" alt="읽고 발표 자료 08쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-09.png" width="100%" alt="읽고 발표 자료 09쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-10.png" width="100%" alt="읽고 발표 자료 10쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-11.png" width="100%" alt="읽고 발표 자료 11쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-12.png" width="100%" alt="읽고 발표 자료 12쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-13.png" width="100%" alt="읽고 발표 자료 13쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-14.png" width="100%" alt="읽고 발표 자료 14쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-15.png" width="100%" alt="읽고 발표 자료 15쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-16.png" width="100%" alt="읽고 발표 자료 16쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-17.png" width="100%" alt="읽고 발표 자료 17쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-18.png" width="100%" alt="읽고 발표 자료 18쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-19.png" width="100%" alt="읽고 발표 자료 19쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-20.png" width="100%" alt="읽고 발표 자료 20쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-21.png" width="100%" alt="읽고 발표 자료 21쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-22.png" width="100%" alt="읽고 발표 자료 22쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-23.png" width="100%" alt="읽고 발표 자료 23쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-24.png" width="100%" alt="읽고 발표 자료 24쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-25.png" width="100%" alt="읽고 발표 자료 25쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-26.png" width="100%" alt="읽고 발표 자료 26쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-27.png" width="100%" alt="읽고 발표 자료 27쪽">
+<img src="capture/pdf_pages/ilgo_ppt_page-28.png" width="100%" alt="읽고 발표 자료 28쪽">
 </p>
 
 ## 앱 화면 캡처
@@ -170,34 +157,34 @@ lib/
 `capture/` 폴더에 있는 앱 화면 캡처를 모두 모았습니다.
 
 <p>
-<img src="capture/스크린샷 2026-07-07 오후 9.17.36.png" width="210" alt="읽고 앱 화면 캡처 01">
-<img src="capture/스크린샷 2026-07-08 오후 4.21.03.png" width="210" alt="읽고 앱 화면 캡처 02">
-<img src="capture/스크린샷 2026-07-08 오후 4.21.26.png" width="210" alt="읽고 앱 화면 캡처 03">
-<img src="capture/스크린샷 2026-07-08 오후 4.21.42.png" width="210" alt="읽고 앱 화면 캡처 04">
+<img src="capture/app_screen_01.png" width="210" alt="읽고 앱 화면 캡처 01">
+<img src="capture/app_screen_02.png" width="210" alt="읽고 앱 화면 캡처 02">
+<img src="capture/app_screen_03.png" width="210" alt="읽고 앱 화면 캡처 03">
+<img src="capture/app_screen_04.png" width="210" alt="읽고 앱 화면 캡처 04">
 <br>
-<img src="capture/스크린샷 2026-07-08 오후 4.21.49.png" width="210" alt="읽고 앱 화면 캡처 05">
-<img src="capture/스크린샷 2026-07-08 오후 4.21.51.png" width="210" alt="읽고 앱 화면 캡처 06">
-<img src="capture/스크린샷 2026-07-08 오후 4.22.00.png" width="210" alt="읽고 앱 화면 캡처 07">
-<img src="capture/스크린샷 2026-07-08 오후 4.22.08.png" width="210" alt="읽고 앱 화면 캡처 08">
+<img src="capture/app_screen_05.png" width="210" alt="읽고 앱 화면 캡처 05">
+<img src="capture/app_screen_06.png" width="210" alt="읽고 앱 화면 캡처 06">
+<img src="capture/app_screen_07.png" width="210" alt="읽고 앱 화면 캡처 07">
+<img src="capture/app_screen_08.png" width="210" alt="읽고 앱 화면 캡처 08">
 <br>
-<img src="capture/스크린샷 2026-07-08 오후 4.22.11.png" width="210" alt="읽고 앱 화면 캡처 09">
-<img src="capture/스크린샷 2026-07-08 오후 4.22.49.png" width="210" alt="읽고 앱 화면 캡처 10">
-<img src="capture/스크린샷 2026-07-08 오후 4.22.52.png" width="210" alt="읽고 앱 화면 캡처 11">
-<img src="capture/스크린샷 2026-07-08 오후 4.22.55.png" width="210" alt="읽고 앱 화면 캡처 12">
+<img src="capture/app_screen_09.png" width="210" alt="읽고 앱 화면 캡처 09">
+<img src="capture/app_screen_10.png" width="210" alt="읽고 앱 화면 캡처 10">
+<img src="capture/app_screen_11.png" width="210" alt="읽고 앱 화면 캡처 11">
+<img src="capture/app_screen_12.png" width="210" alt="읽고 앱 화면 캡처 12">
 <br>
-<img src="capture/스크린샷 2026-07-08 오후 4.23.05.png" width="210" alt="읽고 앱 화면 캡처 13">
-<img src="capture/스크린샷 2026-07-08 오후 4.23.10.png" width="210" alt="읽고 앱 화면 캡처 14">
-<img src="capture/스크린샷 2026-07-08 오후 4.23.44.png" width="210" alt="읽고 앱 화면 캡처 15">
-<img src="capture/스크린샷 2026-07-08 오후 4.23.48.png" width="210" alt="읽고 앱 화면 캡처 16">
+<img src="capture/app_screen_13.png" width="210" alt="읽고 앱 화면 캡처 13">
+<img src="capture/app_screen_14.png" width="210" alt="읽고 앱 화면 캡처 14">
+<img src="capture/app_screen_15.png" width="210" alt="읽고 앱 화면 캡처 15">
+<img src="capture/app_screen_16.png" width="210" alt="읽고 앱 화면 캡처 16">
 <br>
-<img src="capture/스크린샷 2026-07-08 오후 4.23.50.png" width="210" alt="읽고 앱 화면 캡처 17">
-<img src="capture/스크린샷 2026-07-08 오후 4.23.58.png" width="210" alt="읽고 앱 화면 캡처 18">
-<img src="capture/스크린샷 2026-07-08 오후 4.24.13.png" width="210" alt="읽고 앱 화면 캡처 19">
-<img src="capture/스크린샷 2026-07-08 오후 4.24.22.png" width="210" alt="읽고 앱 화면 캡처 20">
+<img src="capture/app_screen_17.png" width="210" alt="읽고 앱 화면 캡처 17">
+<img src="capture/app_screen_18.png" width="210" alt="읽고 앱 화면 캡처 18">
+<img src="capture/app_screen_19.png" width="210" alt="읽고 앱 화면 캡처 19">
+<img src="capture/app_screen_20.png" width="210" alt="읽고 앱 화면 캡처 20">
 <br>
-<img src="capture/스크린샷 2026-07-08 오후 4.24.23.png" width="210" alt="읽고 앱 화면 캡처 21">
-<img src="capture/스크린샷 2026-07-08 오후 4.24.24.png" width="210" alt="읽고 앱 화면 캡처 22">
-<img src="capture/스크린샷 2026-07-08 오후 4.24.25.png" width="210" alt="읽고 앱 화면 캡처 23">
+<img src="capture/app_screen_21.png" width="210" alt="읽고 앱 화면 캡처 21">
+<img src="capture/app_screen_22.png" width="210" alt="읽고 앱 화면 캡처 22">
+<img src="capture/app_screen_23.png" width="210" alt="읽고 앱 화면 캡처 23">
 </p>
 
 ## 안전 및 개인정보
