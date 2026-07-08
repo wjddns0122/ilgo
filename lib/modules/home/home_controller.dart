@@ -27,6 +27,17 @@ class HomeController extends GetxController {
   /// Recent saved analyses shown at the bottom of home.
   final recent = <AnalysisSummary>[].obs;
 
+  /// GetMaterialApp routingCallback: whenever navigation pops back to home
+  /// (e.g. 결과 화면 → 홈), reload "최근 기록" so the just-analyzed record shows
+  /// up immediately. HomeController is a permanent singleton, so onInit's
+  /// one-time load alone would leave the list stale.
+  static void onRouting(Routing? routing) {
+    if (routing == null || routing.isBack != true) return;
+    if (routing.current != Routes.home) return;
+    if (!Get.isRegistered<HomeController>()) return;
+    Get.find<HomeController>().loadRecent();
+  }
+
   /// In-app "기한 알림" fires once per app session, not on every home visit.
   static bool _deadlineAlertShown = false;
 

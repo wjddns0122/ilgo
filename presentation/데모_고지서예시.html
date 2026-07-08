@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>읽고 데모용 전기요금 고지서 (가상)</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:#2b2d2a;font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;padding:32px;display:flex;justify-content:center;}
+  .paper{
+    width:720px;background:#fff;padding:36px 40px;color:#222;
+    box-shadow:0 10px 40px rgba(0,0,0,.5);
+  }
+  .top{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #0f4c81;padding-bottom:12px;}
+  .corp{font-size:20px;font-weight:800;color:#0f4c81;}
+  .corp small{display:block;font-size:11px;font-weight:400;color:#666;letter-spacing:2px;}
+  .doctitle{text-align:right;}
+  .doctitle h1{font-size:22px;font-weight:800;}
+  .doctitle p{font-size:12px;color:#666;margin-top:2px;}
+  table{width:100%;border-collapse:collapse;margin-top:18px;font-size:13px;}
+  th,td{border:1px solid #c9d3dd;padding:8px 10px;text-align:left;}
+  th{background:#eef3f8;font-weight:700;width:130px;color:#1a3a5c;}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;}
+  .total-row td{font-size:16px;font-weight:800;background:#fff8e1;}
+  .due{
+    margin-top:18px;display:flex;justify-content:space-between;align-items:center;
+    background:#0f4c81;color:#fff;border-radius:8px;padding:14px 20px;
+  }
+  .due .amt{font-size:24px;font-weight:800;}
+  .due .date{font-size:15px;font-weight:700;}
+  .notice{margin-top:18px;font-size:11px;color:#555;line-height:1.75;border-top:1px dashed #bbb;padding-top:12px;}
+  .notice b{color:#a33;}
+  .barcode{margin-top:16px;display:flex;align-items:center;gap:14px;}
+  .bars{height:44px;flex:1;background:repeating-linear-gradient(90deg,#111 0 2px,#fff 2px 5px,#111 5px 6px,#fff 6px 10px,#111 10px 13px,#fff 13px 15px);}
+  .barcode span{font-size:11px;color:#666;}
+  .fakemark{margin-top:14px;text-align:center;font-size:10px;color:#bbb;letter-spacing:1px;}
+</style>
+</head>
+<body>
+<div class="paper">
+  <div class="top">
+    <div class="corp">전국전력공사<small>K E P C O · 가상 데모</small></div>
+    <div class="doctitle">
+      <h1>2026년 2월분 전기요금 청구서</h1>
+      <p>청구서 발행일: 2026. 02. 25. | 고지서 번호: 2026-02-93**-71**</p>
+    </div>
+  </div>
+
+  <table>
+    <tr><th>고객명</th><td>김○수</td><th>고객번호</th><td>12**-56**-90**</td></tr>
+    <tr><th>공급주소</th><td colspan="3">서울특별시 ○○구 ○○로 12, 30*호</td></tr>
+    <tr><th>계약종별</th><td>주택용(저압)</td><th>사용기간</th><td>2026. 01. 18. ~ 2026. 02. 17.</td></tr>
+    <tr><th>사용량</th><td>228 kWh (전월 대비 +31 kWh)</td><th>검침일</th><td>매월 17일</td></tr>
+  </table>
+
+  <table>
+    <tr><th>기본요금</th><td class="num">1,600원</td></tr>
+    <tr><th>전력량요금</th><td class="num">48,770원</td></tr>
+    <tr><th>기후환경요금</th><td class="num">2,050원</td></tr>
+    <tr><th>연료비조정액</th><td class="num">1,140원</td></tr>
+    <tr><th>부가가치세 등</th><td class="num">8,650원</td></tr>
+    <tr class="total-row"><th>청구금액 합계</th><td class="num">62,210원</td></tr>
+  </table>
+
+  <div class="due">
+    <div>납기 내 청구금액 <span class="amt">62,210원</span></div>
+    <div class="date">납부기한 2026년 3월 5일 (목)</div>
+  </div>
+
+  <div class="notice">
+    ※ 납부기한 경과 시 <b>미납액의 1.5%에 해당하는 연체가산금</b>이 익월 청구서에 합산 부과되며, 2개월 이상 미납 시 「전기공급약관」 제15조에 의거 <b>전기공급이 중지(단전)</b>될 수 있습니다.<br>
+    ※ 자동이체 계좌 잔액 부족 시 미납으로 처리되오니 유의하시기 바랍니다. 복지할인(장애인·기초생활수급자 등) 대상자는 신청월부터 요금이 경감되므로 관할 지사(지역번호 없이 123)로 신청하시기 바랍니다.<br>
+    ※ 본 청구서에 대한 이의는 고지서 수령일로부터 14일 이내에 제기할 수 있습니다.
+  </div>
+
+  <div class="barcode">
+    <div class="bars"></div>
+    <span>전자납부번호 9420-00**-31**</span>
+  </div>
+
+  <div class="fakemark">— 본 문서는 해커톤 시연용 가상 고지서이며 실제 청구와 무관합니다 —</div>
+</div>
+</body>
+</html>

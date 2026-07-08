@@ -8,6 +8,7 @@ import 'core/theme.dart';
 import 'data/bindings/app_binding.dart';
 import 'data/services/profile_service.dart';
 import 'data/services/tts_service.dart';
+import 'modules/home/home_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,6 +41,8 @@ class IlgoApp extends StatelessWidget {
       initialBinding: AppBinding(),
       initialRoute: initialRoute,
       getPages: AppPages.routes,
+      // Refresh home's "최근 기록" whenever a screen pops back to it.
+      routingCallback: HomeController.onRouting,
       // Apply the user's text-size preference app-wide.
       builder: (context, child) => Obx(
         () => MediaQuery(
