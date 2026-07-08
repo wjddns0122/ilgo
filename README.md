@@ -158,44 +158,92 @@ lib/
 <img src="capture/pdf_pages/ilgo_ppt_page-28.png" width="100%" alt="읽고 발표 자료 28쪽">
 </p>
 
-## 앱 화면 캡처
+## 사용자 흐름
 
-`capture/` 폴더에 있는 앱 화면 캡처 27장을 모두 모았습니다.
+`capture/` 폴더에 있는 앱 화면 캡처 27장을 실제 사용 흐름에 맞춰 정리했습니다.
+
+```mermaid
+flowchart LR
+    A["회원가입/로그인"] --> B["온보딩"]
+    B --> C["문서 입력"]
+    C --> D["AI 분석"]
+    D --> E["쉬운 설명 확인"]
+    E --> F["위험도/할 일 확인"]
+    F --> G["캘린더·도움 요청·음성 듣기"]
+    G --> H["설정 변경"]
+```
+
+### 1. 시작하기
+
+사용자는 로그인하거나 새 계정을 만들고, 가입 완료 화면을 통해 바로 서비스를 시작합니다.
 
 <p>
-<img src="capture/app_screen_01.png" width="190" alt="읽고 앱 화면 캡처 01">
-<img src="capture/app_screen_02.png" width="190" alt="읽고 앱 화면 캡처 02">
-<img src="capture/app_screen_03.png" width="190" alt="읽고 앱 화면 캡처 03">
-<img src="capture/app_screen_04.png" width="190" alt="읽고 앱 화면 캡처 04">
+<img src="capture/app_screen_01.png" width="210" alt="로그인 화면">
+<img src="capture/app_screen_02.png" width="210" alt="회원가입 화면">
+<img src="capture/app_screen_03.png" width="210" alt="가입 완료 화면">
+</p>
+
+### 2. 온보딩 설정
+
+처음 실행하면 읽고가 어떤 도움을 주는지 확인한 뒤, 쉬운 한국어/내 언어 모드와 언어, 글씨 크기, 접근 권한을 차례로 설정합니다.
+
+<p>
+<img src="capture/app_screen_04.png" width="210" alt="서비스 소개 화면">
+<img src="capture/app_screen_05.png" width="210" alt="읽기 방식 선택 화면">
+<img src="capture/app_screen_06.png" width="210" alt="언어 선택 화면">
+<img src="capture/app_screen_07.png" width="210" alt="글씨 크기 설정 화면">
 <br>
-<img src="capture/app_screen_05.png" width="190" alt="읽고 앱 화면 캡처 05">
-<img src="capture/app_screen_06.png" width="190" alt="읽고 앱 화면 캡처 06">
-<img src="capture/app_screen_07.png" width="190" alt="읽고 앱 화면 캡처 07">
-<img src="capture/app_screen_08.png" width="190" alt="읽고 앱 화면 캡처 08">
+<img src="capture/app_screen_08.png" width="210" alt="권한 요청 화면">
+</p>
+
+### 3. 문서 분석하기
+
+고지서나 문자 내용을 촬영하면 읽고가 핵심 문장을 쉬운 말로 정리하고, 필요한 항목을 카드로 나눠 보여줍니다. 일정이 있으면 캘린더에 바로 넣을 수 있습니다.
+
+<p>
+<img src="capture/app_screen_09.png" width="210" alt="쉬운 한국어 분석 결과 화면">
+<img src="capture/app_screen_10.png" width="210" alt="쉬운 설명 상세 화면">
+<img src="capture/app_screen_11.png" width="210" alt="핵심 정보와 할 일 화면">
+<img src="capture/app_screen_12.png" width="210" alt="캘린더 추가 완료 화면">
 <br>
-<img src="capture/app_screen_09.png" width="190" alt="읽고 앱 화면 캡처 09">
-<img src="capture/app_screen_10.png" width="190" alt="읽고 앱 화면 캡처 10">
-<img src="capture/app_screen_11.png" width="190" alt="읽고 앱 화면 캡처 11">
-<img src="capture/app_screen_12.png" width="190" alt="읽고 앱 화면 캡처 12">
+<img src="capture/app_screen_13.png" width="210" alt="결과 화면 하단 액션">
+</p>
+
+### 4. 위험 문서 확인하기
+
+스미싱처럼 위험한 문서는 빨간 경고로 표시하고, 왜 위험한지와 사용자가 무엇을 해야 하는지 단계별로 안내합니다. 영어가 필요한 사용자에게는 같은 내용을 영어로 풀어 줍니다.
+
+<p>
+<img src="capture/app_screen_14.png" width="210" alt="영어 스미싱 분석 결과 화면">
+<img src="capture/app_screen_15.png" width="210" alt="영어 위험 설명 화면">
+<img src="capture/app_screen_16.png" width="210" alt="한국어 위험 설명 화면">
+<img src="capture/app_screen_17.png" width="210" alt="영어 핵심 정보와 할 일 화면">
 <br>
-<img src="capture/app_screen_13.png" width="190" alt="읽고 앱 화면 캡처 13">
-<img src="capture/app_screen_14.png" width="190" alt="읽고 앱 화면 캡처 14">
-<img src="capture/app_screen_15.png" width="190" alt="읽고 앱 화면 캡처 15">
-<img src="capture/app_screen_16.png" width="190" alt="읽고 앱 화면 캡처 16">
+<img src="capture/app_screen_18.png" width="210" alt="위험 문서 관련 도움과 답장 화면">
+</p>
+
+### 5. AI 분석 대기 상태
+
+분석 중에는 사용자가 기다리는 이유를 알 수 있도록 진행 상태를 아이콘과 문장으로 보여줍니다.
+
+<p>
+<img src="capture/app_screen_19.png" width="210" alt="문서 분석 중 화면">
+<img src="capture/app_screen_20.png" width="210" alt="위험 확인 중 화면">
+<img src="capture/app_screen_21.png" width="210" alt="할 일 정리 중 화면">
+<img src="capture/app_screen_22.png" width="210" alt="요약 작성 중 화면">
+</p>
+
+### 6. 후속 도움과 설정
+
+위험도가 높은 문서에서는 상담 연락처를 바로 연결하고, 설명을 음성으로 들을 수도 있습니다. 설정 화면에서는 읽기 방식, 언어, 글씨 크기, 도움받을 곳을 다시 바꿀 수 있습니다.
+
+<p>
+<img src="capture/app_screen_23.png" width="210" alt="위험 상세 안내 화면">
+<img src="capture/app_screen_24.png" width="210" alt="상담 연결 포함 위험 상세 화면">
+<img src="capture/app_screen_25.png" width="210" alt="도움받을 곳 화면">
+<img src="capture/app_screen_26.png" width="210" alt="소리로 듣기 화면">
 <br>
-<img src="capture/app_screen_17.png" width="190" alt="읽고 앱 화면 캡처 17">
-<img src="capture/app_screen_18.png" width="190" alt="읽고 앱 화면 캡처 18">
-<img src="capture/app_screen_19.png" width="190" alt="읽고 앱 화면 캡처 19">
-<img src="capture/app_screen_20.png" width="190" alt="읽고 앱 화면 캡처 20">
-<br>
-<img src="capture/app_screen_21.png" width="190" alt="읽고 앱 화면 캡처 21">
-<img src="capture/app_screen_22.png" width="190" alt="읽고 앱 화면 캡처 22">
-<img src="capture/app_screen_23.png" width="190" alt="읽고 앱 화면 캡처 23">
-<img src="capture/app_screen_24.png" width="190" alt="읽고 앱 화면 캡처 24">
-<br>
-<img src="capture/app_screen_25.png" width="190" alt="읽고 앱 화면 캡처 25">
-<img src="capture/app_screen_26.png" width="190" alt="읽고 앱 화면 캡처 26">
-<img src="capture/app_screen_27.png" width="190" alt="읽고 앱 화면 캡처 27">
+<img src="capture/app_screen_27.png" width="210" alt="설정 화면">
 </p>
 
 ## 안전 및 개인정보
